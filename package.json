@@ -1,0 +1,32 @@
+{
+  "name": "tag-application-bot",
+  "version": "1.0.0",
+  "description": "No description yet",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LhonRafaat/tag-application-bot.git"
+  },
+  "keywords": [
+    "bot"
+  ],
+  "author": "Lhon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LhonRafaat/tag-application-bot/issues"
+  },
+  "homepage": "https://github.com/LhonRafaat/tag-application-bot#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongoose": "^6.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

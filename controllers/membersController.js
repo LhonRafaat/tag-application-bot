@@ -1,7 +1,8 @@
 import { findAll, findOne } from "../services/memberService.js";
 
 export const getMembers = async (req, res) => {
-  const members = findAll();
+  const members = await findAll();
+  console.log(members);
 
   res.status(200).json(members);
 };

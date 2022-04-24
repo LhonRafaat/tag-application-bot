@@ -27,3 +27,10 @@ export const createMember = async (
 
   return await member.save();
 };
+
+export const deleteOne = async (id) => {
+  const member = await Members.findById(id);
+  if (!member) console.log("member not found");
+
+  await Members.findByIdAndDelete(id);
+};

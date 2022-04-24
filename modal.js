@@ -50,7 +50,9 @@ export const getModal = (client) => {
               "pc",
               returnedMember.data.platoons
                 .map((el) => el.id)
+                //this is idf platoon id, hardcoded for now
                 .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551"),
+
               modal.user.username
             );
           }

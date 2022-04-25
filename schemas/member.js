@@ -8,6 +8,7 @@ const membersSchema = new Schema(
     platforms: [{ type: String, required: true }],
     hasTag: { type: Boolean, required: true },
     fullName: { type: String, required: true },
+    votes : {type: Number , default: 0},
   },
   { timestamps: true }
 );

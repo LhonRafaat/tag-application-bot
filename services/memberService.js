@@ -9,6 +9,12 @@ export const findOne = async (discordId) => {
   return await Members.findOne({ discordId });
 };
 
+export const findOneByName = async (name) => {
+  // this is case sensitive which I have to fix.
+  console.log(name);
+  return await Members.findOne({ fullName: name });
+};
+
 export const createMember = async (
   discordId,
   originId,

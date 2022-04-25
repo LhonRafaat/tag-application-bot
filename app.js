@@ -1,12 +1,13 @@
 import express from "express";
 import env from "dotenv";
-import { Client, Intents } from "discord.js";
+import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
 
 import memberRoutes from "./routes/memberRoutes.js";
 import { createMember, findOne } from "./services/memberService.js";
 import axios from "axios";
 import discordModals from "discord-modals";
 import { getModal } from "./modal.js";
+import { tagEmbed } from "./messageEmbed.js";
 
 env.config();
 const app = express();
@@ -29,6 +30,19 @@ client
   .catch((err) => console.log(err));
 
 client.on("ready", () => {
+  const channel = client.channels.cache.get("968131185668665404");
+  channel.bulkDelete(100);
+
+  //TODO move the button to its own file
+  const row = new MessageActionRow().addComponents(
+    new MessageButton()
+      .setCustomId("search")
+      .setLabel("Search for a user")
+      .setStyle("PRIMARY")
+  );
+
+  channel.send({ embeds: [tagEmbed], components: [row] });
+
   console.log(`Logged in as ${client.user.tag}!`);
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
   let commands;
@@ -46,21 +60,18 @@ discordModals(client);
 
 getModal(client);
 
-// client.on("interactionCreate", async (interaction) => {});
+// client.on("clickButton", (button) => {
+//   console.log("button");
+//   if (button.id === "vote") {
+//     console.log("vote");
+//   }
+// });
+
 client.on("messageCreate", async (msg) => {
   //we dont want messages from the bot
 
   if (msg.author.bot) return;
 
-  // check to see if we already have this user in db
-  // const user = await findOne(msg.author.id);
-
-  // if we did not have the user , then we get to work
-  // if (!user) {
-  //   // these console logs are only for debugging , dont worry
-  //   //making a http request to gametools api to find the user profile, but idk what to do about the game and platform , beacause they are required
-  //   // meaning a game and platform is always chosen which ofcourse is a issue.
-  // }
   // in case you are very bored
   if (msg.content.toLowerCase() === "ping") {
     msg.reply("pong");

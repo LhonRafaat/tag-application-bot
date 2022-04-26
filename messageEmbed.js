@@ -5,24 +5,28 @@ import { MessageEmbed } from "discord.js";
 export const tagEmbed = new MessageEmbed()
   .setColor("#0099ff")
   .setTitle("Vote for a user")
-  .setURL("https://discord.js.org/")
+  // .setURL("https://discord.js.org/")
   .setAuthor({
     name: "Me",
-    iconURL: "https://i.imgur.com/AfFp7pu.png",
+    iconURL:
+      "https://eaassets-a.akamaihd.net/battlelog/prod/emblem/392/590/320/2955055690685760912.png?v=1537200736",
     url: "https://discord.js.org",
   })
   .setDescription("Vote for a desired user")
-  .setThumbnail("https://i.imgur.com/AfFp7pu.png")
+  .setThumbnail(
+    "https://eaassets-a.akamaihd.net/battlelog/prod/emblem/392/590/320/2955055690685760912.png?v=1537200736"
+  )
   .addFields(
     { name: "Regular field title", value: "Some value here" },
     { name: "\u200B", value: "\u200B" },
     { name: "Inline field title", value: "Some value here", inline: true },
     { name: "Inline field title", value: "Some value here", inline: true }
   )
-  .addField("Inline field title", "Some value here", true)
-  .setImage("https://i.imgur.com/AfFp7pu.png")
-  .setTimestamp()
+  .setImage(
+    "https://eaassets-a.akamaihd.net/battlelog/prod/emblem/392/590/320/2955055690685760912.png?v=1537200736"
+  )
   .setFooter({
     text: "Some footer text here",
-    iconURL: "https://i.imgur.com/AfFp7pu.png",
+    iconURL:
+      "https://eaassets-a.akamaihd.net/battlelog/prod/emblem/392/590/320/2955055690685760912.png?v=1537200736",
   });

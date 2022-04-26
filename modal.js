@@ -113,16 +113,24 @@ export const getModal = (client) => {
         );
         context.font = "50px sans-serif";
         context.fillText("Skills :", canvas.width / 5.5, canvas.height / 2.0);
-        context.fillText(
-          "Contribution :",
-          canvas.width / 5.5,
-          canvas.height / 1.6
-        );
-        context.fillText(
-          "Personality: ",
-          canvas.width / 5.5,
-          canvas.height / 1.3
-        );
+        context.fillText("Contribution :", 100, canvas.height / 1.6);
+        context.fillText("Personality: ", 140, canvas.height / 1.3);
+        //we repeat fill rect twice once with white once with red to stimulate a progressbar.
+        context.fillStyle = "#ffffff";
+        context.fillRect(480, 220, 1000, 20);
+        context.fillStyle = "#ff0000";
+        context.fillRect(480, 220, 400, 20);
+        context.fillStyle = "#ffffff";
+        context.fillRect(480, 300, 1000, 20);
+        context.fillStyle = "#ff0000";
+
+        context.fillRect(480, 300, 300, 20);
+        context.fillStyle = "#ffffff";
+
+        context.fillRect(480, 370, 1000, 20);
+        context.fillStyle = "#ff0000";
+
+        context.fillRect(480, 370, 700, 20);
 
         // Use the helpful Attachment class structure to process the file for you
         const attachment = new MessageAttachment(

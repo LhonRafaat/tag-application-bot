@@ -29,7 +29,7 @@ client
   .then(() => console.log("connected the bot"))
   .catch((err) => console.log(err));
 
-client.on("ready", () => {
+client.on("ready", async () => {
   const channel = client.channels.cache.get("968131185668665404");
   channel.bulkDelete(100);
 
@@ -41,7 +41,8 @@ client.on("ready", () => {
       .setStyle("PRIMARY")
   );
 
-  channel.send({ embeds: [tagEmbed], components: [row] });
+  const message = await channel.send({ embeds: [tagEmbed], components: [row] });
+  message.pin();
 
   console.log(`Logged in as ${client.user.tag}!`);
   const guild = client.guilds.cache.get(process.env.GUILD_ID);

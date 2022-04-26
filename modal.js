@@ -85,6 +85,12 @@ export const getModal = (client) => {
           ephemeral: true,
         });
       } else if (interactionType === "vote") {
+        //required points for the votes
+        const requiredPoints = 20;
+        // 1500 is the width of the white rect
+        const unit = 1500 / requiredPoints;
+        const user = await findOne(modal.user.id);
+        console.log(user);
         const canvas = Canvas.createCanvas(1500, 500);
         const context = canvas.getContext("2d");
 
@@ -119,18 +125,21 @@ export const getModal = (client) => {
         context.fillStyle = "#ffffff";
         context.fillRect(480, 220, 1000, 20);
         context.fillStyle = "#ff0000";
-        context.fillRect(480, 220, 400, 20);
+
+        // we multiply each point by the unit to get the correct width
+
+        context.fillRect(480, 220, user.skills * unit, 20);
         context.fillStyle = "#ffffff";
         context.fillRect(480, 300, 1000, 20);
         context.fillStyle = "#ff0000";
 
-        context.fillRect(480, 300, 300, 20);
+        context.fillRect(480, 300, user.contribution * unit, 20);
         context.fillStyle = "#ffffff";
 
         context.fillRect(480, 370, 1000, 20);
         context.fillStyle = "#ff0000";
 
-        context.fillRect(480, 370, 700, 20);
+        context.fillRect(480, 370, user.personality * unit, 20);
 
         // Use the helpful Attachment class structure to process the file for you
         const attachment = new MessageAttachment(

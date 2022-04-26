@@ -5,7 +5,9 @@ import {
   findOneByName,
 } from "./services/memberService.js";
 import axios from "axios";
-import { MessageActionRow, MessageButton } from "discord.js";
+import Canvas from "canvas";
+import { voteEmbed } from "./voteEmbed.js";
+import { MessageAttachment } from "discord.js";
 
 export const getModal = (client) => {
   let interactionType;
@@ -83,29 +85,81 @@ export const getModal = (client) => {
           ephemeral: true,
         });
       } else if (interactionType === "vote") {
+        const canvas = Canvas.createCanvas(1500, 500);
+        const context = canvas.getContext("2d");
+
+        const background = await Canvas.loadImage("./assets/images/space.png");
+
+        // This uses the canvas dimensions to stretch the image onto the entire canvas
+        context.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+        const avatar = await Canvas.loadImage(
+          modal.member.displayAvatarURL({ format: "jpg" })
+        );
+        context.drawImage(avatar, 25, 25, 200, 200);
+        context.strokeRect(0, 0, canvas.width, canvas.height);
+
+        // Select the font size and type from one of the natively available fonts
+        context.font = "80px sans-serif";
+
+        // Select the style that will be used to fill the text in
+        context.fillStyle = "#ffffff";
+
+        // Actually fill the text with a solid color
+        context.fillText(
+          modal.member.displayName,
+          canvas.width / 5.5,
+          canvas.height / 3.0
+        );
+        context.font = "50px sans-serif";
+        context.fillText("Skills :", canvas.width / 5.5, canvas.height / 2.0);
+        context.fillText(
+          "Contribution :",
+          canvas.width / 5.5,
+          canvas.height / 1.6
+        );
+        context.fillText(
+          "Personality: ",
+          canvas.width / 5.5,
+          canvas.height / 1.3
+        );
+
+        // Use the helpful Attachment class structure to process the file for you
+        const attachment = new MessageAttachment(
+          canvas.toBuffer(),
+          "profile-image.png"
+        );
         // search by game name, maybe if we can use discord Id would be great.
         const member = await findOneByName(inputValue);
         console.log(member);
 
-        //TODO: make the button reusable
-        const row = new MessageActionRow().addComponents(
-          new MessageButton()
-            .setCustomId("vote")
-            .setLabel("Vote now")
-            .setStyle("PRIMARY")
-        );
+        // //TODO: make the button reusable
+        // const row = new MessageActionRow().addComponents(
+        //   new MessageButton()
+        //     .setCustomId("vote")
+        //     .setLabel("Vote now")
+        //     .setStyle("PRIMARY")
+        // );
         //TODO: send a error message when user doesnt exist
-        await modal.deferReply({ ephemeral: true });
-        modal.followUp({
-          content: `name : ${member.fullName}
-                    originId: ${member.originId}
-                    platforms: ${member.platforms}
-          
-          `,
-          components: [row],
+        await modal.deferReply({ ephemeral: false });
+        const message = await modal.followUp({
+          // content: `name : ${member.fullName}
+          //           originId: ${member.originId}
+          //           platforms: ${member.platforms}
 
+          // `,
+
+          embeds: [voteEmbed],
           ephemeral: true,
+          files: [attachment],
         });
+        Promise.all([
+          message.react("🍎"),
+          message.react("🍊"),
+          message.react("🍇"),
+        ]).catch((error) =>
+          console.error("One of the emojis failed to react:", error)
+        );
       }
     }
   });

@@ -44,7 +44,6 @@ export const getModal = (client) => {
     }
   });
   client.on("modalSubmit", async (modal, data) => {
-    console.log(modal);
     if (modal.customId === "modal-customid") {
       const inputValue = modal.getTextInputValue("textinput-customid");
 
@@ -90,7 +89,6 @@ export const getModal = (client) => {
         // 1500 is the width of the white rect
         const unit = 1500 / requiredPoints;
         const user = await findOne(modal.user.id);
-        console.log(user);
         const canvas = Canvas.createCanvas(1500, 500);
         const context = canvas.getContext("2d");
 
@@ -148,7 +146,6 @@ export const getModal = (client) => {
         );
         // search by game name, maybe if we can use discord Id would be great.
         const member = await findOneByName(inputValue);
-        console.log(member);
 
         // //TODO: make the button reusable
         // const row = new MessageActionRow().addComponents(
@@ -178,6 +175,25 @@ export const getModal = (client) => {
           console.error("One of the emojis failed to react:", error)
         );
       }
+    }
+  });
+
+  client.on("messageReactionAdd", async (reaction, user) => {
+    const dbUser = await findOne(user.id);
+
+    // we check so we dont add the bots votes
+    if (dbUser) {
+      if (user.username !== "tag") {
+        if (reaction.emoji.name === "🍎") {
+          dbUser.skills += 1;
+        } else if (reaction.emoji.name === "🍊") {
+          dbUser.contribution += 1;
+        } else if (reaction.emoji.name === "🍇") {
+          dbUser.personality += 1;
+        }
+      }
+
+      await dbUser.save();
     }
   });
 };

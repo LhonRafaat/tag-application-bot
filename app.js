@@ -21,7 +21,9 @@ const client = new Client({
     Intents.FLAGS.GUILDS,
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_INTEGRATIONS,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
   ],
+  partials: ["USER", "REACTION", "MESSAGE"],
 });
 
 client

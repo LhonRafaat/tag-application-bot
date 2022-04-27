@@ -8,6 +8,7 @@ import axios from "axios";
 import discordModals from "discord-modals";
 import { getModal } from "./modal.js";
 import { tagEmbed } from "./messageEmbed.js";
+import { getPlate } from "./UI/userPlate.js";
 
 env.config();
 const app = express();
@@ -78,6 +79,15 @@ client.on("messageCreate", async (msg) => {
   // in case you are very bored
   if (msg.content.toLowerCase() === "ping") {
     msg.reply("pong");
+  }
+  if (msg.content.toLowerCase() === "!myvotes") {
+    console.log(msg);
+    const plate = await getPlate(
+      msg.author.username,
+      msg.author.id,
+      msg.author.displayAvatarURL({ format: "jpg" })
+    );
+    msg.reply({ files: [plate] });
   }
 });
 

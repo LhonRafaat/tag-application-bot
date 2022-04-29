@@ -56,8 +56,8 @@ client.on("ready", async () => {
     commands = client?.application.commands;
   }
   commands?.create({
-    name: "modal",
-    description: "tag Modal",
+    name: "register",
+    description: "register for idf tag application",
   });
 });
 discordModals(client);

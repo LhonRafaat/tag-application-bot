@@ -2,12 +2,9 @@ import { Modal, TextInputComponent, showModal } from "discord-modals"; // Now we
 import {
   createMember,
   findOne,
-  findOneByName,
 } from "./services/memberService.js";
 import axios from "axios";
-import Canvas from "canvas";
 import { voteEmbed } from "./voteEmbed.js";
-import { MessageAttachment } from "discord.js";
 import { getPlate } from "./UI/userPlate.js";
 
 export const getModal = (client) => {

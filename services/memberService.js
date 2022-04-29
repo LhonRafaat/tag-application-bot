@@ -20,7 +20,8 @@ export const createMember = async (
   platforms,
   hasTag,
   fullName,
-  userNames
+  userNames,
+  avatar
 ) => {
   const member = new Members({
     discordId,
@@ -29,6 +30,7 @@ export const createMember = async (
     hasTag,
     fullName,
     userNames,
+    avatar,
   });
   console.log("created");
 

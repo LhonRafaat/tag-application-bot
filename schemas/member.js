@@ -8,6 +8,7 @@ const membersSchema = new Schema(
     platforms: [{ type: String, required: true }],
     userNames: [{ type: String, required: true }],
     hasTag: { type: Boolean, required: true },
+    avatar: { type: String, required: true },
     fullName: { type: String, required: true },
     skills: { type: Number, default: 0 },
     personality: { type: Number, default: 0 },

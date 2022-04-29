@@ -1,11 +1,17 @@
 import { Modal, TextInputComponent, showModal } from "discord-modals"; // Now we extract the showModal method
 import { createMember, findOne } from "./services/memberService.js";
 import axios from "axios";
-import { voteEmbed } from "./voteEmbed.js";
+import { voteEmbed } from "./UI/embeds/voteEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
 import { getSearchModal } from "./UI/searchModal.js";
 import { getRegisterModal } from "./UI/registerModal.js";
-import { NO_EMOJI, YES_EMOJI } from "./emojies/emojies.js";
+import {
+  CONTRIBUTION_EMOJI,
+  NO_EMOJI,
+  PERSONALITY_EMOJI,
+  SKILL_EMOJI,
+  YES_EMOJI,
+} from "./emojies/emojies.js";
 
 export const getModal = (client) => {
   let interactionType;
@@ -98,9 +104,9 @@ export const getModal = (client) => {
         files: [attachment],
       });
       Promise.all([
-        message.react("🍎"),
-        message.react("🍊"),
-        message.react("🍇"),
+        message.react(SKILL_EMOJI),
+        message.react(CONTRIBUTION_EMOJI),
+        message.react(PERSONALITY_EMOJI),
       ]).catch((error) =>
         console.error("One of the emojis failed to react:", error)
       );
@@ -112,12 +118,13 @@ export const getModal = (client) => {
 
     // we check so we dont add the bots votes
     if (dbUser) {
+      // not the bot
       if (user.username !== "tag") {
-        if (reaction.emoji.name === "🍎") {
+        if (reaction.emoji.name === SKILL_EMOJI) {
           dbUser.skills += 1;
-        } else if (reaction.emoji.name === "🍊") {
+        } else if (reaction.emoji.name === CONTRIBUTION_EMOJI) {
           dbUser.contribution += 1;
-        } else if (reaction.emoji.name === "🍇") {
+        } else if (reaction.emoji.name === PERSONALITY_EMOJI) {
           dbUser.personality += 1;
         }
       }

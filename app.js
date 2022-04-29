@@ -3,11 +3,9 @@ import env from "dotenv";
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
 
 import memberRoutes from "./routes/memberRoutes.js";
-import { createMember, findOne } from "./services/memberService.js";
-import axios from "axios";
 import discordModals from "discord-modals";
 import { getModal } from "./modal.js";
-import { tagEmbed } from "./messageEmbed.js";
+import { tagEmbed } from "./UI/embeds/messageEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
 
 env.config();
@@ -64,13 +62,6 @@ discordModals(client);
 
 getModal(client);
 
-// client.on("clickButton", (button) => {
-//   console.log("button");
-//   if (button.id === "vote") {
-//     console.log("vote");
-//   }
-// });
-
 client.on("messageCreate", async (msg) => {
   //we dont want messages from the bot
 
@@ -81,7 +72,6 @@ client.on("messageCreate", async (msg) => {
     msg.reply("pong");
   }
   if (msg.content.toLowerCase() === "!myvotes") {
-    console.log(msg);
     const plate = await getPlate(
       msg.author.username,
       msg.author.id,

@@ -17,17 +17,19 @@ export const findOneByName = async (name) => {
 
 export const createMember = async (
   discordId,
-  originId,
+  originIds,
   platforms,
   hasTag,
-  fullName
+  fullName,
+  userNames
 ) => {
   const member = new Members({
     discordId,
-    originId,
+    originIds,
     platforms,
     hasTag,
     fullName,
+    userNames,
   });
   console.log("created");
 

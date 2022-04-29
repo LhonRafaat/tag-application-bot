@@ -6,7 +6,7 @@ const membersSchema = new Schema(
     discordId: { type: String, required: true },
     originIds: [{ type: String, required: true }],
     platforms: [{ type: String, required: true }],
-    userNames: { type: String, required: true },
+    userNames: [{ type: String, required: true }],
     hasTag: { type: Boolean, required: true },
     fullName: { type: String, required: true },
     skills: { type: Number, default: 0 },

@@ -1,6 +1,6 @@
 import express from "express";
 import env from "dotenv";
-import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
+import { Client, Intents, MessageButton } from "discord.js";
 
 import memberRoutes from "./routes/memberRoutes.js";
 import discordModals from "discord-modals";

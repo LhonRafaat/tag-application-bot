@@ -1,5 +1,9 @@
 import { Modal, TextInputComponent, showModal } from "discord-modals"; // Now we extract the showModal method
-import { createMember, findOne } from "./services/memberService.js";
+import {
+  createMember,
+  findOne,
+  findOneByName,
+} from "./services/memberService.js";
 import axios from "axios";
 import { voteEmbed } from "./UI/embeds/voteEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
@@ -65,7 +69,8 @@ export const getModal = (client) => {
                 .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551"),
 
               modal.user.username,
-              returnedMember.data.userName
+              returnedMember.data.userName,
+              returnedMember.data.avatar
             );
             // assign registered role
 
@@ -91,10 +96,21 @@ export const getModal = (client) => {
     } else if (interactionType === "vote") {
       // search by game name, maybe if we can use discord Id would be great.
 
+      const usernameVal = modal.getTextInputValue("usernameVal");
+      const user = await findOneByName(usernameVal);
+      if (!user) {
+        await modal.deferReply({ ephemeral: true });
+        return modal.followUp("User not found");
+      }
+
+      //TODO : how can I get the user avatar from discord?
+
+      // I could have just passed the whole user object here instead of passing discord id and fetching it again
+      // in the plate, but idk why I did that ...
       const attachment = await getPlate(
-        modal.member.displayName,
-        modal.user.id,
-        modal.member.displayAvatarURL({ format: "jpg" })
+        user.userNames[0],
+        user.discordId,
+        user.avatar
       );
       //TODO: send a error message when user doesnt exist
       await modal.deferReply({ ephemeral: false });

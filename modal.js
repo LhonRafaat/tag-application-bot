@@ -33,85 +33,77 @@ export const getModal = (client) => {
     }
   });
   client.on("modalSubmit", async (modal, data) => {
-    if (modal.customId === "registerModal") {
-      const gameNameVal = modal.getTextInputValue("gameNameVal");
-      const platformVal = modal.getTextInputValue("platformVal");
-      const gameVal = modal.getTextInputValue("gameVal");
+    const gameNameVal = modal.getTextInputValue("gameNameVal");
+    const platformVal = modal.getTextInputValue("platformVal");
+    const gameVal = modal.getTextInputValue("gameVal");
 
-      //if its for voting we dont want to create a user
-      if (interactionType === "register") {
-        axios
-          .get(
-            `https://api.gametools.network/${gameVal}/all/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`
-          )
-          .then(async (returnedMember) => {
-            //check if the user's profile exists
-            // we got a problem here, names are case sensitive
-            if (returnedMember?.data?.id) {
-              //if the user's profile exists , then we create a new member in the db
+    //if its for voting we dont want to create a user
+    if (interactionType === "register") {
+      axios
+        .get(
+          `https://api.gametools.network/${gameVal}/all/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`
+        )
+        .then(async (returnedMember) => {
+          //check if the user's profile exists
+          // we got a problem here, names are case sensitive
+          if (returnedMember?.data?.id) {
+            //if the user's profile exists , then we create a new member in the db
 
-              createMember(
-                modal.user.id,
-                returnedMember.data.id,
-                "pc",
-                returnedMember.data.platoons
-                  .map((el) => el.id)
-                  //this is idf platoon id, hardcoded for now
-                  .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551"),
+            createMember(
+              modal.user.id,
+              returnedMember.data.id,
+              "pc",
+              returnedMember.data.platoons
+                .map((el) => el.id)
+                //this is idf platoon id, hardcoded for now
+                .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551"),
 
-                modal.user.username,
-                returnedMember.data.userName
-              );
-              // assign registered role
+              modal.user.username,
+              returnedMember.data.userName
+            );
+            // assign registered role
 
-              // addes a role when user is registered, hardcoded for now
+            // addes a role when user is registered, hardcoded for now
 
-              modal.member.roles.add("968118833187545088");
+            modal.member.roles.add("968118833187545088");
 
-              await modal.deferReply({ ephemeral: true });
-              modal.followUp({
-                content: "response collected",
+            await modal.deferReply({ ephemeral: true });
+            modal.followUp({
+              content: "response collected",
 
-                ephemeral: true,
-              });
-            } else {
-              await modal.deferReply({ ephemeral: true });
-              modal.followUp({
-                content: "User not found",
+              ephemeral: true,
+            });
+          } else {
+            await modal.deferReply({ ephemeral: true });
+            modal.followUp({
+              content: "User not found",
 
-                ephemeral: true,
-              });
-            }
-          });
-      } else if (interactionType === "vote") {
-        // search by game name, maybe if we can use discord Id would be great.
-
-        const attachment = await getPlate(
-          modal.member.displayName,
-          modal.user.id,
-          modal.member.displayAvatarURL({ format: "jpg" })
-        );
-        //TODO: send a error message when user doesnt exist
-        await modal.deferReply({ ephemeral: false });
-        const message = await modal.followUp({
-          // content: `name : ${member.fullName}
-          //           originId: ${member.originId}
-          //           platforms: ${member.platforms}
-
-          // `,
-
-          embeds: [voteEmbed],
-          ephemeral: true,
-          files: [attachment],
+              ephemeral: true,
+            });
+          }
         });
-        Promise.all([
-          message.react("🍎"),
-          message.react("🍊"),
-          message.react("🍇"),
-        ]).catch((error) =>
-          console.error("One of the emojis failed to react:", error)
-        );
-      }
+    } else if (interactionType === "vote") {
+      // search by game name, maybe if we can use discord Id would be great.
+
+      const attachment = await getPlate(
+        modal.member.displayName,
+        modal.user.id,
+        modal.member.displayAvatarURL({ format: "jpg" })
+      );
+      //TODO: send a error message when user doesnt exist
+      await modal.deferReply({ ephemeral: false });
+      const message = await modal.followUp({
+        embeds: [voteEmbed],
+        ephemeral: true,
+        files: [attachment],
+      });
+      Promise.all([
+        message.react("🍎"),
+        message.react("🍊"),
+        message.react("🍇"),
+      ]).catch((error) =>
+        console.error("One of the emojis failed to react:", error)
+      );
     }
   });
 

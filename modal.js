@@ -1,11 +1,11 @@
-import { Modal, TextInputComponent, showModal } from "discord-modals"; // Now we extract the showModal method
+import { showModal } from "discord-modals"; // Now we extract the showModal method
 import {
   createMember,
   findOne,
   findOneByName,
 } from "./services/memberService.js";
 import axios from "axios";
-import { voteEmbed } from "./UI/embeds/voteEmbed.js";
+import { getVoteEmbed } from "./UI/embeds/voteEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
 import { getSearchModal } from "./UI/searchModal.js";
 import { getRegisterModal } from "./UI/registerModal.js";
@@ -21,7 +21,7 @@ export const getModal = (client) => {
   let interactionType;
 
   client.on("interactionCreate", async (interaction) => {
-    if (interaction.commandName === "register") {
+    if (interaction.customId === "registerButton") {
       interactionType = "register";
       if (await findOne(interaction.member.id)) {
         const botReply = await interaction.reply(
@@ -34,7 +34,7 @@ export const getModal = (client) => {
           client: client, // Client to show the Modal through the Discord API.
           interaction: interaction, // Show the modal with interaction data.
         });
-    } else if (interaction.customId === "search") {
+    } else if (interaction.customId === "voteButton") {
       interactionType = "vote";
       showModal(getSearchModal(), {
         client: client, // Client to show the Modal through the Discord API.
@@ -113,9 +113,11 @@ export const getModal = (client) => {
         user.avatar
       );
       //TODO: send a error message when user doesnt exist
+
+      // big problem here, if ephemeral is true, we cannot react to the messag
       await modal.deferReply({ ephemeral: false });
       const message = await modal.followUp({
-        embeds: [voteEmbed],
+        embeds: [getVoteEmbed(user.userNames[0], user.discordId)],
         ephemeral: true,
         files: [attachment],
       });

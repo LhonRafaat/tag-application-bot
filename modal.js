@@ -1,55 +1,43 @@
 import { Modal, TextInputComponent, showModal } from "discord-modals"; // Now we extract the showModal method
-import {
-  createMember,
-  findOne,
-} from "./services/memberService.js";
+import { createMember, findOne } from "./services/memberService.js";
 import axios from "axios";
 import { voteEmbed } from "./voteEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
+import { getSearchModal } from "./UI/searchModal.js";
+import { getRegisterModal } from "./UI/registerModal.js";
 
 export const getModal = (client) => {
   let interactionType;
-  const modal = new Modal() // We create a Modal
-    .setCustomId("modal-customid")
-    .setTitle("Test of Discord-Modals!")
-    .addComponents(
-      new TextInputComponent() // We create a Text Input Component
-        .setCustomId("textinput-customid")
-        .setLabel("Some text Here")
-        .setStyle("SHORT") //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
-        .setMinLength(4)
-        .setMaxLength(10)
-        .setPlaceholder("Write a text here")
-        .setRequired(true) // If it's required or not
-    );
 
   client.on("interactionCreate", async (interaction) => {
-    if (interaction.commandName === "modal") {
-      interactionType = "modal";
+    if (interaction.commandName === "register") {
+      interactionType = "register";
       if (await findOne(interaction.member.id))
-        interaction.reply("You are already in the database");
+        interaction.reply("You are already registered.");
       else
-        showModal(modal, {
+        showModal(getRegisterModal(), {
           client: client, // Client to show the Modal through the Discord API.
           interaction: interaction, // Show the modal with interaction data.
         });
     } else if (interaction.customId === "search") {
       interactionType = "vote";
-      showModal(modal, {
+      showModal(getSearchModal(), {
         client: client, // Client to show the Modal through the Discord API.
         interaction: interaction, // Show the modal with interaction data.
       });
     }
   });
   client.on("modalSubmit", async (modal, data) => {
-    if (modal.customId === "modal-customid") {
-      const inputValue = modal.getTextInputValue("textinput-customid");
+    if (modal.customId === "registerModal") {
+      const gameNameVal = modal.getTextInputValue("gameNameVal");
+      const platformVal = modal.getTextInputValue("platformVal");
+      const gameVal = modal.getTextInputValue("gameVal");
 
       //if its for voting we dont want to create a user
-      if (interactionType === "modal") {
+      if (interactionType === "register") {
         axios
           .get(
-            `https://api.gametools.network/bfv/all/?format_values=false&name=${inputValue}&lang=en-us&platform=pc&`
+            `https://api.gametools.network/${gameVal}/all/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`
           )
           .then((returnedMember) => {
             //check if the user's profile exists

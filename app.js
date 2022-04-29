@@ -7,6 +7,7 @@ import discordModals from "discord-modals";
 import { getModal } from "./modal.js";
 import { tagEmbed } from "./UI/embeds/messageEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
+import { findOne } from "./services/memberService.js";
 
 env.config();
 const app = express();
@@ -72,10 +73,12 @@ client.on("messageCreate", async (msg) => {
     msg.reply("pong");
   }
   if (msg.content.toLowerCase() === "!myvotes") {
+    const user = await findOne(msg.author.id);
     const plate = await getPlate(
-      msg.author.username,
-      msg.author.id,
-      msg.author.displayAvatarURL({ format: "jpg" })
+      // taking the first username, maybe we increase it  ?
+      user.userNames[0],
+      user.discordId,
+      user.avatar
     );
     msg.reply({ files: [plate] });
   }

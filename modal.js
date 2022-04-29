@@ -5,6 +5,7 @@ import { voteEmbed } from "./voteEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
 import { getSearchModal } from "./UI/searchModal.js";
 import { getRegisterModal } from "./UI/registerModal.js";
+import { NO_EMOJI, YES_EMOJI } from "./emojies/emojies.js";
 
 export const getModal = (client) => {
   let interactionType;
@@ -12,9 +13,13 @@ export const getModal = (client) => {
   client.on("interactionCreate", async (interaction) => {
     if (interaction.commandName === "register") {
       interactionType = "register";
-      if (await findOne(interaction.member.id))
-        interaction.reply("You are already registered.");
-      else
+      if (await findOne(interaction.member.id)) {
+        const botReply = await interaction.reply(
+          "You are already registered one to link another account?"
+        );
+        botReply.react(YES_EMOJI);
+        botReply.react(NO_EMOJI);
+      } else
         showModal(getRegisterModal(), {
           client: client, // Client to show the Modal through the Discord API.
           interaction: interaction, // Show the modal with interaction data.
@@ -39,8 +44,9 @@ export const getModal = (client) => {
           .get(
             `https://api.gametools.network/${gameVal}/all/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`
           )
-          .then((returnedMember) => {
+          .then(async (returnedMember) => {
             //check if the user's profile exists
+            // we got a problem here, names are case sensitive
             if (returnedMember?.data?.id) {
               //if the user's profile exists , then we create a new member in the db
 
@@ -53,22 +59,30 @@ export const getModal = (client) => {
                   //this is idf platoon id, hardcoded for now
                   .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551"),
 
-                modal.user.username
+                modal.user.username,
+                returnedMember.data.userName
               );
+              // assign registered role
+
+              // addes a role when user is registered, hardcoded for now
+
+              modal.member.roles.add("968118833187545088");
+
+              await modal.deferReply({ ephemeral: true });
+              modal.followUp({
+                content: "response collected",
+
+                ephemeral: true,
+              });
+            } else {
+              await modal.deferReply({ ephemeral: true });
+              modal.followUp({
+                content: "User not found",
+
+                ephemeral: true,
+              });
             }
           });
-        // assign registered role
-
-        // addes a role when user is registered, hardcoded for now
-
-        modal.member.roles.add("968118833187545088");
-
-        await modal.deferReply({ ephemeral: true });
-        modal.followUp({
-          content: "response collected",
-
-          ephemeral: true,
-        });
       } else if (interactionType === "vote") {
         // search by game name, maybe if we can use discord Id would be great.
 

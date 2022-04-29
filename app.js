@@ -8,6 +8,7 @@ import { getModal } from "./modal.js";
 import { tagEmbed } from "./UI/embeds/messageEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
 import { findOne } from "./services/memberService.js";
+import { getButton } from "./UI/button.js";
 
 env.config();
 const app = express();
@@ -36,14 +37,22 @@ client.on("ready", async () => {
   channel.bulkDelete(100);
 
   //TODO move the button to its own file
-  const row = new MessageActionRow().addComponents(
-    new MessageButton()
-      .setCustomId("search")
-      .setLabel("Search for a user")
-      .setStyle("PRIMARY")
-  );
 
-  const message = await channel.send({ embeds: [tagEmbed], components: [row] });
+  const message = await channel.send({
+    embeds: [tagEmbed],
+    components: [
+      getButton([
+        new MessageButton()
+          .setCustomId("voteButton")
+          .setLabel("Vote now !")
+          .setStyle("DANGER"),
+        new MessageButton()
+          .setCustomId("registerButton")
+          .setLabel("Register")
+          .setStyle("SUCCESS"),
+      ]),
+    ],
+  });
   message.pin();
 
   console.log(`Logged in as ${client.user.tag}!`);

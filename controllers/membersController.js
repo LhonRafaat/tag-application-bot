@@ -15,6 +15,6 @@ export const getMember = async (req, res) => {
 };
 
 export const deleteMember = async (req, res) => {
-  deleteOne(req.params.id);
+  await deleteOne(req.params.id);
   return res.status(200).json({ message: "Member deleted" });
 };

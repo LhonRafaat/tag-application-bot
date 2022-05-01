@@ -16,6 +16,8 @@ import {
   SKILL_EMOJI,
   YES_EMOJI,
 } from "./emojies/emojies.js";
+import { getButton } from "./UI/button.js";
+import { MessageButton } from "discord.js";
 
 export const getModal = (client) => {
   let interactionType;
@@ -115,19 +117,35 @@ export const getModal = (client) => {
       //TODO: send a error message when user doesnt exist
 
       // big problem here, if ephemeral is true, we cannot react to the messag
-      await modal.deferReply({ ephemeral: false });
+      await modal.deferReply({ ephemeral: true });
       const message = await modal.followUp({
         embeds: [getVoteEmbed(user.userNames[0], user.discordId)],
         ephemeral: true,
         files: [attachment],
+        components: [
+          getButton([
+            new MessageButton()
+              .setCustomId("skillsId")
+              .setLabel("Skills")
+              .setStyle("DANGER"),
+            new MessageButton()
+              .setCustomId("contributionId")
+              .setLabel("contribution")
+              .setStyle("SUCCESS"),
+            new MessageButton()
+              .setCustomId("personalityId")
+              .setLabel("personality")
+              .setStyle("PRIMARY"),
+          ]),
+        ],
       });
-      Promise.all([
-        message.react(SKILL_EMOJI),
-        message.react(CONTRIBUTION_EMOJI),
-        message.react(PERSONALITY_EMOJI),
-      ]).catch((error) =>
-        console.error("One of the emojis failed to react:", error)
-      );
+      // Promise.all([
+      //   message.react(SKILL_EMOJI),
+      //   message.react(CONTRIBUTION_EMOJI),
+      //   message.react(PERSONALITY_EMOJI),
+      // ]).catch((error) =>
+      //   console.error("One of the emojis failed to react:", error)
+      // );
     }
   });
 

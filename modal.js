@@ -84,6 +84,7 @@ export const getModal = (client) => {
 
               ephemeral: true,
             });
+            // show them their plate here
           } else {
             await modal.deferReply({ ephemeral: true });
             modal.followUp({
@@ -101,6 +102,13 @@ export const getModal = (client) => {
       if (!user) {
         await modal.deferReply({ ephemeral: true });
         return modal.followUp("User not found");
+      }
+
+      if (user.discordId.toString() === modal.member.id.toString()) {
+        await modal.deferReply({ ephemeral: true });
+        return modal.followUp(
+          "You cannot vote for yourself, if you wish to see your own profile, use '!myvotes'"
+        );
       }
 
       //TODO : how can I get the user avatar from discord?

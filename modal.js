@@ -21,17 +21,46 @@ import { MessageButton } from "discord.js";
 
 export const getModal = (client) => {
   let interactionType;
+  let searchedName;
 
   client.on("interactionCreate", async (interaction) => {
-    console.log("here");
+    console.log(interaction.customId);
+
+    const user = await findOne(interaction.member.id);
+    const dbUser = await findOneByName(searchedName);
+
+    // we check so we dont add the bots votes
+    if (dbUser) {
+      // not the bot
+      if (interaction.member.username !== "tag") {
+        if (interaction.customId === "skillsId") {
+          dbUser.skills += 1;
+        } else if (interaction.customId === "contributionId") {
+          dbUser.contribution += 1;
+        } else if (interaction.customId === "personalityId") {
+          dbUser.personality += 1;
+        }
+        if (
+          ["skillsId", "contributionId", "personalityId"].includes(
+            interaction.customId
+          )
+        ) {
+          await dbUser.save();
+          return interaction.reply({
+            content: "successfully voted!",
+            ephemeral: true,
+          });
+        }
+      }
+    }
     if (interaction.customId === "registerButton") {
       interactionType = "register";
-      if (await findOne(interaction.member.id)) {
+      if (dbUser) {
         const botReply = await interaction.reply(
           "You are already registered one to link another account?"
         );
-        botReply.react(YES_EMOJI);
-        botReply.react(NO_EMOJI);
+        // botReply.react(YES_EMOJI);
+        // botReply.react(NO_EMOJI);
       } else
         showModal(getRegisterModal(), {
           client: client, // Client to show the Modal through the Discord API.
@@ -107,12 +136,14 @@ export const getModal = (client) => {
         return modal.followUp("User not found");
       }
 
-      // if (user.discordId.toString() === modal.member.id.toString()) {
-      //   await modal.deferReply({ ephemeral: true });
-      //   return modal.followUp(
-      //     "You cannot vote for yourself, if you wish to see your own profile, use '!myvotes'"
-      //   );
-      // }
+      searchedName = usernameVal;
+
+      if (user.discordId.toString() === modal.member.id.toString()) {
+        await modal.deferReply({ ephemeral: true });
+        return modal.followUp(
+          "You cannot vote for yourself, if you wish to see your own profile, use '!myvotes'"
+        );
+      }
 
       //TODO : how can I get the user avatar from discord?
 
@@ -159,22 +190,20 @@ export const getModal = (client) => {
   });
 
   client.on("messageReactionAdd", async (reaction, user) => {
-    const dbUser = await findOne(user.id);
-
-    // we check so we dont add the bots votes
-    if (dbUser) {
-      // not the bot
-      if (user.username !== "tag") {
-        if (reaction.emoji.name === SKILL_EMOJI) {
-          dbUser.skills += 1;
-        } else if (reaction.emoji.name === CONTRIBUTION_EMOJI) {
-          dbUser.contribution += 1;
-        } else if (reaction.emoji.name === PERSONALITY_EMOJI) {
-          dbUser.personality += 1;
-        }
-      }
-
-      await dbUser.save();
-    }
+    // const dbUser = await findOne(user.id);
+    // // we check so we dont add the bots votes
+    // if (dbUser) {
+    //   // not the bot
+    //   if (user.username !== "tag") {
+    //     if (reaction.emoji.name === SKILL_EMOJI) {
+    //       dbUser.skills += 1;
+    //     } else if (reaction.emoji.name === CONTRIBUTION_EMOJI) {
+    //       dbUser.contribution += 1;
+    //     } else if (reaction.emoji.name === PERSONALITY_EMOJI) {
+    //       dbUser.personality += 1;
+    //     }
+    //   }
+    //   await dbUser.save();
+    // }
   });
 };

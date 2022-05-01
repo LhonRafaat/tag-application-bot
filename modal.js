@@ -21,6 +21,7 @@ export const getModal = (client) => {
   let interactionType;
 
   client.on("interactionCreate", async (interaction) => {
+    console.log("here");
     if (interaction.customId === "registerButton") {
       interactionType = "register";
       if (await findOne(interaction.member.id)) {
@@ -104,12 +105,12 @@ export const getModal = (client) => {
         return modal.followUp("User not found");
       }
 
-      if (user.discordId.toString() === modal.member.id.toString()) {
-        await modal.deferReply({ ephemeral: true });
-        return modal.followUp(
-          "You cannot vote for yourself, if you wish to see your own profile, use '!myvotes'"
-        );
-      }
+      // if (user.discordId.toString() === modal.member.id.toString()) {
+      //   await modal.deferReply({ ephemeral: true });
+      //   return modal.followUp(
+      //     "You cannot vote for yourself, if you wish to see your own profile, use '!myvotes'"
+      //   );
+      // }
 
       //TODO : how can I get the user avatar from discord?
 

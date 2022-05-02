@@ -95,7 +95,8 @@ client.on("messageCreate", async (msg) => {
       // taking the first username, maybe we increase it  ?
       user.userNames[0],
       user.discordId,
-      user.avatar
+      user.avatar,
+      user.userNames[1] ? user.userNames[1] : undefined
     );
     msg.reply({ files: [plate] });
   }

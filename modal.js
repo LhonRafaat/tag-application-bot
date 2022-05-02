@@ -49,7 +49,8 @@ export const getModal = (client) => {
       const attachment = await getPlate(
         discordUser.userNames[0],
         discordUser.discordId,
-        discordUser.avatar
+        discordUser.avatar,
+        discordUser.userNames[1] ? discordUser.userNames[1] : undefined
       );
       //TODO: send a error message when user doesnt exist
 

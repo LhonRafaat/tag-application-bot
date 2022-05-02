@@ -2,7 +2,7 @@ import Canvas from "canvas";
 import { MessageAttachment } from "discord.js";
 import { findOne } from "../services/memberService.js";
 
-export const getPlate = async (name, discordId, userAvatar) => {
+export const getPlate = async (name, discordId, userAvatar, secondName) => {
   //required points for the votes
   const requiredPoints = 20;
   // 1500 is the width of the white rect
@@ -28,6 +28,12 @@ export const getPlate = async (name, discordId, userAvatar) => {
 
   // Actually fill the text with a solid color
   context.fillText(name, canvas.width / 5.5, canvas.height / 3.0);
+  context.fillText(
+    `, (${secondName})`,
+    canvas.width / 2.5,
+    canvas.height / 3.0,
+    250
+  );
   context.font = "50px sans-serif";
   context.fillText("Skills :", canvas.width / 5.5, canvas.height / 2.0);
   context.fillText("Contribution :", 100, canvas.height / 1.6);

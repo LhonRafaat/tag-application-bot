@@ -11,6 +11,7 @@ const membersSchema = new Schema(
     avatar: { type: String, required: true },
     fullName: { type: String, required: true },
     skills: { type: Number, default: 0 },
+    karma: { type: Number, default: 0 },
     personality: { type: Number, default: 0 },
     contribution: { type: Number, default: 0 },
   },

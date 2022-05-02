@@ -43,3 +43,13 @@ export const deleteOne = async (id) => {
 
   await Members.findByIdAndDelete(id);
 };
+
+export const updateUser = async (discordId, originId, userName, platform) => {
+  return await Members.findOneAndUpdate(
+    discordId,
+    {
+      $push: { userNames: userName, platforms: platform, originIds: originId },
+    },
+    { new: true, runValidators: true }
+  );
+};

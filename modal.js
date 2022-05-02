@@ -3,21 +3,17 @@ import {
   createMember,
   findOne,
   findOneByName,
+  updateUser,
 } from "./services/memberService.js";
 import axios from "axios";
 import { getVoteEmbed } from "./UI/embeds/voteEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
 import { getSearchModal } from "./UI/searchModal.js";
 import { getRegisterModal } from "./UI/registerModal.js";
-import {
-  CONTRIBUTION_EMOJI,
-  NO_EMOJI,
-  PERSONALITY_EMOJI,
-  SKILL_EMOJI,
-  YES_EMOJI,
-} from "./emojies/emojies.js";
+
 import { getButton } from "./UI/button.js";
 import { MessageButton } from "discord.js";
+import { linkAnotherAccountModal } from "./UI/linkAnotherAccountModal.js";
 
 export const getModal = (client) => {
   let interactionType;
@@ -110,46 +106,62 @@ export const getModal = (client) => {
     }
     if (interaction.customId === "registerButton") {
       interactionType = "register";
-      if (dbUser) {
-        const botReply = await interaction.reply(
-          "You are already registered one to link another account?"
-        );
-        // botReply.react(YES_EMOJI);
-        // botReply.react(NO_EMOJI);
+      if (user) {
+        await interaction.reply({
+          content: "You are already registered , want to link another account?",
+          ephemeral: true,
+
+          components: [
+            getButton([
+              new MessageButton()
+                .setCustomId("wantToRegister")
+                .setLabel("Yes")
+                .setStyle("SUCCESS"),
+              new MessageButton()
+                .setCustomId("refuseToRegister")
+                .setLabel("No")
+                .setStyle("DANGER"),
+            ]),
+          ],
+        });
       } else
         showModal(getRegisterModal(), {
           client: client, // Client to show the Modal through the Discord API.
           interaction: interaction, // Show the modal with interaction data.
         });
-    } else if (interaction.customId === "voteButton") {
-      interactionType = "vote";
-      showModal(getSearchModal(), {
+    } else if (interaction.customId === "wantToRegister") {
+      showModal(linkAnotherAccountModal(), {
         client: client, // Client to show the Modal through the Discord API.
         interaction: interaction, // Show the modal with interaction data.
       });
+      interactionType = "linkAnotherAccount";
+      // updateUser(user.discordId, )
+    } else if (interaction.customId === "refuseToRegister") {
+      return interaction.reply("okay");
     }
   });
-  client.on("modalSubmit", async (modal, data) => {
+  client.on("modalSubmit", async (modal) => {
     const gameNameVal = modal.getTextInputValue("gameNameVal");
     const platformVal = modal.getTextInputValue("platformVal");
     const gameVal = modal.getTextInputValue("gameVal");
 
     //if its for voting we dont want to create a user
-    if (interactionType === "register") {
-      axios
-        .get(
-          `https://api.gametools.network/${gameVal}/all/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`
-        )
-        .then(async (returnedMember) => {
-          //check if the user's profile exists
-          // we got a problem here, names are case sensitive
-          if (returnedMember?.data?.id) {
-            //if the user's profile exists , then we create a new member in the db
 
+    axios
+      .get(
+        `https://api.gametools.network/${gameVal}/all/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`
+      )
+      .then(async (returnedMember) => {
+        //check if the user's profile exists
+        // we got a problem here, names are case sensitive
+        if (returnedMember?.data?.id) {
+          //if the user's profile exists , then we create a new member in the db
+
+          if (interactionType === "register") {
             createMember(
               modal.user.id,
               returnedMember.data.id,
-              "pc",
+              platformVal,
               returnedMember.data.platoons
                 .map((el) => el.id)
                 //this is idf platoon id, hardcoded for now
@@ -171,69 +183,44 @@ export const getModal = (client) => {
 
               ephemeral: true,
             });
-            // show them their plate here
-          } else {
+          } else if (interactionType === "linkAnotherAccount") {
+            const user = await findOne(modal.member.id);
+            if (user.originIds.includes(returnedMember.data.id)) {
+              await modal.deferReply({ ephemeral: true });
+              return modal.followUp({
+                content: "you have already registered this account",
+
+                ephemeral: true,
+              });
+            }
+            if (!user.userNames.includes(returnedMember.data.userName))
+              user.userNames.push(returnedMember.data.userName);
+            if (!user.originIds.includes(returnedMember.data.id))
+              user.originIds.push(returnedMember.data.id);
+            if (!user.platforms.includes(platformVal))
+              user.platforms.push(platformVal);
+            if (!user.hasTag)
+              (user.hasTag = returnedMember.data.platoons
+                .map((el) => el.id)
+                //this is idf platoon id, hardcoded for now
+                .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551")),
+                await user.save();
             await modal.deferReply({ ephemeral: true });
             modal.followUp({
-              content: "User not found",
+              content: "response collected",
 
               ephemeral: true,
             });
           }
-        });
-    } else if (interactionType === "vote") {
-      // search by game name, maybe if we can use discord Id would be great.
+          // show them their plate here
+        } else {
+          await modal.deferReply({ ephemeral: true });
+          modal.followUp({
+            content: "User not found",
 
-      const usernameVal = modal.getTextInputValue("usernameVal");
-      const user = await findOneByName(usernameVal);
-      if (!user) {
-        await modal.deferReply({ ephemeral: true });
-        return modal.followUp("User not found");
-      }
-
-      searchedName = usernameVal;
-
-      if (user.discordId.toString() === modal.member.id.toString()) {
-        await modal.deferReply({ ephemeral: true });
-        return modal.followUp(
-          "You cannot vote for yourself, if you wish to see your own profile, use '!myvotes'"
-        );
-      }
-
-      //TODO : how can I get the user avatar from discord?
-
-      // I could have just passed the whole user object here instead of passing discord id and fetching it again
-      // in the plate, but idk why I did that ...
-      const attachment = await getPlate(
-        user.userNames[0],
-        user.discordId,
-        user.avatar
-      );
-      //TODO: send a error message when user doesnt exist
-
-      // big problem here, if ephemeral is true, we cannot react to the messag
-      await modal.deferReply({ ephemeral: true });
-      await modal.followUp({
-        embeds: [getVoteEmbed(user.userNames[0], user.discordId)],
-        ephemeral: true,
-        files: [attachment],
-        components: [
-          getButton([
-            new MessageButton()
-              .setCustomId("skillsId")
-              .setLabel("Skills")
-              .setStyle("DANGER"),
-            new MessageButton()
-              .setCustomId("contributionId")
-              .setLabel("contribution")
-              .setStyle("SUCCESS"),
-            new MessageButton()
-              .setCustomId("personalityId")
-              .setLabel("personality")
-              .setStyle("PRIMARY"),
-          ]),
-        ],
+            ephemeral: true,
+          });
+        }
       });
-    }
   });
 };

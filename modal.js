@@ -24,7 +24,62 @@ export const getModal = (client) => {
   let searchedName;
 
   client.on("interactionCreate", async (interaction) => {
-    console.log(interaction.customId);
+    if (interaction.commandName === "vote") {
+      const mentionedUser = interaction.options.getUser("username");
+
+      const discordUser = await findOne(mentionedUser.id);
+
+      if (!discordUser) {
+        return interaction.reply({
+          content: "User not found",
+          ephemeral: true,
+        });
+      }
+
+      if (
+        discordUser.discordId.toString() === interaction.member.id.toString()
+      ) {
+        return interaction.reply({
+          content:
+            "You cannot vote for yourself, if you wish to see your own profile, use '!myvotes'",
+          ephemeral: true,
+        });
+      }
+
+      //TODO : how can I get the user avatar from discord?
+
+      // I could have just passed the whole user object here instead of passing discord id and fetching it again
+      // in the plate, but idk why I did that ...
+      const attachment = await getPlate(
+        discordUser.userNames[0],
+        discordUser.discordId,
+        discordUser.avatar
+      );
+      //TODO: send a error message when user doesnt exist
+
+      // big problem here, if ephemeral is true, we cannot react to the messag
+      await interaction.reply({
+        embeds: [getVoteEmbed(discordUser.userNames[0], discordUser.discordId)],
+        ephemeral: true,
+        files: [attachment],
+        components: [
+          getButton([
+            new MessageButton()
+              .setCustomId("skillsId")
+              .setLabel("Skills")
+              .setStyle("DANGER"),
+            new MessageButton()
+              .setCustomId("contributionId")
+              .setLabel("contribution")
+              .setStyle("SUCCESS"),
+            new MessageButton()
+              .setCustomId("personalityId")
+              .setLabel("personality")
+              .setStyle("PRIMARY"),
+          ]),
+        ],
+      });
+    }
 
     const user = await findOne(interaction.member.id);
     const dbUser = await findOneByName(searchedName);
@@ -158,7 +213,7 @@ export const getModal = (client) => {
 
       // big problem here, if ephemeral is true, we cannot react to the messag
       await modal.deferReply({ ephemeral: true });
-      const message = await modal.followUp({
+      await modal.followUp({
         embeds: [getVoteEmbed(user.userNames[0], user.discordId)],
         ephemeral: true,
         files: [attachment],
@@ -179,31 +234,6 @@ export const getModal = (client) => {
           ]),
         ],
       });
-      // Promise.all([
-      //   message.react(SKILL_EMOJI),
-      //   message.react(CONTRIBUTION_EMOJI),
-      //   message.react(PERSONALITY_EMOJI),
-      // ]).catch((error) =>
-      //   console.error("One of the emojis failed to react:", error)
-      // );
     }
-  });
-
-  client.on("messageReactionAdd", async (reaction, user) => {
-    // const dbUser = await findOne(user.id);
-    // // we check so we dont add the bots votes
-    // if (dbUser) {
-    //   // not the bot
-    //   if (user.username !== "tag") {
-    //     if (reaction.emoji.name === SKILL_EMOJI) {
-    //       dbUser.skills += 1;
-    //     } else if (reaction.emoji.name === CONTRIBUTION_EMOJI) {
-    //       dbUser.contribution += 1;
-    //     } else if (reaction.emoji.name === PERSONALITY_EMOJI) {
-    //       dbUser.personality += 1;
-    //     }
-    //   }
-    //   await dbUser.save();
-    // }
   });
 };

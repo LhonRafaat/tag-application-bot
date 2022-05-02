@@ -64,8 +64,16 @@ client.on("ready", async () => {
     commands = client?.application.commands;
   }
   commands?.create({
-    name: "register",
-    description: "register for idf tag application",
+    name: "vote",
+    description: "vote for user",
+    options: [
+      {
+        name: "username",
+        required: true,
+        description: "username of the user to vote for",
+        type: "USER",
+      },
+    ],
   });
 });
 discordModals(client);

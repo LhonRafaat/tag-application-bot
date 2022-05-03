@@ -25,22 +25,50 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   const avatarFrame = await Canvas.loadImage("./assets/images/frame.png");
   const numBox = await Canvas.loadImage("./assets/images/num-box.png");
   const fillBar = await Canvas.loadImage("./assets/images/fill-bar.png");
-  const sparks = await Canvas.loadImage("./assets/images/sparks.png");
+  const numBoxFull = await Canvas.loadImage("./assets/images/num-box-full.png");
+  const sparkles = await Canvas.loadImage("./assets/images/sparkles.png");
+  const shiny = await Canvas.loadImage("./assets/images/shiny.png");
+  const moreShiny = await Canvas.loadImage("./assets/images/more-shiny.png");
 
   //the avatar and frame have 15 pixels of space differencem and 42 in high and width,, this is an estimate
   context.drawImage(avatar, 40, 40, 208, 208);
   context.drawImage(avatarFrame, 25, 25, 250, 250);
-  context.drawImage(numBox, canvas.width / 2 + 150, 309, 55, 55);
-  context.drawImage(numBox, canvas.width / 2 + 150, 379, 55, 55);
-  context.drawImage(numBox, canvas.width / 2 + 150, 449, 55, 55);
+  context.drawImage(
+    20 === 20 ? numBoxFull : numBox,
+    canvas.width / 2 + 150,
+    309,
+    55,
+    55
+  );
+  context.drawImage(
+    user.contribution === 20 ? numBoxFull : numBox,
+    canvas.width / 2 + 150,
+    449,
+    55,
+    55
+  );
+  context.drawImage(
+    user.personality === 20 ? numBoxFull : numBox,
+    canvas.width / 2 + 150,
+    379,
+    55,
+    55
+  );
+  context.globalCompositeOperation = "lighter";
+  context.drawImage(sparkles, 20, 220, 800, 200);
+  context.drawImage(sparkles, 20, 290, 800, 200);
+  context.drawImage(sparkles, 20, 360, 800, 200);
+  context.globalCompositeOperation = "lighter";
+  context.drawImage(shiny, canvas.width / 2 + 30, 290);
+  context.drawImage(moreShiny, canvas.width / 2 - 50, 320);
   // calculating the fill bar width
   const barLength = canvas.width / 2 / requiredPoints;
 
   context.globalCompositeOperation = "lighter";
   // the category name characters are not even , so I need to add numbers to make the fill bar even
-  context.drawImage(fillBar, 100, 260, 5 * barLength + 50, 130);
-  context.drawImage(fillBar, 330, 330, 20 * barLength - 180, 130);
-  context.drawImage(fillBar, 150, 400, 20 * barLength, 130);
+  context.drawImage(fillBar, 100, 260, 20 * barLength + 50, 150);
+  context.drawImage(fillBar, 330, 330, 19 * barLength - 180, 150);
+  context.drawImage(fillBar, 150, 400, 19 * barLength, 150);
 
   context.strokeRect(0, 0, canvas.width, canvas.height);
 
@@ -51,9 +79,18 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.fillStyle = "#67FFFF";
 
   // Actually fill the text with a solid color
-  context.fillText(name.toUpperCase(), 288, canvas.height / 3.0);
-  context.font = "200 40px sans-serif";
-  context.fillText(`(${secondName})`, 550, canvas.height / 3.0);
+  context.fillText(name.toUpperCase(), 288, canvas.height / 4.0);
+  context.font = "400 40px sans-serif";
+  if (user.secondName)
+    context.fillText(`(${secondName})`, 550, canvas.height / 4.0);
+  context.fillStyle = "white";
+
+  context.fillText(`KARMA`, 288, canvas.height / 2.5);
+  context.fillStyle = "#67FFFF";
+
+  context.fillText(`${user.karma ? user.karma : 0}`, 450, canvas.height / 2.5);
+
+  context.font = "400 35px sans-serif";
 
   context.fillText("SKILL", 40, 350);
   context.fillText("CONTRIBUTION", 40, 420);
@@ -65,9 +102,11 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
 
   // context.fillRect(480, 220, user.skills * unit, 10);
   context.fillStyle = "#ffffff";
-  context.globalAlpha = 0.2;
 
+  context.globalAlpha = 0.1;
   context.fillRect(150, 330, canvas.width / 2, 10);
+  context.fillRect(150, 400, canvas.width / 2, 10);
+  context.fillRect(150, 470, canvas.width / 2, 10);
   context.globalAlpha = 1.0;
 
   // context.fillStyle = grd;
@@ -75,8 +114,8 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
 
   context.font = "600 30px sans-serif";
 
-  context.fillText("12", canvas.width / 2 + 158, 350);
-  context.fillText("20", canvas.width / 2 + 158, 420);
+  context.fillText("20", canvas.width / 2 + 158, 350);
+  context.fillText("19", canvas.width / 2 + 158, 420);
   context.fillText("10", canvas.width / 2 + 158, 490);
 
   // Use the helpful Attachment class structure to process the file for you

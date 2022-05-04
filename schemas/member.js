@@ -4,6 +4,7 @@ const { Schema, model } = mongoose;
 const membersSchema = new Schema(
   {
     discordId: { type: String, required: true },
+    //this can include ps id and xbox id aswell
     originIds: [{ type: String, required: true }],
     platforms: [{ type: String, required: true }],
     userNames: [{ type: String, required: true }],

@@ -34,41 +34,71 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.drawImage(avatar, 40, 40, 208, 208);
   context.drawImage(avatarFrame, 25, 25, 250, 250);
   context.drawImage(
-    20 === 20 ? numBoxFull : numBox,
+    user.skills === requiredPoints ? numBoxFull : numBox,
     canvas.width / 2 + 150,
     309,
     55,
     55
   );
   context.drawImage(
-    user.contribution === 20 ? numBoxFull : numBox,
+    user.contribution === requiredPoints ? numBoxFull : numBox,
     canvas.width / 2 + 150,
     449,
     55,
     55
   );
   context.drawImage(
-    user.personality === 20 ? numBoxFull : numBox,
+    user.personality === requiredPoints ? numBoxFull : numBox,
     canvas.width / 2 + 150,
     379,
     55,
     55
   );
   context.globalCompositeOperation = "lighter";
-  context.drawImage(sparkles, 20, 220, 800, 200);
-  context.drawImage(sparkles, 20, 290, 800, 200);
-  context.drawImage(sparkles, 20, 360, 800, 200);
+  user.skills > requiredPoints / 2 &&
+    context.drawImage(sparkles, 20, 220, 800, 200);
+  user.contribution > requiredPoints / 2 &&
+    context.drawImage(sparkles, 20, 290, 800, 200);
+
+  user.personality > requiredPoints / 2 &&
+    context.drawImage(sparkles, 20, 360, 800, 200);
   context.globalCompositeOperation = "lighter";
-  context.drawImage(shiny, canvas.width / 2 + 30, 290);
-  context.drawImage(moreShiny, canvas.width / 2 - 50, 320);
+
+  if (user.skills === requiredPoints) {
+    context.drawImage(shiny, canvas.width / 2 + 30, 290);
+    context.drawImage(moreShiny, canvas.width / 2 - 50, 320);
+  }
+  if (user.contribution === requiredPoints) {
+    context.drawImage(shiny, canvas.width / 2 + 30, 449);
+    context.drawImage(moreShiny, canvas.width / 2 - 50, 479);
+  }
+  if (user.personality === requiredPoints) {
+    context.drawImage(shiny, canvas.width / 2 + 30, 379);
+    context.drawImage(moreShiny, canvas.width / 2 - 50, 409);
+  }
   // calculating the fill bar width
   const barLength = canvas.width / 2 / requiredPoints;
 
   context.globalCompositeOperation = "lighter";
   // the category name characters are not even , so I need to add numbers to make the fill bar even
-  context.drawImage(fillBar, 100, 260, 20 * barLength + 50, 150);
-  context.drawImage(fillBar, 330, 330, 19 * barLength - 180, 150);
-  context.drawImage(fillBar, 150, 400, 19 * barLength, 150);
+  context.drawImage(
+    fillBar,
+    100,
+    260,
+    user.skills > 0 ? user.skills * barLength + 50 : user.skills * barLength,
+    150
+  );
+  //make sure the votes are more than 5 then subtract it by 180
+  context.drawImage(
+    fillBar,
+    330,
+    330,
+    user.contribution > requiredPoints / 4
+      ? user.contribution * barLength - 180
+      : user.contribution * barLength,
+    150
+  );
+  context.drawImage(fillBar, 150, 400, user.personality * barLength, 150);
 
   context.strokeRect(0, 0, canvas.width, canvas.height);
 
@@ -113,10 +143,22 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   // context.fillRect(canvas.width / 2 + 190, 320, 42, 42);
 
   context.font = "600 30px sans-serif";
-
-  context.fillText("20", canvas.width / 2 + 158, 350);
-  context.fillText("19", canvas.width / 2 + 158, 420);
-  context.fillText("10", canvas.width / 2 + 158, 490);
+  // the number padding look bad when its single number,but when its two it looks better
+  context.fillText(
+    user.skills > 9 ? user.skills : "0" + user.skills,
+    canvas.width / 2 + 158,
+    350
+  );
+  context.fillText(
+    user.contribution > 9 ? user.contribution : "0" + user.contribution,
+    canvas.width / 2 + 158,
+    420
+  );
+  context.fillText(
+    user.personality > 9 ? user.personality : "0" + user.personality,
+    canvas.width / 2 + 158,
+    490
+  );
 
   // Use the helpful Attachment class structure to process the file for you
   const attachment = new MessageAttachment(

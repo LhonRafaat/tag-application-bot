@@ -183,10 +183,18 @@ export const getModal = (client) => {
       .get(
         `https://api.gametools.network/${gameVal}/all/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`
       )
+      .catch(async (err) => {
+        await modal.deferReply({ ephemeral: true });
+        return modal.followUp({
+          content: "User not found",
+
+          ephemeral: true,
+        });
+      })
       .then(async (returnedMember) => {
         //check if the user's profile exists
         // we got a problem here, names are case sensitive
-        if (returnedMember?.data?.id) {
+        if (returnedMember?.data) {
           //if the user's profile exists , then we create a new member in the db
 
           if (interactionType === "register") {
@@ -245,13 +253,6 @@ export const getModal = (client) => {
             });
           }
           // show them their plate here
-        } else {
-          await modal.deferReply({ ephemeral: true });
-          modal.followUp({
-            content: "User not found",
-
-            ephemeral: true,
-          });
         }
       });
   });

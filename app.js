@@ -43,10 +43,6 @@ client.on("ready", async () => {
     components: [
       getButton([
         new MessageButton()
-          .setCustomId("voteButton")
-          .setLabel("Vote now !")
-          .setStyle("DANGER"),
-        new MessageButton()
           .setCustomId("registerButton")
           .setLabel("Register")
           .setStyle("SUCCESS"),
@@ -110,7 +106,7 @@ client.on("messageCreate", async (msg) => {
       user.avatar,
       user.userNames[1] ? user.userNames[1] : undefined
     );
-    msg.reply({ files: [plate] });
+    return msg.reply({ files: [plate] });
   }
 });
 

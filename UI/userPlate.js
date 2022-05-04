@@ -11,6 +11,12 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   const canvas = Canvas.createCanvas(1700, 550);
   const context = canvas.getContext("2d");
 
+  Canvas.registerFont("./assets/fonts/share-regular.ttf", {
+    family: "share-regular",
+  });
+  Canvas.registerFont("./assets/fonts/share-bold.ttf", {
+    family: "share-bold",
+  });
   const background = await Canvas.loadImage("./assets/images/bf-bg.png");
   const idfLogo = await Canvas.loadImage("./assets/images/idf-trans.png");
   var grd = context.createLinearGradient(0, 0, 2, 0);
@@ -36,23 +42,23 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.drawImage(
     user.skills === requiredPoints ? numBoxFull : numBox,
     canvas.width / 2 + 150,
-    309,
-    55,
-    55
+    315,
+    50,
+    48
   );
   context.drawImage(
     user.contribution === requiredPoints ? numBoxFull : numBox,
     canvas.width / 2 + 150,
     449,
-    55,
-    55
+    50,
+    48
   );
   context.drawImage(
     user.personality === requiredPoints ? numBoxFull : numBox,
     canvas.width / 2 + 150,
     379,
-    55,
-    55
+    50,
+    48
   );
   context.globalCompositeOperation = "lighter";
   user.skills > requiredPoints / 2 &&
@@ -65,15 +71,15 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.globalCompositeOperation = "lighter";
 
   if (user.skills === requiredPoints) {
-    context.drawImage(shiny, canvas.width / 2 + 30, 290);
+    context.drawImage(shiny, canvas.width / 2 + 15, 290);
     context.drawImage(moreShiny, canvas.width / 2 - 50, 320);
   }
   if (user.contribution === requiredPoints) {
-    context.drawImage(shiny, canvas.width / 2 + 30, 449);
+    context.drawImage(shiny, canvas.width / 2 + 15, 449);
     context.drawImage(moreShiny, canvas.width / 2 - 50, 479);
   }
   if (user.personality === requiredPoints) {
-    context.drawImage(shiny, canvas.width / 2 + 30, 379);
+    context.drawImage(shiny, canvas.width / 2 + 15, 379);
     context.drawImage(moreShiny, canvas.width / 2 - 50, 409);
   }
   // calculating the fill bar width
@@ -103,25 +109,26 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.strokeRect(0, 0, canvas.width, canvas.height);
 
   // Select the font size and type from one of the natively available fonts
-  context.font = "900 50px sans-serif";
+  context.font = "64px share-bold";
 
   // Select the style that will be used to fill the text in
   context.fillStyle = "#67FFFF";
 
   // Actually fill the text with a solid color
   context.fillText(name.toUpperCase(), 288, canvas.height / 4.0);
-  context.font = "400 40px sans-serif";
-  if (user.secondName)
-    context.fillText(`(${secondName})`, 550, canvas.height / 4.0);
+  context.font = "40px share-regular";
+
+  if (secondName) context.fillText(`(${secondName})`, 600, canvas.height / 4.3);
   context.fillStyle = "white";
 
-  context.fillText(`KARMA`, 288, canvas.height / 2.5);
+  context.font = "28px share-regular";
+
+  context.fillText(`KARMA`, 288, canvas.height / 2.8);
   context.fillStyle = "#67FFFF";
 
-  context.fillText(`${user.karma ? user.karma : 0}`, 450, canvas.height / 2.5);
+  context.fillText(`${user.karma ? user.karma : 0}`, 400, canvas.height / 2.8);
 
-  context.font = "400 35px sans-serif";
-
+  context.font = "32px share-regular";
   context.fillText("SKILL", 40, 350);
   context.fillText("CONTRIBUTION", 40, 420);
   context.fillText("PERSONALITY", 40, 490);
@@ -142,22 +149,23 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   // context.fillStyle = grd;
   // context.fillRect(canvas.width / 2 + 190, 320, 42, 42);
 
-  context.font = "600 30px sans-serif";
+  context.font = "24px share-regular";
+
   // the number padding look bad when its single number,but when its two it looks better
   context.fillText(
-    user.skills > 9 ? user.skills : "0" + user.skills,
-    canvas.width / 2 + 158,
-    350
+    user.skills,
+    user.skills > 9 ? canvas.width / 2 + 158 : canvas.width / 2 + 168,
+    user.skills > 9 ? 350 : 345
   );
   context.fillText(
-    user.contribution > 9 ? user.contribution : "0" + user.contribution,
-    canvas.width / 2 + 158,
-    420
+    user.contribution,
+    user.contribution > 9 ? canvas.width / 2 + 158 : canvas.width / 2 + 168,
+    user.contribution > 9 ? 420 : 415
   );
   context.fillText(
-    user.personality > 9 ? user.personality : "0" + user.personality,
-    canvas.width / 2 + 158,
-    490
+    user.personality,
+    user.personality > 9 ? canvas.width / 2 + 158 : canvas.width / 2 + 168,
+    user.personality > 9 ? 490 : 485
   );
 
   // Use the helpful Attachment class structure to process the file for you

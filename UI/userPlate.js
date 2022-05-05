@@ -7,9 +7,6 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   const requiredPoints = 20;
   // 1500 is the width of the white rect
   const unit = 1500 / requiredPoints;
-  const user = await findOne(discordId);
-  const canvas = Canvas.createCanvas(1700, 550);
-  const context = canvas.getContext("2d");
 
   Canvas.registerFont("./assets/fonts/share-regular.ttf", {
     family: "share-regular",
@@ -17,6 +14,9 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   Canvas.registerFont("./assets/fonts/share-bold.ttf", {
     family: "share-bold",
   });
+  const user = await findOne(discordId);
+  const canvas = Canvas.createCanvas(1700, 550);
+  const context = canvas.getContext("2d");
   const background = await Canvas.loadImage("./assets/images/bf-bg.png");
   const idfLogo = await Canvas.loadImage("./assets/images/idf-trans.png");
   var grd = context.createLinearGradient(0, 0, 2, 0);
@@ -118,7 +118,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.fillText(name.toUpperCase(), 288, canvas.height / 4.0);
   context.font = "40px share-regular";
 
-  if (secondName) context.fillText(`(${secondName})`, 600, canvas.height / 4.3);
+  if (secondName) context.fillText(`(${secondName})`, 510, canvas.height / 4.3);
   context.fillStyle = "white";
 
   context.font = "28px share-regular";
@@ -126,7 +126,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.fillText(`KARMA`, 288, canvas.height / 2.8);
   context.fillStyle = "#67FFFF";
 
-  context.fillText(`${user.karma ? user.karma : 0}`, 400, canvas.height / 2.8);
+  context.fillText(`${user.karma ? user.karma : 0}`, 380, canvas.height / 2.8);
 
   context.font = "32px share-regular";
   context.fillText("SKILL", 40, 350);

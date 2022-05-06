@@ -12,12 +12,12 @@ export const linkAnotherAccountModal = () => {
         .setRequired(true), // If it's required or not
       new TextInputComponent() // We create a Text Input Component
         .setCustomId("platformVal")
-        .setLabel("Enter your platform (pc,xboxone,ps4,ps3,xbox360)")
+        .setLabel("platform (pc,xboxone,ps4,ps3,xbox360)")
         .setStyle("SHORT") //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
         .setRequired(true), // If it's required or not
       new TextInputComponent() // We create a Text Input Component
         .setCustomId("gameVal")
-        .setLabel("Enter your game (bf1,bfv,bf3,bf4)")
+        .setLabel("game (bf1,bfv,bf3,bf4)")
         .setStyle("SHORT") //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
         .setRequired(true) // If it's required or not
     );

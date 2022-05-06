@@ -239,12 +239,13 @@ export const getModal = (client) => {
               user.originIds.push(returnedMember.data.id);
             if (!user.platforms.includes(platformVal))
               user.platforms.push(platformVal);
-            if (!user.hasTag)
-              (user.hasTag = returnedMember.data.platoons
+            if (!user.hasTag) {
+              user.hasTag = returnedMember.data.platoons
                 .map((el) => el.id)
                 //this is idf platoon id, hardcoded for now
-                .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551")),
-                await user.save();
+                .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551");
+            }
+            await user.save();
             await modal.deferReply({ ephemeral: true });
             modal.followUp({
               content: "response collected",

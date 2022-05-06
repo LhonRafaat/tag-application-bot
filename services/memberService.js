@@ -53,3 +53,11 @@ export const updateUser = async (discordId, originId, userName, platform) => {
     { new: true, runValidators: true }
   );
 };
+
+export const updateTag = async (discordId, hasTag) => {
+  return await Members.findOneAndUpdate(
+    { discordId },
+    { hasTag },
+    { new: true, runValidators: true }
+  );
+};

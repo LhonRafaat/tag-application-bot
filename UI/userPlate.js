@@ -97,7 +97,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   //make sure the votes are more than 5 then subtract it by 180
   context.drawImage(
     fillBar,
-    330,
+    200,
     330,
     user.contribution > requiredPoints / 4
       ? user.contribution * barLength - 180

@@ -1,6 +1,7 @@
 import { showModal } from "discord-modals"; // Now we extract the showModal method
 import {
   createMember,
+  findAll,
   findOne,
   findOneByName,
   updateUser,
@@ -117,11 +118,29 @@ export const getModal = (client) => {
       // not the bot
       if (interaction.member.username !== "tag") {
         if (interaction.customId === "skillsId") {
+          if (user.skillsVoters.includes(interaction.member.id))
+            return interaction.reply({
+              content: "You have already voted for skills",
+              ephemeral: true,
+            });
           dbUser.skills += 1;
+          dbUser.skillVoters.push(interaction.member.id);
         } else if (interaction.customId === "contributionId") {
+          if (user.contributionVoters.includes(interaction.member.id))
+            return interaction.reply({
+              content: "You have already voted for contribution",
+              ephemeral: true,
+            });
           dbUser.contribution += 1;
+          dbUser.contributionVoters.push(interaction.member.id);
         } else if (interaction.customId === "personalityId") {
+          if (user.personalityVoters.includes(interaction.member.id))
+            return interaction.reply({
+              content: "You have already voted for personality",
+              ephemeral: true,
+            });
           dbUser.personality += 1;
+          dbUser.personalityVoters.push(interaction.member.id);
         }
         if (
           ["skillsId", "contributionId", "personalityId"].includes(
@@ -195,9 +214,21 @@ export const getModal = (client) => {
         //check if the user's profile exists
         // we got a problem here, names are case sensitive
         if (returnedMember?.data) {
-          //if the user's profile exists , then we create a new member in the db
+          // we check if this account is linked by someone else already
+          let members = await findAll();
+          let originIds = [];
+          members.map((member) => originIds.push(...member.originIds));
+          if (originIds.includes(returnedMember.data.id)) {
+            await modal.deferReply({ ephemeral: true });
+            modal.followUp({
+              content: "This account is already linked",
 
+              ephemeral: true,
+            });
+          }
           if (interactionType === "register") {
+            //if the user's profile exists , then we create a new member in the db
+
             createMember(
               modal.user.id,
               returnedMember.data.id,

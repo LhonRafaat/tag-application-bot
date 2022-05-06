@@ -15,6 +15,9 @@ const membersSchema = new Schema(
     karma: { type: Number, default: 0 },
     personality: { type: Number, default: 0 },
     contribution: { type: Number, default: 0 },
+    skillVoters: [{ type: String, required: false }],
+    personalityVoters: [{ type: String, required: false }],
+    contributionVoters: [{ type: String, required: false }],
   },
   { timestamps: true }
 );

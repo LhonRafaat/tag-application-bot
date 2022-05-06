@@ -18,7 +18,7 @@ import { linkAnotherAccountModal } from "./UI/linkAnotherAccountModal.js";
 
 export const getModal = (client) => {
   let interactionType;
-  let searchedName;
+  let mentionedProfile;
 
   client.on("interactionCreate", async (interaction) => {
     if (interaction.commandName === "getstatus") {
@@ -56,6 +56,7 @@ export const getModal = (client) => {
       const mentionedUser = interaction.options.getUser("username");
 
       const discordUser = await findOne(mentionedUser.id);
+      mentionedProfile = discordUser;
 
       if (!discordUser) {
         return interaction.reply({
@@ -111,14 +112,17 @@ export const getModal = (client) => {
     }
 
     const user = await findOne(interaction.member.id);
-    const dbUser = await findOneByName(searchedName);
+    const dbUser = await findOne(mentionedProfile.discordId);
+    console.log("here");
+    console.log(mentionedProfile);
 
     // we check so we dont add the bots votes
     if (dbUser) {
+      console.log(dbUser);
       // not the bot
       if (interaction.member.username !== "tag") {
         if (interaction.customId === "skillsId") {
-          if (user.skillsVoters.includes(interaction.member.id))
+          if (dbUser.skillVoters.includes(interaction.member.id))
             return interaction.reply({
               content: "You have already voted for skills",
               ephemeral: true,
@@ -126,7 +130,7 @@ export const getModal = (client) => {
           dbUser.skills += 1;
           dbUser.skillVoters.push(interaction.member.id);
         } else if (interaction.customId === "contributionId") {
-          if (user.contributionVoters.includes(interaction.member.id))
+          if (dbUser.contributionVoters.includes(interaction.member.id))
             return interaction.reply({
               content: "You have already voted for contribution",
               ephemeral: true,
@@ -134,7 +138,7 @@ export const getModal = (client) => {
           dbUser.contribution += 1;
           dbUser.contributionVoters.push(interaction.member.id);
         } else if (interaction.customId === "personalityId") {
-          if (user.personalityVoters.includes(interaction.member.id))
+          if (dbUser.personalityVoters.includes(interaction.member.id))
             return interaction.reply({
               content: "You have already voted for personality",
               ephemeral: true,

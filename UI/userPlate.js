@@ -119,7 +119,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.font = "40px share-regular";
 
   // if (secondName) context.fillText(`(${secondName})`, 510, canvas.height / 4.3);
-  // context.fillStyle = "white";
+  context.fillStyle = "white";
 
   context.font = "28px share-regular";
 

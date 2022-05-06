@@ -154,7 +154,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   // the number padding look bad when its single number,but when its two it looks better
   context.fillText(
     user.skills,
-    user.skills > 9 ? canvas.width / 2 + 158 : canvas.width / 2 + 168,
+    user.skills > 9 ? canvas.width / 2 + 160 : canvas.width / 2 + 168,
     user.skills > 9 ? 350 : 345
   );
   context.fillText(

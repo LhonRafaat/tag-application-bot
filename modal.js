@@ -21,7 +21,30 @@ export const getModal = (client) => {
   let mentionedProfile;
 
   client.on("interactionCreate", async (interaction) => {
-    if (interaction.commandName === "getstatus") {
+    if (interaction.commandName === "getuser") {
+      const username = interaction.options.getString("username");
+      console.log(username);
+      const member = await findOneByName(username);
+      if (!member) {
+        return interaction.reply({
+          content: "User not found",
+          ephemeral: true,
+        });
+      }
+      const attachment = await getPlate(
+        member.userNames[0],
+        member.discordId,
+        member.avatar,
+        member.userNames[1] ? member.userNames[1] : undefined
+      );
+      //TODO: send a error message when user doesnt exist
+
+      // big problem here, if ephemeral is true, we cannot react to the messag
+      return await interaction.reply({
+        ephemeral: true,
+        files: [attachment],
+      });
+    } else if (interaction.commandName === "getstatus") {
       const mentionedUser = interaction.options.getUser("username");
 
       const discordUser = await findOne(mentionedUser.id);
@@ -50,9 +73,7 @@ export const getModal = (client) => {
         ephemeral: true,
         files: [attachment],
       });
-    }
-
-    if (interaction.commandName === "vote") {
+    } else if (interaction.commandName === "vote") {
       const mentionedUser = interaction.options.getUser("username");
 
       const discordUser = await findOne(mentionedUser.id);
@@ -96,14 +117,29 @@ export const getModal = (client) => {
           getButton([
             new MessageButton()
               .setCustomId("skillsId")
+              .setDisabled(
+                discordUser.skillVoters.includes(
+                  interaction.member.id.toString()
+                )
+              )
               .setLabel("Skills")
               .setStyle("DANGER"),
             new MessageButton()
               .setCustomId("contributionId")
+              .setDisabled(
+                discordUser.contributionVoters.includes(
+                  interaction.member.id.toString()
+                )
+              )
               .setLabel("contribution")
               .setStyle("SUCCESS"),
             new MessageButton()
               .setCustomId("personalityId")
+              .setDisabled(
+                discordUser.personalityVoters.includes(
+                  interaction.member.id.toString()
+                )
+              )
               .setLabel("personality")
               .setStyle("PRIMARY"),
           ]),
@@ -113,8 +149,6 @@ export const getModal = (client) => {
 
     const user = await findOne(interaction.member.id);
     const dbUser = await findOne(mentionedProfile.discordId);
-    console.log("here");
-    console.log(mentionedProfile);
 
     // we check so we dont add the bots votes
     if (dbUser) {

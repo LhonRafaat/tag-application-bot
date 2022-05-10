@@ -11,7 +11,9 @@ export const findOne = async (discordId) => {
 
 export const findOneByName = async (name) => {
   // this is case sensitive which I have to fix.
-  return await Members.findOne({ userNames: name });
+  return await Members.findOne({
+    userNames: { $regex: name, $options: "i" },
+  });
 };
 
 export const createMember = async (

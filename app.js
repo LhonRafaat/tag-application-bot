@@ -83,6 +83,18 @@ client.on("ready", async () => {
       },
     ],
   });
+  commands?.create({
+    name: "getuser",
+    description: "get user status plate",
+    options: [
+      {
+        name: "username",
+        required: true,
+        description: "username of the user to get the status",
+        type: "STRING",
+      },
+    ],
+  });
 });
 discordModals(client);
 

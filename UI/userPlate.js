@@ -191,21 +191,21 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.fillText(
     user.skills,
     user.skills > 9 ? canvas.width / 2 + 160 : canvas.width / 2 + 168,
-    user.skills > 9 ? 350 : 345
+    350
   );
   context.font = "32px share-regular";
 
   context.fillText(
     user.contribution,
     user.contribution > 9 ? canvas.width / 2 + 158 : canvas.width / 2 + 168,
-    user.contribution > 9 ? 420 : 415
+    420
   );
   context.font = "32px share-regular";
 
   context.fillText(
     user.personality,
     user.personality > 9 ? canvas.width / 2 + 158 : canvas.width / 2 + 168,
-    user.personality > 9 ? 490 : 485
+    490
   );
 
   // Use the helpful Attachment class structure to process the file for you

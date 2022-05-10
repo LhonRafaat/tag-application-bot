@@ -17,8 +17,8 @@ import { MessageButton } from "discord.js";
 import { linkAnotherAccountModal } from "./UI/linkAnotherAccountModal.js";
 
 export const getModal = (client) => {
-  let interactionType;
-  let mentionedProfile;
+  let interactionType = null;
+  let mentionedProfile = null;
 
   client.on("interactionCreate", async (interaction) => {
     if (interaction.commandName === "getuser") {
@@ -148,7 +148,7 @@ export const getModal = (client) => {
     }
 
     const user = await findOne(interaction.member.id);
-    const dbUser = await findOne(mentionedProfile.discordId);
+    const dbUser = await findOne(mentionedProfile?.discordId);
 
     // we check so we dont add the bots votes
     if (dbUser) {

@@ -36,52 +36,72 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   const shiny = await Canvas.loadImage("./assets/images/shiny.png");
   const moreShiny = await Canvas.loadImage("./assets/images/more-shiny.png");
 
-  //the avatar and frame have 15 pixels of space differencem and 42 in high and width,, this is an estimate
-  context.drawImage(avatar, 40, 40, 208, 208);
-  context.drawImage(avatarFrame, 25, 25, 250, 250);
-  context.drawImage(
-    user.skills === requiredPoints ? numBoxFull : numBox,
-    canvas.width / 2 + 150,
-    315,
-    50,
-    48
-  );
-  context.drawImage(
-    user.contribution === requiredPoints ? numBoxFull : numBox,
-    canvas.width / 2 + 150,
-    449,
-    50,
-    48
-  );
-  context.drawImage(
-    user.personality === requiredPoints ? numBoxFull : numBox,
-    canvas.width / 2 + 150,
-    379,
-    50,
-    48
-  );
+  // this is the sparkles
+
   context.globalCompositeOperation = "lighter";
   user.skills > requiredPoints / 2 &&
     context.drawImage(sparkles, 20, 220, 800, 200);
   user.contribution > requiredPoints / 2 &&
     context.drawImage(sparkles, 20, 290, 800, 200);
-
   user.personality > requiredPoints / 2 &&
     context.drawImage(sparkles, 20, 360, 800, 200);
   context.globalCompositeOperation = "lighter";
 
-  if (user.skills === requiredPoints) {
+  if (user.skills === requiredPoints || user.skills > requiredPoints) {
     context.drawImage(shiny, canvas.width / 2 + 15, 290);
+    context.globalCompositeOperation = "lighter";
     context.drawImage(moreShiny, canvas.width / 2 - 50, 320);
   }
-  if (user.contribution === requiredPoints) {
-    context.drawImage(shiny, canvas.width / 2 + 15, 449);
-    context.drawImage(moreShiny, canvas.width / 2 - 50, 479);
+
+  if (
+    user.contribution === requiredPoints ||
+    user.contribution > requiredPoints
+  ) {
+    context.drawImage(shiny, canvas.width / 2 + 15, 360);
+    context.drawImage(moreShiny, canvas.width / 2 - 50, 390);
   }
-  if (user.personality === requiredPoints) {
-    context.drawImage(shiny, canvas.width / 2 + 15, 379);
-    context.drawImage(moreShiny, canvas.width / 2 - 50, 409);
+  if (
+    user.personality === requiredPoints ||
+    user.personality > requiredPoints
+  ) {
+    context.drawImage(shiny, canvas.width / 2 + 15, 430);
+    context.drawImage(moreShiny, canvas.width / 2 - 50, 460);
   }
+
+  //the avatar and frame have 15 pixels of space differencem and 42 in high and width,, this is an estimate
+  context.drawImage(avatar, 40, 40, 208, 208);
+  context.drawImage(avatarFrame, 25, 25, 250, 250);
+  context.globalCompositeOperation = "source-over";
+  context.drawImage(
+    user.skills === requiredPoints || user.skills > requiredPoints
+      ? numBoxFull
+      : numBox,
+    canvas.width / 2 + 150,
+    315,
+    50,
+    48
+  );
+  context.globalCompositeOperation = "source-over";
+  context.drawImage(
+    user.contribution === requiredPoints || user.contribution > requiredPoints
+      ? numBoxFull
+      : numBox,
+    canvas.width / 2 + 150,
+    385,
+    50,
+    48
+  );
+  context.globalCompositeOperation = "source-over";
+  context.drawImage(
+    user.personality === requiredPoints || user.personality > requiredPoints
+      ? numBoxFull
+      : numBox,
+    canvas.width / 2 + 150,
+    455,
+    50,
+    48
+  );
+
   // calculating the fill bar width
   const barLength = canvas.width / 2 / requiredPoints;
 
@@ -91,20 +111,36 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
     fillBar,
     100,
     260,
-    user.skills > 0 ? user.skills * barLength + 50 : user.skills * barLength,
+    user.skills <= requiredPoints
+      ? user.skills > 0
+        ? user.skills * barLength + 50
+        : user.skills * barLength
+      : user.skills * requiredPoints,
     150
   );
   //make sure the votes are more than 5 then subtract it by 180
+  context.globalCompositeOperation = "lighter";
   context.drawImage(
     fillBar,
-    200,
+    150,
     330,
-    user.contribution > requiredPoints / 4
-      ? user.contribution * barLength - 180
-      : user.contribution * barLength,
+    user.contribution <= requiredPoints
+      ? user.contribution > requiredPoints / 4
+        ? user.contribution * barLength
+        : user.contribution * barLength
+      : requiredPoints * barLength,
     150
   );
-  context.drawImage(fillBar, 150, 400, user.personality * barLength, 150);
+  context.globalCompositeOperation = "lighter";
+  context.drawImage(
+    fillBar,
+    150,
+    400,
+    user.personality <= requiredPoints
+      ? user.personality * barLength
+      : requiredPoints * barLength,
+    150
+  );
 
   context.strokeRect(0, 0, canvas.width, canvas.height);
 
@@ -149,7 +185,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   // context.fillStyle = grd;
   // context.fillRect(canvas.width / 2 + 190, 320, 42, 42);
 
-  context.font = "24px share-regular";
+  context.font = "32px share-regular";
 
   // the number padding look bad when its single number,but when its two it looks better
   context.fillText(
@@ -157,11 +193,15 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
     user.skills > 9 ? canvas.width / 2 + 160 : canvas.width / 2 + 168,
     user.skills > 9 ? 350 : 345
   );
+  context.font = "32px share-regular";
+
   context.fillText(
     user.contribution,
     user.contribution > 9 ? canvas.width / 2 + 158 : canvas.width / 2 + 168,
     user.contribution > 9 ? 420 : 415
   );
+  context.font = "32px share-regular";
+
   context.fillText(
     user.personality,
     user.personality > 9 ? canvas.width / 2 + 158 : canvas.width / 2 + 168,

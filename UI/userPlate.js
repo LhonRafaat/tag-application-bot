@@ -166,9 +166,9 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.fillText(`${user.karma ? user.karma : 0}`, 380, canvas.height / 2.8);
 
   context.font = "32px share-regular";
-  context.fillText("SKILL", 40, 350);
-  context.fillText("CONTRIBUTION", 40, 420);
-  context.fillText("PERSONALITY", 40, 490);
+  context.fillText("SKILL", 40, 345);
+  context.fillText("CONTRIBUTION", 40, 415);
+  context.fillText("PERSONALITY", 40, 485);
 
   //we repeat fill rect twice once with white once with red to stimulate a progressbar.
 

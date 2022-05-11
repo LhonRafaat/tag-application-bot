@@ -25,7 +25,7 @@ export const getModal = (client) => {
     interactionType = null;
     mentionedProfile = null;
 
-    if (interaction.commandName === "getuser") {
+    if (interaction.commandName === "getbygamename") {
       const username = interaction.options.getString("username");
       console.log(username);
       const member = await findOneByName(username);

@@ -84,7 +84,7 @@ client.on("ready", async () => {
     ],
   });
   commands?.create({
-    name: "getuser",
+    name: "getbygamename",
     description: "get user status plate",
     options: [
       {

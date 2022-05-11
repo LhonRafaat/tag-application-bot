@@ -2,7 +2,7 @@
   "name": "tag-application-bot",
   "version": "1.0.0",
   "description": "No description yet",
-  "main": "app.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "nodemon server.js"

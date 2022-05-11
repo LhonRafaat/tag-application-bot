@@ -123,6 +123,7 @@ client.on("messageCreate", async (msg) => {
   }
   if (msg.content.toLowerCase() === "!myvotes") {
     const user = await findOne(msg.author.id);
+    if (!user) return msg.reply("you are not registered");
     const plate = await getPlate(
       // taking the first username, maybe we increase it  ?
       user.userNames[0],

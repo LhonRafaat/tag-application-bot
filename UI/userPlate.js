@@ -1,10 +1,11 @@
 import Canvas from "canvas";
 import { MessageAttachment } from "discord.js";
 import { findOne } from "../services/memberService.js";
+import { requiredPoints } from "../settings/setting.js";
 
 export const getPlate = async (name, discordId, userAvatar, secondName) => {
   //required points for the votes
-  const requiredPoints = 20;
+  // const requiredPoints = 20;
   // 1500 is the width of the white rect
   const unit = 1500 / requiredPoints;
 

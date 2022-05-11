@@ -95,6 +95,18 @@ client.on("ready", async () => {
       },
     ],
   });
+  commands?.create({
+    name: "setpoints",
+    description: "set required points",
+    options: [
+      {
+        name: "points",
+        required: true,
+        description: "enter the required points",
+        type: "NUMBER",
+      },
+    ],
+  });
 });
 discordModals(client);
 

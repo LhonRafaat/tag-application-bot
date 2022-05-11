@@ -15,12 +15,16 @@ import { getRegisterModal } from "./UI/registerModal.js";
 import { getButton } from "./UI/button.js";
 import { MessageButton } from "discord.js";
 import { linkAnotherAccountModal } from "./UI/linkAnotherAccountModal.js";
+import { setRequiredPoints } from "./settings/setting.js";
 
 export const getModal = (client) => {
   let interactionType = null;
   let mentionedProfile = null;
 
   client.on("interactionCreate", async (interaction) => {
+    interactionType = null;
+    mentionedProfile = null;
+
     if (interaction.commandName === "getuser") {
       const username = interaction.options.getString("username");
       console.log(username);
@@ -227,6 +231,15 @@ export const getModal = (client) => {
       // updateUser(user.discordId, )
     } else if (interaction.customId === "refuseToRegister") {
       return interaction.reply("okay");
+    } else if (interaction.commandName === "setpoints") {
+      console.log(interaction.option);
+      // here we should check that only admins could do that
+      const points = interaction.options.getNumber("points");
+      console.log(points);
+      setRequiredPoints(points);
+      return points
+        ? interaction.reply("okay")
+        : interaction.reply("bad request");
     }
   });
   client.on("modalSubmit", async (modal) => {

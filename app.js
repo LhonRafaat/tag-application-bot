@@ -125,6 +125,28 @@ client.on("messageCreate", async (msg) => {
   if (msg.content.toLowerCase() === "ping") {
     msg.reply("pong");
   }
+  if (msg.content.toLowerCase() === "!makechannel") {
+    const guild = client.guilds.cache.get(process.env.GUILD_ID);
+    const role = guild.roles.cache.find((role) => {
+      return role.name === "@everyone";
+    });
+
+    await guild.channels.create("submit a ticket", {
+      parent: "967391078254796802",
+      permissionOverwrites: [
+        {
+          id: role.id,
+          deny: ["VIEW_CHANNEL"],
+        },
+        {
+          id: msg.member.id,
+          allow: ["VIEW_CHANNEL"],
+        },
+      ],
+    });
+
+    // 967391078254796802;
+  }
   if (msg.content.toLowerCase() === "!myvotes") {
     const user = await findOne(msg.author.id);
     if (!user) return msg.reply("you are not registered");

@@ -285,9 +285,11 @@ export const getModal = (client) => {
               returnedMember.data.id,
               platformVal,
               returnedMember.data.platoons
-                .map((el) => el.id)
-                //this is idf platoon id, hardcoded for now
-                .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551"),
+                ? returnedMember.data.platoons
+                    .map((el) => el.id)
+                    //this is idf platoon id, hardcoded for now
+                    .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551")
+                : false,
 
               modal.user.username,
               returnedMember.data.userName,

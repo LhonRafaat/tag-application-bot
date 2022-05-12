@@ -107,6 +107,10 @@ client.on("ready", async () => {
       },
     ],
   });
+  commands?.create({
+    name: "requiredpoints",
+    description: "preview required points",
+  });
 });
 discordModals(client);
 

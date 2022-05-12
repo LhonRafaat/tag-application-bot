@@ -4,18 +4,19 @@ import {
   findAll,
   findOne,
   findOneByName,
-  updateUser,
 } from "./services/memberService.js";
 import axios from "axios";
 import { getVoteEmbed } from "./UI/embeds/voteEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
-import { getSearchModal } from "./UI/searchModal.js";
 import { getRegisterModal } from "./UI/registerModal.js";
 
 import { getButton } from "./UI/button.js";
 import { MessageButton } from "discord.js";
 import { linkAnotherAccountModal } from "./UI/linkAnotherAccountModal.js";
-import { setRequiredPoints } from "./settings/setting.js";
+import {
+  getRequiredPoints,
+  setRequiredPoints,
+} from "./services/settingService.js";
 
 export const getModal = (client) => {
   let interactionType = null;
@@ -47,6 +48,13 @@ export const getModal = (client) => {
       return await interaction.reply({
         ephemeral: true,
         files: [attachment],
+      });
+    } else if (interaction.commandName === "requiredpoints") {
+      const requiredPoints = await getRequiredPoints();
+      if (!requiredPoints) return interaction.reply("No required points set");
+      interaction.reply({
+        ephemeral: true,
+        content: `Required points: ${await getRequiredPoints()}`,
       });
     } else if (interaction.commandName === "getstatus") {
       const mentionedUser = interaction.options.getUser("username");
@@ -235,7 +243,6 @@ export const getModal = (client) => {
       console.log(interaction.option);
       // here we should check that only admins could do that
       const points = interaction.options.getNumber("points");
-      console.log(points);
       setRequiredPoints(points);
       return points
         ? interaction.reply("okay")
@@ -243,6 +250,7 @@ export const getModal = (client) => {
     }
   });
   client.on("modalSubmit", async (modal) => {
+    console.log(modal.member.roles);
     const gameNameVal = modal.getTextInputValue("gameNameVal");
     const platformVal = modal.getTextInputValue("platformVal");
     const gameVal = modal.getTextInputValue("gameVal");
@@ -284,12 +292,7 @@ export const getModal = (client) => {
               modal.user.id,
               returnedMember.data.id,
               platformVal,
-              returnedMember.data.platoons
-                ? returnedMember.data.platoons
-                    .map((el) => el.id)
-                    //this is idf platoon id, hardcoded for now
-                    .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551")
-                : false,
+              modal.member.roles.cache.some((role) => role.name === "idf-pc"),
 
               modal.user.username,
               returnedMember.data.userName,

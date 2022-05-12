@@ -1,12 +1,13 @@
 import Canvas from "canvas";
 import { MessageAttachment } from "discord.js";
 import { findOne } from "../services/memberService.js";
-import { requiredPoints } from "../settings/setting.js";
+import { getRequiredPoints } from "../services/settingService.js";
 
 export const getPlate = async (name, discordId, userAvatar, secondName) => {
   //required points for the votes
   // const requiredPoints = 20;
   // 1500 is the width of the white rect
+  const requiredPoints = await getRequiredPoints();
   const unit = 1500 / requiredPoints;
 
   Canvas.registerFont("./assets/fonts/share-regular.ttf", {

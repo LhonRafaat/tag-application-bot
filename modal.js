@@ -17,6 +17,7 @@ import {
   getRequiredPoints,
   setRequiredPoints,
 } from "./services/settingService.js";
+import { questionsEmbed } from "./UI/embeds/questionsEmbed.js";
 
 export const getModal = (client) => {
   let interactionType = null;
@@ -164,9 +165,18 @@ export const getModal = (client) => {
 
     // we check so we dont add the bots votes
     if (dbUser) {
-      console.log(dbUser);
       // not the bot
       if (interaction.member.username !== "tag") {
+        const requiredPoints = await getRequiredPoints();
+
+        const guild = client.guilds.cache.get(process.env.GUILD_ID);
+        const role = guild.roles.cache.find((role) => {
+          return role.name === "@everyone";
+        });
+        const mods = guild.roles.cache.find((role) => {
+          return role.name === "mod";
+        });
+
         if (interaction.customId === "skillsId") {
           if (dbUser.skillVoters.includes(interaction.member.id))
             return interaction.reply({
@@ -175,6 +185,13 @@ export const getModal = (client) => {
             });
           dbUser.skills += 1;
           dbUser.skillVoters.push(interaction.member.id);
+          // here we check if the user has reached the required points at least in two categories
+          if (
+            dbUser.contribution === requiredPoints ||
+            dbUser.personality === requiredPoints
+          ) {
+            dbUser.reachedVotes = true;
+          }
         } else if (interaction.customId === "contributionId") {
           if (dbUser.contributionVoters.includes(interaction.member.id))
             return interaction.reply({
@@ -183,6 +200,14 @@ export const getModal = (client) => {
             });
           dbUser.contribution += 1;
           dbUser.contributionVoters.push(interaction.member.id);
+
+          // here we check if user has reached the required points at least in two categories
+          if (
+            dbUser.skills === requiredPoints ||
+            dbUser.personality === requiredPoints
+          ) {
+            dbUser.reachedVotes = true;
+          }
         } else if (interaction.customId === "personalityId") {
           if (dbUser.personalityVoters.includes(interaction.member.id))
             return interaction.reply({
@@ -191,6 +216,14 @@ export const getModal = (client) => {
             });
           dbUser.personality += 1;
           dbUser.personalityVoters.push(interaction.member.id);
+
+          // here we check if user has reached the required points at least in two categories
+          if (
+            dbUser.skills === requiredPoints ||
+            dbUser.contribution === requiredPoints
+          ) {
+            dbUser.reachedVotes = true;
+          }
         }
         if (
           ["skillsId", "contributionId", "personalityId"].includes(
@@ -198,6 +231,28 @@ export const getModal = (client) => {
           )
         ) {
           await dbUser.save();
+
+          if (dbUser.reachedVotes) {
+            const newChannel = await guild.channels.create("submit a ticket", {
+              parent: "974645473187098654",
+              permissionOverwrites: [
+                {
+                  id: role.id,
+                  deny: ["VIEW_CHANNEL"],
+                },
+                {
+                  id: dbUser.discordId,
+                  allow: ["VIEW_CHANNEL"],
+                },
+                {
+                  id: mods.id,
+                  allow: ["ADMINISTRATOR"],
+                },
+              ],
+            });
+            newChannel.send({ embeds: [questionsEmbed] });
+          }
+
           return interaction.reply({
             content: "successfully voted!",
             ephemeral: true,
@@ -326,12 +381,7 @@ export const getModal = (client) => {
               user.originIds.push(returnedMember.data.id);
             if (!user.platforms.includes(platformVal))
               user.platforms.push(platformVal);
-            if (!user.hasTag) {
-              user.hasTag = returnedMember.data.platoons
-                .map((el) => el.id)
-                //this is idf platoon id, hardcoded for now
-                .includes("fbc7c5ab-c125-41f9-be8c-f367c03b2551");
-            }
+
             await user.save();
             await modal.deferReply({ ephemeral: true });
             modal.followUp({

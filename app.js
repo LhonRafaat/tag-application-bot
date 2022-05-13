@@ -9,6 +9,7 @@ import { tagEmbed } from "./UI/embeds/messageEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
 import { findOne } from "./services/memberService.js";
 import { getButton } from "./UI/button.js";
+import { questionsEmbed } from "./UI/embeds/questionsEmbed.js";
 
 env.config();
 const app = express();
@@ -130,9 +131,12 @@ client.on("messageCreate", async (msg) => {
     const role = guild.roles.cache.find((role) => {
       return role.name === "@everyone";
     });
+    const mods = guild.roles.cache.find((role) => {
+      return role.name === "mod";
+    });
 
-    await guild.channels.create("submit a ticket", {
-      parent: "967391078254796802",
+    const newChannel = await guild.channels.create("submit a ticket", {
+      parent: "974645473187098654",
       permissionOverwrites: [
         {
           id: role.id,
@@ -142,10 +146,13 @@ client.on("messageCreate", async (msg) => {
           id: msg.member.id,
           allow: ["VIEW_CHANNEL"],
         },
+        {
+          id: mods.id,
+          allow: ["ADMINISTRATOR"],
+        },
       ],
     });
-
-    // 967391078254796802;
+    newChannel.send({ embeds: [questionsEmbed] });
   }
   if (msg.content.toLowerCase() === "!myvotes") {
     const user = await findOne(msg.author.id);

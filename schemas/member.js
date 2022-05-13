@@ -18,6 +18,7 @@ const membersSchema = new Schema(
     skillVoters: [{ type: String, required: false }],
     personalityVoters: [{ type: String, required: false }],
     contributionVoters: [{ type: String, required: false }],
+    reachedVotes: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

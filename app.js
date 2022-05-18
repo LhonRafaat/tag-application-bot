@@ -112,6 +112,10 @@ client.on("ready", async () => {
     name: "requiredpoints",
     description: "preview required points",
   });
+  commands?.create({
+    name: "closeticket",
+    description: "delete current channel",
+  });
 });
 discordModals(client);
 
@@ -123,10 +127,15 @@ client.on("messageCreate", async (msg) => {
   if (msg.author.bot) return;
 
   // in case you are very bored
-  if (msg.content.toLowerCase() === "ping") {
-    msg.reply("pong");
+  if (msg.content.toLowerCase() === "who is the best pilot in the universe") {
+    msg.reply("LhonXD");
   }
   if (msg.content.toLowerCase() === "!makechannel") {
+    // check here if the user has the permission to create channels
+    if (!msg.member.roles.cache.find((role) => role.name === "register")) {
+      return msg.reply("You do not have the permission to create channels");
+    }
+
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
     const role = guild.roles.cache.find((role) => {
       return role.name === "@everyone";

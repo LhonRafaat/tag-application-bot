@@ -18,6 +18,7 @@ import {
   setRequiredPoints,
 } from "./services/settingService.js";
 import { questionsEmbed } from "./UI/embeds/questionsEmbed.js";
+import { getUserProfile } from "./utils/utils.js";
 
 export const getModal = (client) => {
   let interactionType = null;
@@ -293,38 +294,40 @@ export const getModal = (client) => {
       interactionType = "linkAnotherAccount";
       // updateUser(user.discordId, )
     } else if (interaction.customId === "refuseToRegister") {
-      return interaction.reply("okay");
+      return interaction.reply({ content: "okay", ephemeral: true });
     } else if (interaction.commandName === "setpoints") {
       console.log(interaction.option);
       // here we should check that only admins could do that
       const points = interaction.options.getNumber("points");
       setRequiredPoints(points);
       return points
-        ? interaction.reply("okay")
-        : interaction.reply("bad request");
+        ? interaction.reply({ content: "okay", ephemeral: true })
+        : interaction.reply({ content: "bad request", ephemeral: true });
     }
   });
   client.on("modalSubmit", async (modal) => {
-    console.log(modal.member.roles);
+    const gameVal = modal.getTextInputValue("gameVal");
     const gameNameVal = modal.getTextInputValue("gameNameVal");
     const platformVal = modal.getTextInputValue("platformVal");
-    const gameVal = modal.getTextInputValue("gameVal");
+    if (!["pc", "xboxone", "ps4", "ps3", "xbox360"].includes(platformVal)) {
+      await modal.deferReply({ ephemeral: true });
+      return modal.followUp({
+        content: "Please enter a correct platform and try again",
 
+        ephemeral: true,
+      });
+    } else if (!["bf1", "bfv", "bf3", "bf4"].includes(gameVal)) {
+      await modal.deferReply({ ephemeral: true });
+      return modal.followUp({
+        content: "Please enter a correct game and try again",
+
+        ephemeral: true,
+      });
+    }
     //if its for voting we dont want to create a user
 
-    axios
-      .get(
-        `https://api.gametools.network/${gameVal}/all/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`
-      )
-      .catch(async (err) => {
-        await modal.deferReply({ ephemeral: true });
-        return modal.followUp({
-          content: "User not found",
-
-          ephemeral: true,
-        });
-      })
-      .then(async (returnedMember) => {
+    getUserProfile(gameVal, gameNameVal, platformVal, modal).then(
+      async (returnedMember) => {
         //check if the user's profile exists
         // we got a problem here, names are case sensitive
         if (returnedMember?.data) {
@@ -360,7 +363,7 @@ export const getModal = (client) => {
             modal.member.roles.add("968118833187545088");
 
             await modal.deferReply({ ephemeral: true });
-            modal.followUp({
+            return modal.followUp({
               content: "response collected",
 
               ephemeral: true,
@@ -392,6 +395,7 @@ export const getModal = (client) => {
           }
           // show them their plate here
         }
-      });
+      }
+    );
   });
 };

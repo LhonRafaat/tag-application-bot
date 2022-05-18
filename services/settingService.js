@@ -6,14 +6,14 @@ export const getRequiredPoints = async () => {
   return setting[0].requiredPoints;
 };
 
-export const setRequiredPoints = async (id, requiredPoints) => {
+export const setRequiredPoints = async (requiredPoints) => {
   const settings = await Setting.find();
   if (settings.length === 0) {
     return await Setting.create({
       requiredPoints,
     });
   } else {
-    const setting = await Setting.findById(id);
+    const setting = await Setting.findById(settings[0]._id);
 
     setting.requiredPoints = requiredPoints;
 

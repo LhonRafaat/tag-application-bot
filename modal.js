@@ -5,7 +5,6 @@ import {
   findOne,
   findOneByName,
 } from "./services/memberService.js";
-import axios from "axios";
 import { getVoteEmbed } from "./UI/embeds/voteEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
 import { getRegisterModal } from "./UI/registerModal.js";
@@ -51,6 +50,15 @@ export const getModal = (client) => {
         ephemeral: true,
         files: [attachment],
       });
+    } else if (interaction.commandName === "closeticket") {
+      if (interaction.channel.parentId === "974645473187098654") {
+        interaction.channel.delete();
+      } else {
+        return interaction.reply({
+          content: "You can only delete tickets subchannels",
+          ephemeral: true,
+        });
+      }
     } else if (interaction.commandName === "requiredpoints") {
       const requiredPoints = await getRequiredPoints();
       if (!requiredPoints) return interaction.reply("No required points set");
@@ -350,7 +358,9 @@ export const getModal = (client) => {
               modal.user.id,
               returnedMember.data.id,
               platformVal,
-              modal.member.roles.cache.some((role) => role.name === "idf-pc"),
+              modal.member.roles.cache.some((role) =>
+                role.name.startsWith("idf")
+              ),
 
               modal.user.username,
               returnedMember.data.userName,
@@ -360,7 +370,15 @@ export const getModal = (client) => {
 
             // addes a role when user is registered, hardcoded for now
 
-            modal.member.roles.add("968118833187545088");
+            if (
+              modal.member.roles.cache.some((role) =>
+                role.name.startsWith("idf")
+              )
+            ) {
+              modal.member.roles.add("968118833187545088");
+            } else {
+              modal.member.roles.add("968118833187545088");
+            }
 
             await modal.deferReply({ ephemeral: true });
             return modal.followUp({

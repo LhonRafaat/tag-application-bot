@@ -164,7 +164,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.fillText(`KARMA`, 288, canvas.height / 2.8);
   context.fillStyle = "#67FFFF";
 
-  context.fillText(`${user.karma ? user.karma : 0}`, 380, canvas.height / 2.8);
+  context.fillText(`${user.karma ? user.karma : 0}`, 390, canvas.height / 2.8);
 
   context.font = "32px share-regular";
   context.fillText("SKILL", 40, 345);

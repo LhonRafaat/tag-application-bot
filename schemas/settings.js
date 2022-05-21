@@ -4,6 +4,16 @@ const { Schema, model } = mongoose;
 const settingSchema = new Schema(
   {
     requiredPoints: { type: Number, default: 20 },
+    moderatorId: { type: String, default: "977520328404262943" },
+    seniorModeratorId: { type: String, default: "962439606505189456" },
+    trialModeratorId: { type: String, default: "977520328404262943" },
+    designId: { type: String, default: "977520328404262943" },
+    forceCodeId: { type: String, default: "962440574768660510" },
+    adminId: { type: String, default: "977568930837168200" },
+    regIdfId: { type: String, default: "977520328404262943" },
+    regStaffId: { type: String, default: "977520328404262943" },
+    regAdminId: { type: String, default: "977520328404262943" },
+    regMemberId: { type: String, default: "977520328404262943" },
   },
   { timestamps: true }
 );

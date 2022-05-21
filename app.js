@@ -3,6 +3,7 @@ import env from "dotenv";
 import { Client, Intents, MessageButton } from "discord.js";
 
 import memberRoutes from "./routes/memberRoutes.js";
+import settingsRoute from "./routes/settingsRoute.js";
 import discordModals from "discord-modals";
 import { getModal } from "./modal.js";
 import { tagEmbed } from "./UI/embeds/messageEmbed.js";
@@ -17,6 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(memberRoutes);
+app.use(settingsRoute);
 
 const client = new Client({
   intents: [

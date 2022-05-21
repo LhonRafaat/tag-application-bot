@@ -21,3 +21,9 @@ export const setRequiredPoints = async (requiredPoints) => {
     return setting;
   }
 };
+
+export const getSettings = async () => {
+  const setting = await Setting.find();
+
+  return setting;
+};

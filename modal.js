@@ -14,6 +14,7 @@ import { MessageButton } from "discord.js";
 import { linkAnotherAccountModal } from "./UI/linkAnotherAccountModal.js";
 import {
   getRequiredPoints,
+  getSettings,
   setRequiredPoints,
 } from "./services/settingService.js";
 import { questionsEmbed } from "./UI/embeds/questionsEmbed.js";
@@ -314,6 +315,15 @@ export const getModal = (client) => {
     }
   });
   client.on("modalSubmit", async (modal) => {
+    const settings = await getSettings();
+    if (!settings || settings?.length === 0) {
+      await modal.deferReply({ ephemeral: true });
+      return modal.followUp({
+        content: "An error occured, please contact staff (settings error)",
+
+        ephemeral: true,
+      });
+    }
     const gameVal = modal.getTextInputValue("gameVal");
     const gameNameVal = modal.getTextInputValue("gameNameVal");
     const platformVal = modal.getTextInputValue("platformVal");
@@ -373,11 +383,52 @@ export const getModal = (client) => {
             if (
               modal.member.roles.cache.some((role) =>
                 role.name.startsWith("idf")
+              ) &&
+              !(
+                modal.member.roles.cache.some((role) =>
+                  role.name.includes("moderator")
+                ) ||
+                modal.member.roles.cache.some((role) =>
+                  role.name.includes("design")
+                ) ||
+                modal.member.roles.cache.some((role) =>
+                  role.name.includes("code")
+                ) ||
+                modal.member.roles.cache.some(
+                  (role) => role.id === settings[0].adminId
+                ) ||
+                modal.member.roles.cache.some((role) =>
+                  role.name.includes("founder")
+                )
               )
             ) {
-              modal.member.roles.add("968118833187545088");
-            } else {
-              modal.member.roles.add("968118833187545088");
+              // idf registered tag
+              modal.member.roles.add("977562759992602695");
+              console.log("idf");
+            } else if (
+              //staff
+              modal.member.roles.cache.some((role) =>
+                role.name.includes("moderator")
+              ) ||
+              modal.member.roles.cache.some((role) =>
+                role.name.includes("design")
+              ) ||
+              modal.member.roles.cache.some((role) =>
+                role.name.includes("code")
+              )
+            ) {
+              console.log("mod");
+            } else if (
+              //staff
+              modal.member.roles.cache.some(
+                (role) => role.id === settings[0].adminId
+              ) ||
+              modal.member.roles.cache.some((role) =>
+                role.name.includes("founder")
+              )
+            ) {
+              // admins
+              console.log("admin");
             }
 
             await modal.deferReply({ ephemeral: true });

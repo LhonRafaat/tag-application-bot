@@ -14,6 +14,8 @@ const settingSchema = new Schema(
     regStaffId: { type: String, default: "977520328404262943" },
     regAdminId: { type: String, default: "977520328404262943" },
     regMemberId: { type: String, default: "977520328404262943" },
+    votingChannelId: { type: String, default: "968131185668665404" },
+    ticketsParentId: { type: String, default: "974645473187098654" },
   },
   { timestamps: true }
 );

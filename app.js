@@ -11,6 +11,7 @@ import { getPlate } from "./UI/userPlate.js";
 import { findOne } from "./services/memberService.js";
 import { getButton } from "./UI/button.js";
 import { questionsEmbed } from "./UI/embeds/questionsEmbed.js";
+import { getSettings } from "./services/settingService.js";
 
 env.config();
 const app = express();
@@ -36,7 +37,9 @@ client
   .catch((err) => console.log(err));
 
 client.on("ready", async () => {
-  const channel = client.channels.cache.get("968131185668665404");
+  const settings = await getSettings();
+  if (settings.length === 0) return;
+  const channel = client.channels.cache.get(settings[0].votingChannelId);
   channel.bulkDelete(100);
 
   //TODO move the button to its own file
@@ -124,6 +127,10 @@ discordModals(client);
 getModal(client);
 
 client.on("messageCreate", async (msg) => {
+  const settings = await getSettings();
+  if (settings.length === 0)
+    msg.reply({ ephemeral: true, content: "error occurred" });
+
   //we dont want messages from the bot
 
   if (msg.author.bot) return;
@@ -143,11 +150,11 @@ client.on("messageCreate", async (msg) => {
       return role.name === "@everyone";
     });
     const mods = guild.roles.cache.find((role) => {
-      return role.name === "mod";
+      return role.id === "mod";
     });
 
     const newChannel = await guild.channels.create("submit a ticket", {
-      parent: "974645473187098654",
+      parent: settings[0].ticketsParentId,
       permissionOverwrites: [
         {
           id: role.id,

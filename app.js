@@ -39,6 +39,8 @@ client.on("ready", async () => {
   const settings = await getSettings();
   if (settings.length === 0) return;
   const channel = client.channels.cache.get(settings[0].votingChannelId);
+  if (!channel) return;
+  channel.bulkDelete(100);
 
   //TODO move the button to its own file
 
@@ -126,7 +128,10 @@ getModal(client);
 client.on("messageCreate", async (msg) => {
   const settings = await getSettings();
   if (settings.length === 0)
-    msg.reply({ ephemeral: true, content: "error occurred" });
+    return msg.reply({
+      ephemeral: true,
+      content: "error occurred (set settings)",
+    });
 
   //we dont want messages from the bot
 
@@ -136,43 +141,7 @@ client.on("messageCreate", async (msg) => {
   if (msg.content.toLowerCase() === "who is the best pilot in the universe") {
     msg.reply("LhonXD");
   }
-  if (msg.content.toLowerCase() === "!makechannel") {
-    // check here if the user has the permission to create channels
-    if (!msg.member.roles.cache.find((role) => role.name === "register")) {
-      return msg.reply("You do not have the permission to create channels");
-    }
 
-    const guild = client.guilds.cache.get(process.env.GUILD_ID);
-    const role = guild.roles.cache.find((role) => {
-      return role.name === "@everyone";
-    });
-    const mods = guild.roles.cache.find((role) => {
-      return [
-        settings[0].modId,
-        settings[0].founderId,
-        settings[0].headAdminId,
-      ].includes(role.id);
-    });
-
-    const newChannel = await guild.channels.create("submit a ticket", {
-      parent: settings[0].ticketsParentId,
-      permissionOverwrites: [
-        {
-          id: role.id,
-          deny: ["VIEW_CHANNEL"],
-        },
-        {
-          id: msg.member.id,
-          allow: ["VIEW_CHANNEL"],
-        },
-        {
-          id: mods.id,
-          allow: ["ADMINISTRATOR"],
-        },
-      ],
-    });
-    newChannel.send({ embeds: [questionsEmbed] });
-  }
   if (msg.content.toLowerCase() === "!myvotes") {
     const user = await findOne(msg.author.id);
     if (!user) return msg.reply("you are not registered");

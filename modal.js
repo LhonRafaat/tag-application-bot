@@ -74,7 +74,20 @@ export const getModal = (client) => {
         files: [attachment],
       });
     } else if (interaction.commandName === "closeticket") {
-      if (interaction.channel.parentId === "974645473187098654") {
+      const isAuthorized = interaction.member.roles.cache.find((role) => {
+        return [
+          settings[0].founderId,
+          settings[0].headAdminId,
+          settings[0].modId,
+        ].includes(role.id);
+      });
+      if (!isAuthorized) {
+        return interaction.reply({
+          content: "You are not authorized",
+          ephemeral: true,
+        });
+      }
+      if (interaction.channel.parentId === settings[0].ticketsParentId) {
         interaction.channel.delete();
       } else {
         return interaction.reply({
@@ -239,11 +252,20 @@ export const getModal = (client) => {
           const requiredPoints = await getRequiredPoints();
 
           const guild = client.guilds.cache.get(process.env.GUILD_ID);
+          if (!guild)
+            return interaction.reply({
+              content: "Error (guild not found)",
+              ephemeral: true,
+            });
           const role = guild.roles.cache.find((role) => {
             return role.name === "@everyone";
           });
           const mods = guild.roles.cache.find((role) => {
-            return role.name === "mod";
+            return [
+              settings[0].modId,
+              settings[0].founderId,
+              settings[0].headAdminId,
+            ].includes(role.id);
           });
 
           if (interaction.customId === "skillsId") {
@@ -305,7 +327,7 @@ export const getModal = (client) => {
               const newChannel = await guild.channels.create(
                 "submit a ticket",
                 {
-                  parent: "974645473187098654",
+                  parent: settings[0].ticketsParentId,
                   permissionOverwrites: [
                     {
                       id: role.id,

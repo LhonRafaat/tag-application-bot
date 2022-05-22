@@ -6,7 +6,6 @@ import memberRoutes from "./routes/memberRoutes.js";
 import settingsRoute from "./routes/settingsRoute.js";
 import discordModals from "discord-modals";
 import { getModal } from "./modal.js";
-import { tagEmbed } from "./UI/embeds/messageEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
 import { findOne } from "./services/memberService.js";
 import { getButton } from "./UI/button.js";
@@ -40,12 +39,10 @@ client.on("ready", async () => {
   const settings = await getSettings();
   if (settings.length === 0) return;
   const channel = client.channels.cache.get(settings[0].votingChannelId);
-  channel.bulkDelete(100);
 
   //TODO move the button to its own file
 
   const message = await channel.send({
-    embeds: [tagEmbed],
     components: [
       getButton([
         new MessageButton()
@@ -55,7 +52,7 @@ client.on("ready", async () => {
       ]),
     ],
   });
-  message.pin();
+  // message.pin();
 
   console.log(`Logged in as ${client.user.tag}!`);
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
@@ -150,7 +147,11 @@ client.on("messageCreate", async (msg) => {
       return role.name === "@everyone";
     });
     const mods = guild.roles.cache.find((role) => {
-      return role.id === "mod";
+      return [
+        settings[0].modId,
+        settings[0].founderId,
+        settings[0].headAdminId,
+      ].includes(role.id);
     });
 
     const newChannel = await guild.channels.create("submit a ticket", {

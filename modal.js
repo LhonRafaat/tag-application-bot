@@ -27,8 +27,30 @@ export const getModal = (client) => {
   client.on("interactionCreate", async (interaction) => {
     interactionType = null;
     mentionedProfile = null;
+    const settings = await getSettings();
+    if (!settings || settings?.length === 0) {
+      return interaction.reply({
+        content: "An error occured, please contact staff (settings error)",
+
+        ephemeral: true,
+      });
+    }
 
     if (interaction.commandName === "getbygamename") {
+      // check user if is head admin or founder
+      const isAuthorized = interaction.member.roles.cache.find((role) => {
+        return [
+          settings[0].founderId,
+          settings[0].headAdminId,
+          settings[0].modId,
+        ].includes(role.id);
+      });
+      if (!isAuthorized) {
+        return interaction.reply({
+          content: "You are not authorized",
+          ephemeral: true,
+        });
+      }
       const username = interaction.options.getString("username");
       console.log(username);
       const member = await findOneByName(username);
@@ -61,6 +83,18 @@ export const getModal = (client) => {
         });
       }
     } else if (interaction.commandName === "requiredpoints") {
+      // check user if is head admin or founder
+      const isAuthorized = interaction.member.roles.cache.find((role) => {
+        return [settings[0].founderId, settings[0].headAdminId].includes(
+          role.id
+        );
+      });
+      if (!isAuthorized) {
+        return interaction.reply({
+          content: "You are not authorized",
+          ephemeral: true,
+        });
+      }
       const requiredPoints = await getRequiredPoints();
       if (!requiredPoints) return interaction.reply("No required points set");
       interaction.reply({
@@ -68,6 +102,19 @@ export const getModal = (client) => {
         content: `Required points: ${await getRequiredPoints()}`,
       });
     } else if (interaction.commandName === "getstatus") {
+      const isAuthorized = interaction.member.roles.cache.find((role) => {
+        return [
+          settings[0].founderId,
+          settings[0].headAdminId,
+          settings[0].modId,
+        ].includes(role.id);
+      });
+      if (!isAuthorized) {
+        return interaction.reply({
+          content: "You are not authorized",
+          ephemeral: true,
+        });
+      }
       const mentionedUser = interaction.options.getUser("username");
 
       const discordUser = await findOne(mentionedUser.id);
@@ -97,6 +144,20 @@ export const getModal = (client) => {
         files: [attachment],
       });
     } else if (interaction.commandName === "vote") {
+      const canVote = interaction.member.roles.cache.find((role) => {
+        return [
+          settings[0].candidateId,
+          settings[0].registeredStaff,
+          settings[0].registeredMangment,
+          settings[0].registeredMember,
+        ].includes(role.id);
+      });
+      if (!canVote) {
+        return interaction.reply({
+          content: "Please register to be able to vote.",
+          ephemeral: true,
+        });
+      }
       const mentionedUser = interaction.options.getUser("username");
 
       const discordUser = await findOne(mentionedUser.id);
@@ -168,109 +229,113 @@ export const getModal = (client) => {
           ]),
         ],
       });
-    }
 
-    const user = await findOne(interaction.member.id);
-    const dbUser = await findOne(mentionedProfile?.discordId);
+      const dbUser = await findOne(mentionedProfile?.discordId);
 
-    // we check so we dont add the bots votes
-    if (dbUser) {
-      // not the bot
-      if (interaction.member.username !== "tag") {
-        const requiredPoints = await getRequiredPoints();
+      // we check so we dont add the bots votes
+      if (dbUser) {
+        // not the bot
+        if (interaction.member.username !== "tag") {
+          const requiredPoints = await getRequiredPoints();
 
-        const guild = client.guilds.cache.get(process.env.GUILD_ID);
-        const role = guild.roles.cache.find((role) => {
-          return role.name === "@everyone";
-        });
-        const mods = guild.roles.cache.find((role) => {
-          return role.name === "mod";
-        });
-
-        if (interaction.customId === "skillsId") {
-          if (dbUser.skillVoters.includes(interaction.member.id))
-            return interaction.reply({
-              content: "You have already voted for skills",
-              ephemeral: true,
-            });
-          dbUser.skills += 1;
-          dbUser.skillVoters.push(interaction.member.id);
-          // here we check if the user has reached the required points at least in two categories
-          if (
-            dbUser.contribution === requiredPoints ||
-            dbUser.personality === requiredPoints
-          ) {
-            dbUser.reachedVotes = true;
-          }
-        } else if (interaction.customId === "contributionId") {
-          if (dbUser.contributionVoters.includes(interaction.member.id))
-            return interaction.reply({
-              content: "You have already voted for contribution",
-              ephemeral: true,
-            });
-          dbUser.contribution += 1;
-          dbUser.contributionVoters.push(interaction.member.id);
-
-          // here we check if user has reached the required points at least in two categories
-          if (
-            dbUser.skills === requiredPoints ||
-            dbUser.personality === requiredPoints
-          ) {
-            dbUser.reachedVotes = true;
-          }
-        } else if (interaction.customId === "personalityId") {
-          if (dbUser.personalityVoters.includes(interaction.member.id))
-            return interaction.reply({
-              content: "You have already voted for personality",
-              ephemeral: true,
-            });
-          dbUser.personality += 1;
-          dbUser.personalityVoters.push(interaction.member.id);
-
-          // here we check if user has reached the required points at least in two categories
-          if (
-            dbUser.skills === requiredPoints ||
-            dbUser.contribution === requiredPoints
-          ) {
-            dbUser.reachedVotes = true;
-          }
-        }
-        if (
-          ["skillsId", "contributionId", "personalityId"].includes(
-            interaction.customId
-          )
-        ) {
-          await dbUser.save();
-
-          if (dbUser.reachedVotes) {
-            const newChannel = await guild.channels.create("submit a ticket", {
-              parent: "974645473187098654",
-              permissionOverwrites: [
-                {
-                  id: role.id,
-                  deny: ["VIEW_CHANNEL"],
-                },
-                {
-                  id: dbUser.discordId,
-                  allow: ["VIEW_CHANNEL"],
-                },
-                {
-                  id: mods.id,
-                  allow: ["ADMINISTRATOR"],
-                },
-              ],
-            });
-            newChannel.send({ embeds: [questionsEmbed] });
-          }
-
-          return interaction.reply({
-            content: "successfully voted!",
-            ephemeral: true,
+          const guild = client.guilds.cache.get(process.env.GUILD_ID);
+          const role = guild.roles.cache.find((role) => {
+            return role.name === "@everyone";
           });
+          const mods = guild.roles.cache.find((role) => {
+            return role.name === "mod";
+          });
+
+          if (interaction.customId === "skillsId") {
+            if (dbUser.skillVoters.includes(interaction.member.id))
+              return interaction.reply({
+                content: "You have already voted for skills",
+                ephemeral: true,
+              });
+            dbUser.skills += 1;
+            dbUser.skillVoters.push(interaction.member.id);
+            // here we check if the user has reached the required points at least in two categories
+            if (
+              dbUser.contribution === requiredPoints ||
+              dbUser.personality === requiredPoints
+            ) {
+              dbUser.reachedVotes = true;
+            }
+          } else if (interaction.customId === "contributionId") {
+            if (dbUser.contributionVoters.includes(interaction.member.id))
+              return interaction.reply({
+                content: "You have already voted for contribution",
+                ephemeral: true,
+              });
+            dbUser.contribution += 1;
+            dbUser.contributionVoters.push(interaction.member.id);
+
+            // here we check if user has reached the required points at least in two categories
+            if (
+              dbUser.skills === requiredPoints ||
+              dbUser.personality === requiredPoints
+            ) {
+              dbUser.reachedVotes = true;
+            }
+          } else if (interaction.customId === "personalityId") {
+            if (dbUser.personalityVoters.includes(interaction.member.id))
+              return interaction.reply({
+                content: "You have already voted for personality",
+                ephemeral: true,
+              });
+            dbUser.personality += 1;
+            dbUser.personalityVoters.push(interaction.member.id);
+
+            // here we check if user has reached the required points at least in two categories
+            if (
+              dbUser.skills === requiredPoints ||
+              dbUser.contribution === requiredPoints
+            ) {
+              dbUser.reachedVotes = true;
+            }
+          }
+          if (
+            ["skillsId", "contributionId", "personalityId"].includes(
+              interaction.customId
+            )
+          ) {
+            await dbUser.save();
+
+            if (dbUser.reachedVotes) {
+              const newChannel = await guild.channels.create(
+                "submit a ticket",
+                {
+                  parent: "974645473187098654",
+                  permissionOverwrites: [
+                    {
+                      id: role.id,
+                      deny: ["VIEW_CHANNEL"],
+                    },
+                    {
+                      id: dbUser.discordId,
+                      allow: ["VIEW_CHANNEL"],
+                    },
+                    {
+                      id: mods.id,
+                      allow: ["ADMINISTRATOR"],
+                    },
+                  ],
+                }
+              );
+              newChannel.send({ embeds: [questionsEmbed] });
+            }
+
+            return interaction.reply({
+              content: "successfully voted!",
+              ephemeral: true,
+            });
+          }
         }
       }
     }
     if (interaction.customId === "registerButton") {
+      const user = await findOne(interaction.member.id);
+
       interactionType = "register";
       if (user) {
         await interaction.reply({
@@ -305,6 +370,18 @@ export const getModal = (client) => {
     } else if (interaction.customId === "refuseToRegister") {
       return interaction.reply({ content: "okay", ephemeral: true });
     } else if (interaction.commandName === "setpoints") {
+      // check user if is head admin or founder
+      const isAuthorized = interaction.member.roles.cache.find((role) => {
+        return [settings[0].founderId, settings[0].headAdminId].includes(
+          role.id
+        );
+      });
+      if (!isAuthorized) {
+        return interaction.reply({
+          content: "You are not authorized",
+          ephemeral: true,
+        });
+      }
       console.log(interaction.option);
       // here we should check that only admins could do that
       const points = interaction.options.getNumber("points");
@@ -369,7 +446,11 @@ export const getModal = (client) => {
               returnedMember.data.id,
               platformVal,
               modal.member.roles.cache.some((role) =>
-                role.name.startsWith("idf")
+                [
+                  settings[0].idfXboxId,
+                  settings[0].idfPcId,
+                  settings[0].idfPsId,
+                ].includes(role.id)
               ),
 
               modal.user.username,
@@ -382,53 +463,55 @@ export const getModal = (client) => {
 
             if (
               modal.member.roles.cache.some((role) =>
-                role.name.startsWith("idf")
+                [
+                  settings[0].idfXboxId,
+                  settings[0].idfPcId,
+                  settings[0].idfPsId,
+                ].includes(role.id)
               ) &&
-              !(
-                modal.member.roles.cache.some((role) =>
-                  role.name.includes("moderator")
-                ) ||
-                modal.member.roles.cache.some((role) =>
-                  role.name.includes("design")
-                ) ||
-                modal.member.roles.cache.some((role) =>
-                  role.name.includes("code")
-                ) ||
-                modal.member.roles.cache.some(
-                  (role) => role.id === settings[0].adminId
-                ) ||
-                modal.member.roles.cache.some((role) =>
-                  role.name.includes("founder")
-                )
+              !modal.member.roles.cache.some((role) =>
+                [
+                  settings[0].moderatorId,
+                  settings[0].seniorModeratorId,
+                  settings[0].trialModeratorId,
+                  settings[0].designId,
+                  settings[0].forceCodeId,
+                  settings[0].adminId,
+                  settings[0].modId,
+                  settings[0].founderId,
+                  settings[0].headAdminId,
+                ].includes(role.id)
               )
             ) {
               // idf registered tag
-              modal.member.roles.add("977562759992602695");
-              console.log("idf");
+              modal.member.roles.add(settings[0].registeredMember);
             } else if (
               //staff
-              modal.member.roles.cache.some((role) =>
-                role.name.includes("moderator")
-              ) ||
-              modal.member.roles.cache.some((role) =>
-                role.name.includes("design")
-              ) ||
-              modal.member.roles.cache.some((role) =>
-                role.name.includes("code")
-              )
+              modal.member.roles.cache.some((role) => {
+                [
+                  settings[0].moderatorId,
+                  settings[0].seniorModeratorId,
+                  settings[0].trialModeratorId,
+                  settings[0].designId,
+                  settings[0].forceCodeId,
+                  settings[0].adminId,
+                ].includes(role.id);
+              })
             ) {
+              modal.member.roles.add(settings[0].registeredStaff);
+
               console.log("mod");
             } else if (
-              //staff
-              modal.member.roles.cache.some(
-                (role) => role.id === settings[0].adminId
-              ) ||
-              modal.member.roles.cache.some((role) =>
-                role.name.includes("founder")
-              )
+              modal.member.roles.cache.some((role) => {
+                [
+                  settings[0].modId,
+                  settings[0].founderId,
+                  settings[0].headAdminId,
+                ].includes(role.id);
+              })
             ) {
               // admins
-              console.log("admin");
+              modal.member.roles.add(settings[0].registeredMangment);
             }
 
             await modal.deferReply({ ephemeral: true });

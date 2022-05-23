@@ -4,6 +4,7 @@ import { Client, Intents, MessageButton } from "discord.js";
 
 import memberRoutes from "./routes/memberRoutes.js";
 import settingsRoute from "./routes/settingsRoute.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import discordModals from "discord-modals";
 import { getModal } from "./modal.js";
 import { getPlate } from "./UI/userPlate.js";
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(memberRoutes);
 app.use(settingsRoute);
+app.use(adminRoutes);
 
 const client = new Client({
   intents: [

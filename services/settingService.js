@@ -27,3 +27,8 @@ export const getSettings = async () => {
 
   return setting;
 };
+
+export const setSettings = async (settingsData) => {
+  const settings = await Setting.create(settingsData);
+  return settings;
+};

@@ -36,7 +36,7 @@ export const setSettings = async (settingsData) => {
 export const editSettings = async (settingsData) => {
   const allSettings = await Setting.find();
 
-  if (settings.length === 0) throw new Error("No settings found");
+  if (allSettings.length === 0) throw new Error("No settings found");
   const settings = await Setting.findByIdAndUpdate(
     allSettings[0]._id,
     settingsData,

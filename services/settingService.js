@@ -32,3 +32,19 @@ export const setSettings = async (settingsData) => {
   const settings = await Setting.create(settingsData);
   return settings;
 };
+
+export const editSettings = async (settingsData) => {
+  const allSettings = await Setting.find();
+
+  if (settings.length === 0) throw new Error("No settings found");
+  const settings = await Setting.findByIdAndUpdate(
+    allSettings[0]._id,
+    settingsData,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  return settings;
+};

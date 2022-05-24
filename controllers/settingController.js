@@ -1,4 +1,5 @@
 import {
+  editSettings,
   getSettings as settingService,
   setSettings,
 } from "../services/settingService.js";
@@ -12,6 +13,15 @@ export const getSetting = async (req, res) => {
 export const postSettings = async (req, res) => {
   try {
     const settings = await setSettings(req.body);
+    res.status(200).json(settings);
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+};
+
+export const patchSettings = async (req, res) => {
+  try {
+    const settings = await editSettings(req.body);
     res.status(200).json(settings);
   } catch (e) {
     res.status(400).json({ message: e.message });

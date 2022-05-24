@@ -128,11 +128,7 @@ getModal(client);
 
 client.on("messageCreate", async (msg) => {
   const settings = await getSettings();
-  if (settings.length === 0)
-    return msg.reply({
-      ephemeral: true,
-      content: "error occurred (set settings)",
-    });
+  if (settings.length === 0) return;
 
   //we dont want messages from the bot
 

@@ -1,7 +1,7 @@
 import express from "express";
 import env from "dotenv";
 import { Client, Intents, MessageButton } from "discord.js";
-
+import cors from "cors";
 import memberRoutes from "./routes/memberRoutes.js";
 import settingsRoute from "./routes/settingsRoute.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -10,12 +10,11 @@ import { getModal } from "./modal.js";
 import { getPlate } from "./UI/userPlate.js";
 import { findOne } from "./services/memberService.js";
 import { getButton } from "./UI/button.js";
-import { questionsEmbed } from "./UI/embeds/questionsEmbed.js";
 import { getSettings } from "./services/settingService.js";
 
 env.config();
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(memberRoutes);

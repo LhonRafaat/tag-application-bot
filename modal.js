@@ -426,14 +426,20 @@ export const getModal = (client) => {
     const gameVal = modal.getTextInputValue("gameVal");
     const gameNameVal = modal.getTextInputValue("gameNameVal");
     const platformVal = modal.getTextInputValue("platformVal");
-    if (!["pc", "xboxone", "ps4", "ps3", "xbox360"].includes(platformVal)) {
+    if (
+      !["pc", "xboxone", "ps4", "ps3", "xbox360"].includes(
+        platformVal.trim().toLowerCase()
+      )
+    ) {
       await modal.deferReply({ ephemeral: true });
       return modal.followUp({
         content: "Please enter a correct platform and try again",
 
         ephemeral: true,
       });
-    } else if (!["bf1", "bfv", "bf3", "bf4"].includes(gameVal)) {
+    } else if (
+      !["bf1", "bfv", "bf3", "bf4"].includes(gameVal.trim().toLowerCase())
+    ) {
       await modal.deferReply({ ephemeral: true });
       return modal.followUp({
         content: "Please enter a correct game and try again",

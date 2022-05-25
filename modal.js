@@ -213,7 +213,7 @@ export const getModal = (client) => {
         components: [
           getButton([
             new MessageButton()
-              .setCustomId("skillsId")
+              .setCustomId(`skillsId-${discordUser.discordId}`)
               .setDisabled(
                 discordUser.skillVoters.includes(
                   interaction.member.id.toString()
@@ -222,7 +222,7 @@ export const getModal = (client) => {
               .setLabel("Skills")
               .setStyle("DANGER"),
             new MessageButton()
-              .setCustomId("contributionId")
+              .setCustomId(`contributionId-${discordUser.discordId}`)
               .setDisabled(
                 discordUser.contributionVoters.includes(
                   interaction.member.id.toString()
@@ -231,7 +231,7 @@ export const getModal = (client) => {
               .setLabel("contribution")
               .setStyle("SUCCESS"),
             new MessageButton()
-              .setCustomId("personalityId")
+              .setCustomId(`personalityId-${discordUser.discordId}`)
               .setDisabled(
                 discordUser.personalityVoters.includes(
                   interaction.member.id.toString()
@@ -242,11 +242,17 @@ export const getModal = (client) => {
           ]),
         ],
       });
-
-      const dbUser = await findOne(mentionedProfile?.discordId);
+    }
+    if (
+      ["personalityId", "contributionId", "skillsId"].includes(
+        interaction.customId?.split("-")[0]
+      )
+    ) {
+      const dbUser = await findOne(interaction.customId.split("-")[1]);
 
       // we check so we dont add the bots votes
       if (dbUser) {
+        console.log("here");
         // not the bot
         if (interaction.member.username !== "tag") {
           const requiredPoints = await getRequiredPoints();
@@ -268,7 +274,7 @@ export const getModal = (client) => {
             ].includes(role.id);
           });
 
-          if (interaction.customId === "skillsId") {
+          if (interaction.customId.split("-")[0] === "skillsId") {
             if (dbUser.skillVoters.includes(interaction.member.id))
               return interaction.reply({
                 content: "You have already voted for skills",
@@ -283,7 +289,7 @@ export const getModal = (client) => {
             ) {
               dbUser.reachedVotes = true;
             }
-          } else if (interaction.customId === "contributionId") {
+          } else if (interaction.customId.split("-")[0] === "contributionId") {
             if (dbUser.contributionVoters.includes(interaction.member.id))
               return interaction.reply({
                 content: "You have already voted for contribution",
@@ -299,7 +305,9 @@ export const getModal = (client) => {
             ) {
               dbUser.reachedVotes = true;
             }
-          } else if (interaction.customId === "personalityId") {
+          } else if (interaction.customId.split("-")[0] === "personalityId") {
+            console.log("here 2");
+
             if (dbUser.personalityVoters.includes(interaction.member.id))
               return interaction.reply({
                 content: "You have already voted for personality",
@@ -318,7 +326,7 @@ export const getModal = (client) => {
           }
           if (
             ["skillsId", "contributionId", "personalityId"].includes(
-              interaction.customId
+              interaction.customId.split("-")[0]
             )
           ) {
             await dbUser.save();
@@ -355,6 +363,7 @@ export const getModal = (client) => {
         }
       }
     }
+
     if (interaction.customId === "registerButton") {
       const user = await findOne(interaction.member.id);
 
@@ -404,7 +413,6 @@ export const getModal = (client) => {
           ephemeral: true,
         });
       }
-      console.log(interaction.option);
       // here we should check that only admins could do that
       const points = interaction.options.getNumber("points");
       setRequiredPoints(points);

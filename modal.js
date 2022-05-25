@@ -534,6 +534,8 @@ export const getModal = (client) => {
             ) {
               // admins
               modal.member.roles.add(settings[0].registeredMangment);
+            } else {
+              modal.member.roles.add(settings[0].candidateId);
             }
 
             await modal.deferReply({ ephemeral: true });

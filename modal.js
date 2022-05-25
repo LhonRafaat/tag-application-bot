@@ -484,15 +484,15 @@ export const getModal = (client) => {
             // addes a role when user is registered, hardcoded for now
 
             if (
-              modal.member.roles.cache.some((role) =>
-                [
+              modal.member.roles.cache.some((role) => {
+                return [
                   settings[0].idfXboxId,
                   settings[0].idfPcId,
                   settings[0].idfPsId,
-                ].includes(role.id)
-              ) &&
-              !modal.member.roles.cache.some((role) =>
-                [
+                ].includes(role.id);
+              }) &&
+              !modal.member.roles.cache.some((role) => {
+                return [
                   settings[0].moderatorId,
                   settings[0].seniorModeratorId,
                   settings[0].trialModeratorId,
@@ -502,15 +502,15 @@ export const getModal = (client) => {
                   settings[0].modId,
                   settings[0].founderId,
                   settings[0].headAdminId,
-                ].includes(role.id)
-              )
+                ].includes(role.id);
+              })
             ) {
               // idf registered tag
               modal.member.roles.add(settings[0].registeredMember);
             } else if (
               //staff
               modal.member.roles.cache.some((role) => {
-                [
+                return [
                   settings[0].moderatorId,
                   settings[0].seniorModeratorId,
                   settings[0].trialModeratorId,
@@ -525,7 +525,7 @@ export const getModal = (client) => {
               console.log("mod");
             } else if (
               modal.member.roles.cache.some((role) => {
-                [
+                return [
                   settings[0].modId,
                   settings[0].founderId,
                   settings[0].headAdminId,

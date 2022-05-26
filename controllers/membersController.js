@@ -1,4 +1,9 @@
-import { deleteOne, findAll, findOne } from "../services/memberService.js";
+import {
+  deleteOne,
+  findAll,
+  findOne,
+  updateUser,
+} from "../services/memberService.js";
 
 export const getMembers = async (req, res) => {
   const members = await findAll();
@@ -17,4 +22,13 @@ export const getMember = async (req, res) => {
 export const deleteMember = async (req, res) => {
   await deleteOne(req.params.id);
   return res.status(200).json({ message: "Member deleted" });
+};
+
+export const patchUser = async (req, res) => {
+  try {
+    const user = await updateUser(req.body);
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };

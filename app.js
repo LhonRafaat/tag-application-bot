@@ -90,6 +90,10 @@ client.on("ready", async () => {
     ],
   });
   commands?.create({
+    name: "getregister",
+    description: "get register button",
+  });
+  commands?.create({
     name: "getbygamename",
     description: "get user status plate",
     options: [

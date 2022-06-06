@@ -52,7 +52,6 @@ export const getModal = (client) => {
         });
       }
       const username = interaction.options.getString("username");
-      console.log(username);
       const member = await findOneByName(username);
       if (!member) {
         return interaction.reply({
@@ -95,6 +94,17 @@ export const getModal = (client) => {
           ephemeral: true,
         });
       }
+    } else if (interaction.commandName === "getregister") {
+      interaction.reply({
+        components: [
+          getButton([
+            new MessageButton()
+              .setCustomId("registerButton")
+              .setLabel("Register")
+              .setStyle("SUCCESS"),
+          ]),
+        ],
+      });
     } else if (interaction.commandName === "requiredpoints") {
       // check user if is head admin or founder
       const isAuthorized = interaction.member.roles.cache.find((role) => {

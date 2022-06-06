@@ -34,7 +34,6 @@ export const createMember = async (
     userNames,
     avatar,
   });
-  console.log("created");
 
   return await member.save();
 };

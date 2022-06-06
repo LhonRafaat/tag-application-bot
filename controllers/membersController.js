@@ -7,7 +7,6 @@ import {
 
 export const getMembers = async (req, res) => {
   const members = await findAll();
-  console.log(members);
 
   res.status(200).json(members);
 };

@@ -11,15 +11,14 @@ import { getPlate } from "./UI/userPlate.js";
 import { findOne } from "./services/memberService.js";
 import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
+import jwt from "jsonwebtoken";
+import { loginCont } from "./controllers/adminController.js";
 
 env.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(memberRoutes);
-app.use(settingsRoute);
-app.use(adminRoutes);
 
 const client = new Client({
   intents: [
@@ -155,6 +154,32 @@ client.on("messageCreate", async (msg) => {
     );
     return msg.reply({ files: [plate] });
   }
+});
+
+app.use("/api/auth/login", loginCont);
+app.use((req, res, next) => {
+  try {
+    const verified = jwt.verify(
+      req.headers.authorization.split(" ")[1],
+      process.env.JWT_SECRET
+    );
+    //check for token
+  } catch (error) {
+    return res.status(401).json({
+      msg: "Unauthorized",
+    });
+  }
+
+  next();
+});
+
+app.use(memberRoutes);
+app.use(settingsRoute);
+app.use(adminRoutes);
+app.use("*", (req, res) => {
+  return res.status(404).json({
+    msg: "Not found",
+  });
 });
 
 export default app;

@@ -262,7 +262,6 @@ export const getModal = (client) => {
 
       // we check so we dont add the bots votes
       if (dbUser) {
-        console.log("here");
         // not the bot
         if (interaction.member.username !== "tag") {
           const requiredPoints = await getRequiredPoints();
@@ -316,7 +315,6 @@ export const getModal = (client) => {
               dbUser.reachedVotes = true;
             }
           } else if (interaction.customId.split("-")[0] === "personalityId") {
-            console.log("here 2");
 
             if (dbUser.personalityVoters.includes(interaction.member.id))
               return interaction.reply({
@@ -546,7 +544,6 @@ export const getModal = (client) => {
             ) {
               modal.member.roles.add(settings[0].registeredStaff);
 
-              console.log("mod");
             } else if (
               modal.member.roles.cache.some((role) => {
                 return [

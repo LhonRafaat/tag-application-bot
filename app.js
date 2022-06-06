@@ -41,7 +41,7 @@ client.on("ready", async () => {
   if (settings.length === 0) return;
   const channel = client.channels.cache.get(settings[0].votingChannelId);
   if (!channel) return;
-  // channel.bulkDelete(100);
+  channel.bulkDelete(100);
 
   //TODO move the button to its own file
 

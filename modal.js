@@ -95,6 +95,19 @@ export const getModal = (client) => {
         });
       }
     } else if (interaction.commandName === "getregister") {
+      const isAuthorized = interaction.member.roles.cache.find((role) => {
+        return [
+          settings[0].founderId,
+          settings[0].headAdminId,
+          settings[0].modId,
+        ].includes(role.id);
+      });
+      if (!isAuthorized) {
+        return interaction.reply({
+          content: "You are not authorized",
+          ephemeral: true,
+        });
+      }
       interaction.reply({
         components: [
           getButton([

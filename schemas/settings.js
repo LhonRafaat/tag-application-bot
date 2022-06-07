@@ -26,6 +26,10 @@ const settingSchema = new Schema(
     // channels id
     votingChannelId: { type: String, default: "968131185668665404" },
     ticketsParentId: { type: String, default: "946010863805014037" },
+    //------------
+    //bot id
+
+    botId: { type: String, default: "978712177567465472" },
 
     // idf roles
     idfXboxId: { type: String, default: "977951821194727434" },

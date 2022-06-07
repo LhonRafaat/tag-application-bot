@@ -45,7 +45,7 @@ client.on("ready", async () => {
       //Iterate through the messages here with the variable "messages".
       messages.forEach((message) => {
         //TODO: Add the bot id to settings schema
-        if (message.author.id === "978712177567465472") {
+        if (message.author.id === settings[0].botId) {
           message.delete();
         }
       });

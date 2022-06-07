@@ -38,26 +38,30 @@ client
 client.on("ready", async () => {
   const settings = await getSettings();
   if (settings.length === 0) return;
-  const channel = client.channels.cache.get(settings[0].votingChannelId);
-  if (!channel) return;
-  channel.bulkDelete(100);
+  try {
+    const channel = client.channels.cache.get(settings[0].votingChannelId);
+    // channel.bulkDelete(100);
 
-  //TODO move the button to its own file
+    //TODO move the button to its own file
 
-  const message = await channel.send({
-    components: [
-      getButton([
-        new MessageButton()
-          .setCustomId("registerButton")
-          .setLabel("Register")
-          .setStyle("SUCCESS"),
-      ]),
-    ],
-  });
+    await channel.send({
+      components: [
+        getButton([
+          new MessageButton()
+            .setCustomId("registerButton")
+            .setLabel("Register")
+            .setStyle("SUCCESS"),
+        ]),
+      ],
+    });
+  } catch (error) {
+    return;
+  }
+
   // message.pin();
 
   console.log(`Logged in as ${client.user.tag}!`);
-  const guild = client.guilds.cache.get(process.env.GUILD_ID);
+  const guild = client.guilds.cache.get(process.env.GUILD_ID + "22");
   let commands;
   if (guild) {
     commands = guild.commands;
@@ -159,10 +163,7 @@ client.on("messageCreate", async (msg) => {
 app.use("/api/auth/login", loginCont);
 app.use((req, res, next) => {
   try {
-    const verified = jwt.verify(
-      req.headers.authorization.split(" ")[1],
-      process.env.JWT_SECRET
-    );
+    jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET);
     //check for token
   } catch (error) {
     return res.status(401).json({

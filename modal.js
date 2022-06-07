@@ -315,7 +315,6 @@ export const getModal = (client) => {
               dbUser.reachedVotes = true;
             }
           } else if (interaction.customId.split("-")[0] === "personalityId") {
-
             if (dbUser.personalityVoters.includes(interaction.member.id))
               return interaction.reply({
                 content: "You have already voted for personality",
@@ -340,27 +339,31 @@ export const getModal = (client) => {
             await dbUser.save();
 
             if (dbUser.reachedVotes) {
-              const newChannel = await guild.channels.create(
-                "submit a ticket",
-                {
-                  parent: settings[0].ticketsParentId,
-                  permissionOverwrites: [
-                    {
-                      id: role.id,
-                      deny: ["VIEW_CHANNEL"],
-                    },
-                    {
-                      id: dbUser.discordId,
-                      allow: ["VIEW_CHANNEL"],
-                    },
-                    {
-                      id: mods.id,
-                      allow: ["ADMINISTRATOR"],
-                    },
-                  ],
-                }
-              );
-              newChannel.send({ embeds: [questionsEmbed] });
+              try {
+                const newChannel = await guild.channels.create(
+                  "submit a ticket",
+                  {
+                    parent: settings[0].ticketsParentId,
+                    permissionOverwrites: [
+                      {
+                        id: role.id,
+                        deny: ["VIEW_CHANNEL"],
+                      },
+                      {
+                        id: dbUser.discordId,
+                        allow: ["VIEW_CHANNEL"],
+                      },
+                      {
+                        id: mods.id,
+                        allow: ["ADMINISTRATOR"],
+                      },
+                    ],
+                  }
+                );
+                newChannel.send({ embeds: [questionsEmbed] });
+              } catch (error) {
+                console.log(error);
+              }
             }
 
             return interaction.reply({
@@ -543,7 +546,6 @@ export const getModal = (client) => {
               })
             ) {
               modal.member.roles.add(settings[0].registeredStaff);
-
             } else if (
               modal.member.roles.cache.some((role) => {
                 return [

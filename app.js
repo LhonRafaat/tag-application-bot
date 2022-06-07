@@ -40,6 +40,16 @@ client.on("ready", async () => {
   if (settings.length === 0) return;
   try {
     const channel = client.channels.cache.get(settings[0].votingChannelId);
+    channel.messages.fetch({ limit: 100 }).then((messages) => {
+      console.log(`Received ${messages.size} messages`);
+      //Iterate through the messages here with the variable "messages".
+      messages.forEach((message) => {
+        //TODO: Add the bot id to settings schema
+        if (message.author.id === "978712177567465472") {
+          message.delete();
+        }
+      });
+    });
     // channel.bulkDelete(100);
 
     //TODO move the button to its own file

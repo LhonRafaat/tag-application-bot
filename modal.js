@@ -544,7 +544,11 @@ export const getModal = (client) => {
               })
             ) {
               // idf registered tag
-              modal.member.roles.add(settings[0].registeredMember);
+              modal.member.roles
+                .add(settings[0].registeredMember)
+                .catch((err) => {
+                  console.log("Error" + err);
+                });
             } else if (
               //staff
               modal.member.roles.cache.some((role) => {
@@ -558,7 +562,11 @@ export const getModal = (client) => {
                 ].includes(role.id);
               })
             ) {
-              modal.member.roles.add(settings[0].registeredStaff);
+              modal.member.roles
+                .add(settings[0].registeredStaff)
+                .catch((err) => {
+                  console.log("Error" + err);
+                });
             } else if (
               modal.member.roles.cache.some((role) => {
                 return [
@@ -569,9 +577,15 @@ export const getModal = (client) => {
               })
             ) {
               // admins
-              modal.member.roles.add(settings[0].registeredMangment);
+              modal.member.roles
+                .add(settings[0].registeredMangment)
+                .catch((err) => {
+                  console.log("Error" + err);
+                });
             } else {
-              modal.member.roles.add(settings[0].candidateId);
+              modal.member.roles.add(settings[0].candidateId).catch((err) => {
+                console.log("Error" + err);
+              });
             }
 
             await modal.deferReply({ ephemeral: true });

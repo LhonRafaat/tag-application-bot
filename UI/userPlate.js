@@ -117,7 +117,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
       ? user.skills > 0
         ? user.skills * barLength + 50
         : user.skills * barLength
-      : user.skills * requiredPoints,
+      : requiredPoints * barLength + 50,
     150
   );
   //make sure the votes are more than 5 then subtract it by 180

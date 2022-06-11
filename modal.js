@@ -587,6 +587,14 @@ export const getModal = (client) => {
                 console.log("Error" + err);
               });
             }
+            try {
+              const channel = client.channels.cache.get(
+                settings[0].idfBotChannelId
+              );
+              channel.send("<@" + modal.user.id + "> just registered!");
+            } catch (error) {
+              console.log(error);
+            }
 
             await modal.deferReply({ ephemeral: true });
             return modal.followUp({

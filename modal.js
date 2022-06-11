@@ -588,9 +588,7 @@ export const getModal = (client) => {
               });
             }
             try {
-              const channel = client.channels.cache.get(
-                settings[0].idfBotChannelId
-              );
+              const channel = client.channels.cache.get("977523561617047582");
               channel.send("<@" + modal.user.id + "> just registered!");
             } catch (error) {
               console.log(error);

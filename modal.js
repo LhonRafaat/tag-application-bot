@@ -589,7 +589,7 @@ export const getModal = (client) => {
             }
             try {
               const channel = await client.channels.cache.get(
-                "977523561617047582"
+                settings[0].idfBotChannelId
               );
               channel.send(
                 "<@" +

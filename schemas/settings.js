@@ -30,6 +30,7 @@ const settingSchema = new Schema(
     //bot id
 
     botId: { type: String, default: "978712177567465472" },
+    idfBotChannelId: { type: String, default: "977523561617047582" },
 
     // idf roles
     idfXboxId: { type: String, default: "977951821194727434" },

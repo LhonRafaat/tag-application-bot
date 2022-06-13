@@ -19,8 +19,12 @@ export const getMember = async (req, res) => {
 };
 
 export const deleteMember = async (req, res) => {
-  await deleteOne(req.params.id);
-  return res.status(200).json({ message: "Member deleted" });
+  try {
+    await deleteOne(req.params.id);
+    return res.status(200).json({ message: "Member deleted" });
+  } catch (error) {
+    return res.status(500).json({ message: "Error deleting member" });
+  }
 };
 
 export const patchUser = async (req, res) => {

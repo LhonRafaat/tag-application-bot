@@ -155,6 +155,12 @@ client.on("messageCreate", async (msg) => {
   if (msg.content.toLowerCase() === "who is the best pilot in the universe") {
     msg.reply("LhonXD");
   }
+  if (
+    msg.content.toLowerCase() ===
+    "who lies about who is the worst pilot in the universe"
+  ) {
+    msg.reply("MrIcePops");
+  }
 
   if (msg.content.toLowerCase() === "!myvotes") {
     const user = await findOne(msg.author.id);

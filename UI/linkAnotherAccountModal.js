@@ -3,11 +3,11 @@ import { Modal, TextInputComponent } from "discord-modals";
 export const linkAnotherAccountModal = () => {
   return new Modal() // We create a Modal
     .setCustomId("linkAnotherAccount")
-    .setTitle("Register for iDF tag application")
+    .setTitle("Member Registration")
     .addComponents(
       new TextInputComponent() // We create a Text Input Component
         .setCustomId("gameNameVal")
-        .setLabel("Enter your game name")
+        .setLabel("Ingame nickname")
         .setStyle("SHORT") //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
         .setRequired(true), // If it's required or not
       new TextInputComponent() // We create a Text Input Component

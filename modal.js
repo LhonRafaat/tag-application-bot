@@ -251,7 +251,7 @@ export const getModal = (client) => {
                   interaction.member.id.toString()
                 )
               )
-              .setLabel("contribution")
+              .setLabel("Contribution")
               .setStyle("SUCCESS"),
             new MessageButton()
               .setCustomId(`personalityId-${discordUser.discordId}`)
@@ -260,7 +260,7 @@ export const getModal = (client) => {
                   interaction.member.id.toString()
                 )
               )
-              .setLabel("personality")
+              .setLabel("Personality")
               .setStyle("PRIMARY"),
           ]),
         ],

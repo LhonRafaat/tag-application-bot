@@ -176,8 +176,12 @@ client.on("messageCreate", async (msg) => {
   }
 
   if (msg.content.toLowerCase() === "!voteranking") {
-    const members = await getMembersRanking();
-    msg.reply(members.toString());
+    try {
+      const members = await getMembersRanking();
+      msg.reply(members);
+    } catch (error) {
+      console.log(error);
+    }
   }
 });
 

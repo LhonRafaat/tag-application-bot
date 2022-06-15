@@ -66,12 +66,15 @@ export const getMembersRanking = async () => {
     contribution: -1,
     personality: -1,
   });
+  let ranking = "";
 
   members = members
     .map((el, i) => {
-      return `${i + 1}- ${el.userNames[0]}`;
+      if (el?.userNames?.length > 0) {
+        ranking = ranking + `\n${i + 1}- ${el.userNames[0]}`;
+      }
     })
     .slice(0, 10);
 
-  return members;
+  return ranking;
 };

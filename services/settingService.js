@@ -48,3 +48,5 @@ export const editSettings = async (settingsData) => {
 
   return settings;
 };
+
+

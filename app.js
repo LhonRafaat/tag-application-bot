@@ -8,7 +8,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import discordModals from "discord-modals";
 import { getModal } from "./modal.js";
 import { getPlate } from "./UI/userPlate.js";
-import { findOne } from "./services/memberService.js";
+import { findOne, getMembersRanking } from "./services/memberService.js";
 import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
 import jwt from "jsonwebtoken";
@@ -173,6 +173,11 @@ client.on("messageCreate", async (msg) => {
       user.userNames[1] ? user.userNames[1] : undefined
     );
     return msg.reply({ files: [plate] });
+  }
+
+  if (msg.content.toLowerCase() === "!voteranking") {
+    const members = await getMembersRanking();
+    msg.reply(members.toString());
   }
 });
 

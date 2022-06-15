@@ -59,3 +59,19 @@ export const updateTag = async (discordId, hasTag) => {
     { new: true, runValidators: true }
   );
 };
+
+export const getMembersRanking = async () => {
+  let members = await Members.find().sort({
+    skills: -1,
+    contribution: -1,
+    personality: -1,
+  });
+
+  members = members
+    .map((el, i) => {
+      return `${i + 1}- ${el.userNames[0]}`;
+    })
+    .slice(0, 10);
+
+  return members;
+};

@@ -13,7 +13,7 @@ import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
 import jwt from "jsonwebtoken";
 import { loginCont } from "./controllers/adminController.js";
-import { getUserByGameId } from "./utils/utils.js";
+import { games, getUserByGameId } from "./utils/utils.js";
 
 env.config();
 const app = express();
@@ -181,14 +181,23 @@ client.on("messageCreate", async (msg) => {
       if (!user) return msg.reply("you are not registered");
       // console.log(user.originIds[0]);
       // let platform;
-
-      // const gameProfile = await getUserByGameId(user.originIds[0], "bfv");
-
+      let gameProfileData = null;
+      for (let index = 0; index < games.length; index++) {
+        const gameProfile = await getUserByGameId(
+          user.originIds[0],
+          games[index]
+        );
+        if (gameProfile.data) {
+          gameProfileData = gameProfile;
+          break;
+        }
+      }
+      if (!gameProfileData?.data) return msg.reply("Game profile not found");
       const plate = await getPlate(
         // taking the first username, maybe we increase it  ?
-        user.userNames[0],
+        gameProfileData.data.userName,
         user.discordId,
-        user.avatar,
+        gameProfileData.data.avatar,
         user.userNames[1] ? user.userNames[1] : undefined
       );
 

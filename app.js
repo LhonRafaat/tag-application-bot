@@ -13,6 +13,7 @@ import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
 import jwt from "jsonwebtoken";
 import { loginCont } from "./controllers/adminController.js";
+import { getUserByGameId } from "./utils/utils.js";
 
 env.config();
 const app = express();
@@ -116,6 +117,18 @@ client.on("ready", async () => {
         description: "username of the user to get the status",
         type: "STRING",
       },
+      {
+        name: "game",
+        required: true,
+        description: "game name of the user to get the status",
+        type: "STRING",
+      },
+      {
+        name: "platform",
+        required: true,
+        description: "platform of the user to get the status",
+        type: "STRING",
+      },
     ],
   });
   commands?.create({
@@ -164,15 +177,29 @@ client.on("messageCreate", async (msg) => {
 
   if (msg.content.toLowerCase() === "!myvotes") {
     const user = await findOne(msg.author.id);
-    if (!user) return msg.reply("you are not registered");
-    const plate = await getPlate(
-      // taking the first username, maybe we increase it  ?
-      user.userNames[0],
-      user.discordId,
-      user.avatar,
-      user.userNames[1] ? user.userNames[1] : undefined
-    );
-    return msg.reply({ files: [plate] });
+    try {
+      if (!user) return msg.reply("you are not registered");
+      // console.log(user.originIds[0]);
+      // let platform;
+
+      // const gameProfile = await getUserByGameId(user.originIds[0], "bfv");
+
+      const plate = await getPlate(
+        // taking the first username, maybe we increase it  ?
+        user.userNames[0],
+        user.discordId,
+        user.avatar,
+        user.userNames[1] ? user.userNames[1] : undefined
+      );
+
+      return msg.reply({ files: [plate] });
+    } catch (error) {
+      console.log(error);
+      return msg.reply({
+        content: "Error occured, please try again later",
+        ephemeral: true,
+      });
+    }
   }
 
   if (msg.content.toLowerCase() === "!voteranking") {

@@ -2,6 +2,7 @@ import { showModal } from "discord-modals"; // Now we extract the showModal meth
 import {
   createMember,
   findAll,
+  findByGameId,
   findOne,
   findOneByName,
 } from "./services/memberService.js";
@@ -18,7 +19,7 @@ import {
   setRequiredPoints,
 } from "./services/settingService.js";
 import { questionsEmbed } from "./UI/embeds/questionsEmbed.js";
-import { getUserProfile } from "./utils/utils.js";
+import { getUserByGameId, getUserProfile } from "./utils/utils.js";
 
 export const getModal = (client) => {
   let interactionType = null;
@@ -38,40 +39,57 @@ export const getModal = (client) => {
 
     if (interaction.commandName === "getbygamename") {
       // check user if is head admin or founder
-      const isAuthorized = interaction.member.roles.cache.find((role) => {
-        return [
-          settings[0].founderId,
-          settings[0].headAdminId,
-          settings[0].modId,
-        ].includes(role.id);
-      });
-      if (!isAuthorized) {
-        return interaction.reply({
-          content: "You are not authorized",
-          ephemeral: true,
-        });
-      }
+      // const isAuthorized = interaction.member.roles.cache.find((role) => {
+      //   return [
+      //     settings[0].founderId,
+      //     settings[0].headAdminId,
+      //     settings[0].modId,
+      //   ].includes(role.id);
+      // });
+      // if (!isAuthorized) {
+      //   return interaction.reply({
+      //     content: "You are not authorized",
+      //     ephemeral: true,
+      //   });
+      // }
       const username = interaction.options.getString("username");
-      const member = await findOneByName(username);
-      if (!member) {
+      const game = interaction.options.getString("game");
+      const platform = interaction.options.getString("platform");
+      try {
+        const gameprofileData = await getUserProfile(game, username, platform);
+        if (!gameprofileData?.data) {
+          return interaction.reply({
+            content: "User not found",
+            ephemeral: true,
+          });
+        }
+        const member = await findByGameId(gameprofileData.data.id);
+        if (!member) {
+          return interaction.reply({
+            content: "User not in idf database",
+            ephemeral: true,
+          });
+        }
+        const attachment = await getPlate(
+          member.userNames[0],
+          member.discordId,
+          member.avatar,
+          member.userNames[1] ? member.userNames[1] : undefined
+        );
+        //TODO: send a error message when user doesnt exist
+
+        // big problem here, if ephemeral is true, we cannot react to the messag
+        return await interaction.reply({
+          ephemeral: true,
+          files: [attachment],
+        });
+      } catch (error) {
+        console.log(error);
         return interaction.reply({
-          content: "User not found",
+          content: "An error occured, please contact staff",
           ephemeral: true,
         });
       }
-      const attachment = await getPlate(
-        member.userNames[0],
-        member.discordId,
-        member.avatar,
-        member.userNames[1] ? member.userNames[1] : undefined
-      );
-      //TODO: send a error message when user doesnt exist
-
-      // big problem here, if ephemeral is true, we cannot react to the messag
-      return await interaction.reply({
-        ephemeral: true,
-        files: [attachment],
-      });
     } else if (interaction.commandName === "closeticket") {
       const isAuthorized = interaction.member.roles.cache.find((role) => {
         return [

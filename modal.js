@@ -39,13 +39,13 @@ export const getModal = (client) => {
 
     if (interaction.commandName === "getbygamename") {
       // check user if is head admin or founder
-      // const isAuthorized = interaction.member.roles.cache.find((role) => {
-      //   return [
-      //     settings[0].founderId,
-      //     settings[0].headAdminId,
-      //     settings[0].modId,
-      //   ].includes(role.id);
-      // });
+      const isAuthorized = interaction.member.roles.cache.find((role) => {
+        return [
+          settings[0].founderId,
+          settings[0].headAdminId,
+          settings[0].modId,
+        ].includes(role.id);
+      });
       // if (!isAuthorized) {
       //   return interaction.reply({
       //     content: "You are not authorized",
@@ -79,10 +79,18 @@ export const getModal = (client) => {
         //TODO: send a error message when user doesnt exist
 
         // big problem here, if ephemeral is true, we cannot react to the messag
-        return await interaction.reply({
-          ephemeral: true,
-          files: [attachment],
-        });
+
+        if (isAuthorized) {
+          return await interaction.reply({
+            ephemeral: true,
+            files: [attachment],
+          });
+        } else {
+          return await interaction.reply({
+            content: "user is in iDF",
+            ephemeral: true,
+          });
+        }
       } catch (error) {
         console.log(error);
         return interaction.reply({

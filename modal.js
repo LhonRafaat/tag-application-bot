@@ -82,6 +82,7 @@ export const getModal = (client) => {
 
         if (isAuthorized) {
           return await interaction.reply({
+            content: `<@${member.discordId}>`,
             ephemeral: true,
             files: [attachment],
           });

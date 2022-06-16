@@ -87,7 +87,7 @@ export const getModal = (client) => {
           });
         } else {
           return await interaction.reply({
-            content: "user is in iDF",
+            content: "Searched user is a member of our discord server",
             ephemeral: true,
           });
         }

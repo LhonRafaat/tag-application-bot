@@ -29,7 +29,6 @@ export const getUserByGameId = async (gameId, gameVal) => {
     const user = await axios.get(
       `https://api.gametools.network/${gameVal}/all/?format_values=false&playerid=${gameId}&lang=en-us`
     );
-    console.log(user);
     return user;
   } catch (e) {
     // console.log(e);
@@ -40,3 +39,5 @@ export const getUserByGameId = async (gameId, gameVal) => {
     // });
   }
 };
+
+export const games = ["bfv", "bf1", "bf4", "bf3"];

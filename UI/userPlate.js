@@ -28,8 +28,13 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   // This uses the canvas dimensions to stretch the image onto the entire canvas
   context.drawImage(background, 0, 0, canvas.width, canvas.height);
   context.drawImage(idfLogo, canvas.width - 100, 20);
+  try {
+    const avatar = await Canvas.loadImage(userAvatar);
+    context.drawImage(avatar, 40, 40, 208, 208);
+  } catch (error) {
+    console.log(error);
+  }
 
-  const avatar = await Canvas.loadImage(userAvatar);
   const avatarFrame = await Canvas.loadImage("./assets/images/frame.png");
   const numBox = await Canvas.loadImage("./assets/images/num-box.png");
   const fillBar = await Canvas.loadImage("./assets/images/fill-bar.png");
@@ -71,7 +76,6 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   }
 
   //the avatar and frame have 15 pixels of space differencem and 42 in high and width,, this is an estimate
-  context.drawImage(avatar, 40, 40, 208, 208);
   context.drawImage(avatarFrame, 25, 25, 250, 250);
   context.globalCompositeOperation = "source-over";
   context.drawImage(

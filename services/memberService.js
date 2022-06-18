@@ -64,19 +64,35 @@ export const updateTag = async (discordId, hasTag) => {
 };
 
 export const getMembersRanking = async () => {
-  let members = await Members.find().sort({
-    skills: -1,
-    contribution: -1,
-    personality: -1,
-  });
+  let members = await Members.aggregate([
+    {
+      $unwind: {
+        path: "$userNames",
+      },
+    },
+    {
+      $group: {
+        _id: "$userNames",
+        totalVotes: {
+          $sum: { $add: ["$skills", "$personality", "$contribution"] },
+        },
+      },
+    },
+    {
+      $sort: {
+        totalVotes: -1,
+      },
+    },
+  ]);
+  console.log(members);
   let ranking = "";
   members = members.slice(0, 10);
 
-  members.map((el, i) => {
-    if (el?.userNames?.length > 0) {
-      ranking = ranking + `\n${i + 1}- ${el.userNames[0]}`;
-    }
-  });
+  if (members.length > 0)
+    members.map((el, i) => {
+      ranking = ranking + `\n${i + 1}- ${el._id}`;
+    });
+  if (!ranking.length > 0) ranking = "No members found";
 
   return ranking;
 };

@@ -39,7 +39,9 @@ export const getModal = (client) => {
 
     if (interaction.commandName === "getbygamename") {
       // check user if is head admin or founder
-      await interaction.deferReply();
+      await interaction.deferReply({
+        ephemeral: true,
+      });
       const isAuthorized = await interaction.member.roles.cache.find((role) => {
         return [
           settings[0].founderId,

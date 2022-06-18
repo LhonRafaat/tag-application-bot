@@ -13,7 +13,7 @@ import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
 import jwt from "jsonwebtoken";
 import { loginCont } from "./controllers/adminController.js";
-import { games, getUserByGameId } from "./utils/utils.js";
+import { games, getUserByGameId, getUserProfile } from "./utils/utils.js";
 
 env.config();
 const app = express();
@@ -183,9 +183,9 @@ client.on("messageCreate", async (msg) => {
       // let platform;
       let gameProfileData = null;
       for (let index = 0; index < games.length; index++) {
-        const gameProfile = await getUserByGameId(
-          user.originIds[0],
+        const gameProfile = await getUserProfile(
           games[index],
+          user.userNames[0],
           user.platforms[0]
         );
         if (gameProfile.data) {

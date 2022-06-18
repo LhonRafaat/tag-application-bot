@@ -22,12 +22,10 @@ export const getUserProfile = async (
     }
   }
 };
-export const getUserByGameId = async (gameId, gameVal) => {
-  console.log(gameId);
-  console.log(gameVal);
+export const getUserByGameId = async (gameId, gameVal, platform) => {
   try {
     const user = await axios.get(
-      `https://api.gametools.network/${gameVal}/all/?format_values=false&playerid=${gameId}&lang=en-us`
+      `https://api.gametools.network/${gameVal}/all/?format_values=false&playerid=${gameId}&lang=en-us&platform=${platform}`
     );
     return user;
   } catch (e) {

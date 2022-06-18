@@ -185,7 +185,8 @@ client.on("messageCreate", async (msg) => {
       for (let index = 0; index < games.length; index++) {
         const gameProfile = await getUserByGameId(
           user.originIds[0],
-          games[index]
+          games[index], 
+          user.platforms[0]
         );
         if (gameProfile.data) {
           gameProfileData = gameProfile;

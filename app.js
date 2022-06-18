@@ -178,14 +178,14 @@ client.on("messageCreate", async (msg) => {
   if (msg.content.toLowerCase() === "!myvotes") {
     const user = await findOne(msg.author.id);
     try {
-      if (!user) return msg.reply("you are not registered");
+      if (!user) return await msg.reply("you are not registered");
       // console.log(user.originIds[0]);
       // let platform;
       let gameProfileData = null;
       for (let index = 0; index < games.length; index++) {
         const gameProfile = await getUserByGameId(
           user.originIds[0],
-          games[index], 
+          games[index],
           user.platforms[0]
         );
         if (gameProfile.data) {
@@ -202,11 +202,11 @@ client.on("messageCreate", async (msg) => {
         user.userNames[1] ? user.userNames[1] : undefined
       );
 
-      return msg.reply({ files: [plate] });
+      return await msg.reply({ files: [plate] });
     } catch (error) {
       console.log(error);
-      return msg.reply({
-        content: "Error occured, please try again later",
+      return await msg.reply({
+        content: "fetched profile not found",
         ephemeral: true,
       });
     }

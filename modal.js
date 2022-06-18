@@ -39,7 +39,8 @@ export const getModal = (client) => {
 
     if (interaction.commandName === "getbygamename") {
       // check user if is head admin or founder
-      const isAuthorized = interaction.member.roles.cache.find((role) => {
+      await interaction.deferReply();
+      const isAuthorized = await interaction.member.roles.cache.find((role) => {
         return [
           settings[0].founderId,
           settings[0].headAdminId,
@@ -52,28 +53,28 @@ export const getModal = (client) => {
       //     ephemeral: true,
       //   });
       // }
-      const username = interaction.options.getString("username");
-      const game = interaction.options.getString("game");
-      const platform = interaction.options.getString("platform");
+      const username = await interaction.options.getString("username");
+      const game = await interaction.options.getString("game");
+      const platform = await interaction.options.getString("platform");
       try {
         const gameprofileData = await getUserProfile(game, username, platform);
         if (!gameprofileData?.data) {
-          return interaction.reply({
+          return await interaction.editReply({
             content: "User not found",
             ephemeral: true,
           });
         }
         const member = await findByGameId(gameprofileData.data.id);
         if (!member) {
-          return interaction.reply({
+          return await interaction.editReply({
             content: "User not in idf database",
             ephemeral: true,
           });
         }
         const attachment = await getPlate(
-          member.userNames[0],
+          gameprofileData.data.userName,
           member.discordId,
-          member.avatar,
+          gameprofileData.data.avatar,
           member.userNames[1] ? member.userNames[1] : undefined
         );
         //TODO: send a error message when user doesnt exist
@@ -81,21 +82,21 @@ export const getModal = (client) => {
         // big problem here, if ephemeral is true, we cannot react to the messag
 
         if (isAuthorized) {
-          return await interaction.reply({
+          return await interaction.editReply({
             content: `<@${member.discordId}>`,
             ephemeral: true,
             files: [attachment],
           });
         } else {
-          return await interaction.reply({
+          return await interaction.editReply({
             content: "Searched user is a member of our discord server",
             ephemeral: true,
           });
         }
       } catch (error) {
         console.log(error);
-        return interaction.reply({
-          content: "An error occured, please contact staff",
+        return await interaction.editReply({
+          content: "Could not fetch queried user",
           ephemeral: true,
         });
       }

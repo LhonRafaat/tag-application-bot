@@ -14,7 +14,7 @@ export const getUserProfile = async (
   } catch {
     if (modal) {
       await modal.deferReply({ ephemeral: true });
-      return modal.followUp({
+      return await modal.followUp({
         content: "User not found",
 
         ephemeral: true,

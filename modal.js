@@ -26,11 +26,14 @@ export const getModal = (client) => {
   let mentionedProfile = null;
 
   client.on("interactionCreate", async (interaction) => {
+    await interaction.deferReply({
+      ephemeral: true,
+    });
     interactionType = null;
     mentionedProfile = null;
     const settings = await getSettings();
     if (!settings || settings?.length === 0) {
-      return interaction.reply({
+      return await interaction.editReply({
         content: "An error occured, please contact staff (settings error)",
 
         ephemeral: true,
@@ -39,9 +42,7 @@ export const getModal = (client) => {
 
     if (interaction.commandName === "getbygamename") {
       // check user if is head admin or founder
-      await interaction.deferReply({
-        ephemeral: true,
-      });
+
       const isAuthorized = await interaction.member.roles.cache.find((role) => {
         return [
           settings[0].founderId,
@@ -103,7 +104,7 @@ export const getModal = (client) => {
         });
       }
     } else if (interaction.commandName === "closeticket") {
-      const isAuthorized = interaction.member.roles.cache.find((role) => {
+      const isAuthorized = await interaction.member.roles.cache.find((role) => {
         return [
           settings[0].founderId,
           settings[0].headAdminId,
@@ -111,21 +112,21 @@ export const getModal = (client) => {
         ].includes(role.id);
       });
       if (!isAuthorized) {
-        return interaction.reply({
+        return await interaction.editReply({
           content: "You are not authorized",
           ephemeral: true,
         });
       }
       if (interaction.channel.parentId === settings[0].ticketsParentId) {
-        interaction.channel.delete();
+        await interaction.channel.delete();
       } else {
-        return interaction.reply({
+        return interaction.editReply({
           content: "You can only delete tickets subchannels",
           ephemeral: true,
         });
       }
     } else if (interaction.commandName === "getregister") {
-      const isAuthorized = interaction.member.roles.cache.find((role) => {
+      const isAuthorized = await interaction.member.roles.cache.find((role) => {
         return [
           settings[0].founderId,
           settings[0].headAdminId,
@@ -133,12 +134,12 @@ export const getModal = (client) => {
         ].includes(role.id);
       });
       if (!isAuthorized) {
-        return interaction.reply({
+        return interaction.editReply({
           content: "You are not authorized",
           ephemeral: true,
         });
       }
-      interaction.reply({
+      await interaction.editReply({
         components: [
           getButton([
             new MessageButton()
@@ -150,25 +151,26 @@ export const getModal = (client) => {
       });
     } else if (interaction.commandName === "requiredpoints") {
       // check user if is head admin or founder
-      const isAuthorized = interaction.member.roles.cache.find((role) => {
+      const isAuthorized = await interaction.member.roles.cache.find((role) => {
         return [settings[0].founderId, settings[0].headAdminId].includes(
           role.id
         );
       });
       if (!isAuthorized) {
-        return interaction.reply({
+        return await interaction.editReply({
           content: "You are not authorized",
           ephemeral: true,
         });
       }
       const requiredPoints = await getRequiredPoints();
-      if (!requiredPoints) return interaction.reply("No required points set");
-      interaction.reply({
+      if (!requiredPoints)
+        return await interaction.editReply("No required points set");
+      await interaction.editReply({
         ephemeral: true,
         content: `Required points: ${await getRequiredPoints()}`,
       });
     } else if (interaction.commandName === "getstatus") {
-      const isAuthorized = interaction.member.roles.cache.find((role) => {
+      const isAuthorized = await interaction.member.roles.cache.find((role) => {
         return [
           settings[0].founderId,
           settings[0].headAdminId,
@@ -176,17 +178,17 @@ export const getModal = (client) => {
         ].includes(role.id);
       });
       if (!isAuthorized) {
-        return interaction.reply({
+        return await interaction.editReply({
           content: "You are not authorized",
           ephemeral: true,
         });
       }
-      const mentionedUser = interaction.options.getUser("username");
+      const mentionedUser = await interaction.options.getUser("username");
 
       const discordUser = await findOne(mentionedUser.id);
 
       if (!discordUser) {
-        return interaction.reply({
+        return await interaction.editReply({
           content: "User not found",
           ephemeral: true,
         });
@@ -205,12 +207,12 @@ export const getModal = (client) => {
       //TODO: send a error message when user doesnt exist
 
       // big problem here, if ephemeral is true, we cannot react to the messag
-      return await interaction.reply({
+      return await await interaction.editReply({
         ephemeral: true,
         files: [attachment],
       });
     } else if (interaction.commandName === "vote") {
-      const canVote = interaction.member.roles.cache.find((role) => {
+      const canVote = await interaction.member.roles.cache.find((role) => {
         return [
           settings[0].candidateId,
           settings[0].registeredStaff,
@@ -219,18 +221,18 @@ export const getModal = (client) => {
         ].includes(role.id);
       });
       if (!canVote) {
-        return interaction.reply({
+        return await interaction.editReply({
           content: "Please register to be able to vote.",
           ephemeral: true,
         });
       }
-      const mentionedUser = interaction.options.getUser("username");
+      const mentionedUser = await interaction.options.getUser("username");
 
       const discordUser = await findOne(mentionedUser.id);
       mentionedProfile = discordUser;
 
       if (!discordUser) {
-        return interaction.reply({
+        return await interaction.editReply({
           content: "User not found",
           ephemeral: true,
         });
@@ -239,7 +241,7 @@ export const getModal = (client) => {
       if (
         discordUser.discordId.toString() === interaction.member.id.toString()
       ) {
-        return interaction.reply({
+        return await interaction.editReply({
           content:
             "You cannot vote for yourself, if you wish to see your own profile, use '!myvotes'",
           ephemeral: true,
@@ -259,7 +261,7 @@ export const getModal = (client) => {
       //TODO: send a error message when user doesnt exist
 
       // big problem here, if ephemeral is true, we cannot react to the messag
-      await interaction.reply({
+      await await interaction.editReply({
         embeds: [getVoteEmbed(discordUser.userNames[0], discordUser.discordId)],
         ephemeral: true,
         files: [attachment],
@@ -309,16 +311,16 @@ export const getModal = (client) => {
         if (interaction.member.username !== "tag") {
           const requiredPoints = await getRequiredPoints();
 
-          const guild = client.guilds.cache.get(process.env.GUILD_ID);
+          const guild = await client.guilds.cache.get(process.env.GUILD_ID);
           if (!guild)
-            return interaction.reply({
+            return await interaction.editReply({
               content: "Error (guild not found)",
               ephemeral: true,
             });
-          const role = guild.roles.cache.find((role) => {
+          const role = await guild.roles.cache.find((role) => {
             return role.name === "@everyone";
           });
-          const mods = guild.roles.cache.find((role) => {
+          const mods = await guild.roles.cache.find((role) => {
             return [
               settings[0].modId,
               settings[0].founderId,
@@ -328,7 +330,7 @@ export const getModal = (client) => {
 
           if (interaction.customId.split("-")[0] === "skillsId") {
             if (dbUser.skillVoters.includes(interaction.member.id))
-              return interaction.reply({
+              return await interaction.editReply({
                 content: "You have already voted for skills",
                 ephemeral: true,
               });
@@ -343,7 +345,7 @@ export const getModal = (client) => {
             }
           } else if (interaction.customId.split("-")[0] === "contributionId") {
             if (dbUser.contributionVoters.includes(interaction.member.id))
-              return interaction.reply({
+              return await interaction.editReply({
                 content: "You have already voted for contribution",
                 ephemeral: true,
               });
@@ -359,7 +361,7 @@ export const getModal = (client) => {
             }
           } else if (interaction.customId.split("-")[0] === "personalityId") {
             if (dbUser.personalityVoters.includes(interaction.member.id))
-              return interaction.reply({
+              return await interaction.editReply({
                 content: "You have already voted for personality",
                 ephemeral: true,
               });
@@ -403,13 +405,13 @@ export const getModal = (client) => {
                     ],
                   }
                 );
-                newChannel.send({ embeds: [questionsEmbed] });
+                await newChannel.send({ embeds: [questionsEmbed] });
               } catch (error) {
                 console.log(error);
               }
             }
 
-            return interaction.reply({
+            return await interaction.editReply({
               content: "successfully voted!",
               ephemeral: true,
             });
@@ -423,7 +425,7 @@ export const getModal = (client) => {
 
       interactionType = "register";
       if (user) {
-        await interaction.reply({
+        await interaction.editReply({
           content: "You are already registered , want to link another account?",
           ephemeral: true,
 
@@ -453,48 +455,51 @@ export const getModal = (client) => {
       interactionType = "linkAnotherAccount";
       // updateUser(user.discordId, )
     } else if (interaction.customId === "refuseToRegister") {
-      return interaction.reply({ content: "okay", ephemeral: true });
+      return await interaction.editReply({ content: "okay", ephemeral: true });
     } else if (interaction.commandName === "setpoints") {
       // check user if is head admin or founder
-      const isAuthorized = interaction.member.roles.cache.find((role) => {
+      const isAuthorized = await interaction.member.roles.cache.find((role) => {
         return [settings[0].founderId, settings[0].headAdminId].includes(
           role.id
         );
       });
       if (!isAuthorized) {
-        return interaction.reply({
+        return await interaction.editReply({
           content: "You are not authorized",
           ephemeral: true,
         });
       }
       // here we should check that only admins could do that
-      const points = interaction.options.getNumber("points");
+      const points = await interaction.options.getNumber("points");
       setRequiredPoints(points);
       return points
-        ? interaction.reply({ content: "okay", ephemeral: true })
-        : interaction.reply({ content: "bad request", ephemeral: true });
+        ? await interaction.editReply({ content: "okay", ephemeral: true })
+        : await interaction.editReply({
+            content: "bad request",
+            ephemeral: true,
+          });
     }
   });
   client.on("modalSubmit", async (modal) => {
     const settings = await getSettings();
     if (!settings || settings?.length === 0) {
       await modal.deferReply({ ephemeral: true });
-      return modal.followUp({
+      return await modal.followUp({
         content: "An error occured, please contact staff (settings error)",
 
         ephemeral: true,
       });
     }
-    const gameVal = modal.getTextInputValue("gameVal");
-    const gameNameVal = modal.getTextInputValue("gameNameVal");
-    const platformVal = modal.getTextInputValue("platformVal");
+    const gameVal = await modal.getTextInputValue("gameVal");
+    const gameNameVal = await modal.getTextInputValue("gameNameVal");
+    const platformVal = await modal.getTextInputValue("platformVal");
     if (
       !["pc", "xboxone", "ps4", "ps3", "xbox360"].includes(
         platformVal.trim().toLowerCase()
       )
     ) {
       await modal.deferReply({ ephemeral: true });
-      return modal.followUp({
+      return await modal.followUp({
         content: "Please enter a correct platform and try again",
 
         ephemeral: true,
@@ -503,7 +508,7 @@ export const getModal = (client) => {
       !["bf1", "bfv", "bf3", "bf4"].includes(gameVal.trim().toLowerCase())
     ) {
       await modal.deferReply({ ephemeral: true });
-      return modal.followUp({
+      return await modal.followUp({
         content: "Please enter a correct game and try again",
 
         ephemeral: true,
@@ -522,7 +527,7 @@ export const getModal = (client) => {
           members.map((member) => originIds.push(...member.originIds));
           if (originIds.includes(returnedMember.data.id)) {
             await modal.deferReply({ ephemeral: true });
-            modal.followUp({
+            await modal.followUp({
               content: "This account is already linked",
 
               ephemeral: true,
@@ -535,7 +540,7 @@ export const getModal = (client) => {
               modal.user.id,
               returnedMember.data.id,
               platformVal,
-              modal.member.roles.cache.some((role) =>
+              await modal.member.roles.cache.some((role) =>
                 [
                   settings[0].idfXboxId,
                   settings[0].idfPcId,
@@ -552,14 +557,14 @@ export const getModal = (client) => {
             // addes a role when user is registered, hardcoded for now
 
             if (
-              modal.member.roles.cache.some((role) => {
+              (await modal.member.roles.cache.some((role) => {
                 return [
                   settings[0].idfXboxId,
                   settings[0].idfPcId,
                   settings[0].idfPsId,
                 ].includes(role.id);
-              }) &&
-              !modal.member.roles.cache.some((role) => {
+              })) &&
+              !(await modal.member.roles.cache.some((role) => {
                 return [
                   settings[0].moderatorId,
                   settings[0].seniorModeratorId,
@@ -571,17 +576,17 @@ export const getModal = (client) => {
                   settings[0].founderId,
                   settings[0].headAdminId,
                 ].includes(role.id);
-              })
+              }))
             ) {
               // idf registered tag
-              modal.member.roles
+              await modal.member.roles
                 .add(settings[0].registeredMember)
                 .catch((err) => {
                   console.log("Error" + err);
                 });
             } else if (
               //staff
-              modal.member.roles.cache.some((role) => {
+              await modal.member.roles.cache.some((role) => {
                 return [
                   settings[0].moderatorId,
                   settings[0].seniorModeratorId,
@@ -592,13 +597,13 @@ export const getModal = (client) => {
                 ].includes(role.id);
               })
             ) {
-              modal.member.roles
+              await modal.member.roles
                 .add(settings[0].registeredStaff)
                 .catch((err) => {
                   console.log("Error" + err);
                 });
             } else if (
-              modal.member.roles.cache.some((role) => {
+              await modal.member.roles.cache.some((role) => {
                 return [
                   settings[0].modId,
                   settings[0].founderId,
@@ -607,21 +612,23 @@ export const getModal = (client) => {
               })
             ) {
               // admins
-              modal.member.roles
+              await modal.member.roles
                 .add(settings[0].registeredMangment)
                 .catch((err) => {
                   console.log("Error" + err);
                 });
             } else {
-              modal.member.roles.add(settings[0].candidateId).catch((err) => {
-                console.log("Error" + err);
-              });
+              await modal.member.roles
+                .add(settings[0].candidateId)
+                .catch((err) => {
+                  console.log("Error" + err);
+                });
             }
             try {
               const channel = await client.channels.cache.get(
                 settings[0].idfBotChannelId
               );
-              channel.send(
+              await channel.send(
                 "<@" +
                   modal.user.id +
                   "> just registered as " +
@@ -633,7 +640,7 @@ export const getModal = (client) => {
             }
 
             await modal.deferReply({ ephemeral: true });
-            return modal.followUp({
+            return await modal.followUp({
               content: "response collected",
 
               ephemeral: true,
@@ -642,7 +649,7 @@ export const getModal = (client) => {
             const user = await findOne(modal.member.id);
             if (user.originIds.includes(returnedMember.data.id)) {
               await modal.deferReply({ ephemeral: true });
-              return modal.followUp({
+              return await modal.followUp({
                 content: "you have already registered this account",
 
                 ephemeral: true,
@@ -657,7 +664,7 @@ export const getModal = (client) => {
 
             await user.save();
             await modal.deferReply({ ephemeral: true });
-            modal.followUp({
+            await modal.followUp({
               content: "response collected",
 
               ephemeral: true,

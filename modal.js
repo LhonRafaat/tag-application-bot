@@ -26,9 +26,11 @@ export const getModal = (client) => {
   let mentionedProfile = null;
 
   client.on("interactionCreate", async (interaction) => {
-    await interaction.deferReply({
-      ephemeral: true,
-    });
+    if (!["registerButton", "wantToRegister"].includes(interaction.customId)) {
+      await interaction.deferReply({
+        ephemeral: true,
+      });
+    }
     interactionType = null;
     mentionedProfile = null;
     const settings = await getSettings();
@@ -425,6 +427,7 @@ export const getModal = (client) => {
 
       interactionType = "register";
       if (user) {
+        await interaction.deferReply();
         await interaction.editReply({
           content: "You are already registered , want to link another account?",
           ephemeral: true,

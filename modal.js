@@ -427,7 +427,7 @@ export const getModal = (client) => {
 
       interactionType = "register";
       if (user) {
-        await interaction.deferReply();
+        await interaction.deferReply({ ephemeral: true });
         await interaction.editReply({
           content: "You are already registered , want to link another account?",
           ephemeral: true,

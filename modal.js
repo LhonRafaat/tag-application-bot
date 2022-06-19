@@ -27,9 +27,11 @@ export const getModal = (client) => {
 
   client.on("interactionCreate", async (interaction) => {
     if (!["registerButton", "wantToRegister"].includes(interaction.customId)) {
-      await interaction.deferReply({
-        ephemeral: true,
-      });
+      if (interaction.commandName !== "getregister") {
+        await interaction.deferReply({
+          ephemeral: true,
+        });
+      }
     }
     interactionType = null;
     mentionedProfile = null;
@@ -128,6 +130,7 @@ export const getModal = (client) => {
         });
       }
     } else if (interaction.commandName === "getregister") {
+      await interaction.deferReply();
       const isAuthorized = await interaction.member.roles.cache.find((role) => {
         return [
           settings[0].founderId,

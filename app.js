@@ -188,7 +188,7 @@ client.on("messageCreate", async (msg) => {
           user.userNames[0],
           user.platforms[0]
         );
-        if (gameProfile.data) {
+        if (gameProfile?.data) {
           gameProfileData = gameProfile;
           break;
         }

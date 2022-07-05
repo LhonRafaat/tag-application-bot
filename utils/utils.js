@@ -38,4 +38,15 @@ export const getUserByGameId = async (gameId, gameVal, platform) => {
   }
 };
 
+export const getBf2Profile = async (name) => {
+  try {
+    const user = await axios.get(
+      `https://api.gametools.network/bf2/stats/?format_values=false&name=${name}&lang=en-us&platform=pc`
+    );
+    return user;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const games = ["bfv", "bf1", "bf4", "bf3"];

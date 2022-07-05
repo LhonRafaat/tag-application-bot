@@ -1,4 +1,4 @@
-import { showModal } from "discord-modals"; // Now we extract the showModal method
+import { Modal, showModal, TextInputComponent } from "discord-modals"; // Now we extract the showModal method
 import {
   createMember,
   findAll,
@@ -453,6 +453,12 @@ export const getModal = (client) => {
           client: client, // Client to show the Modal through the Discord API.
           interaction: interaction, // Show the modal with interaction data.
         });
+    } else if (interaction.customId === "registerBf2") {
+      //use discord js input component to get name input
+      interaction.editReply({
+        content: "Please enter your BF2 name",
+        ephemeral: true,
+      });
     } else if (interaction.customId === "wantToRegister") {
       showModal(linkAnotherAccountModal(), {
         client: client, // Client to show the Modal through the Discord API.

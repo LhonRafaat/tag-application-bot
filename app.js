@@ -61,7 +61,11 @@ client.on("ready", async () => {
           new MessageButton()
             .setCustomId("registerButton")
             .setLabel("Register")
-            .setStyle("SUCCESS"),
+            .setStyle("PRIMARY"),
+          new MessageButton()
+            .setCustomId("registerBf2")
+            .setLabel("Register your BF2 account")
+            .setStyle("SECONDARY"),
         ]),
       ],
     });

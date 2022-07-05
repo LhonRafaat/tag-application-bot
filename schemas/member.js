@@ -19,6 +19,9 @@ const membersSchema = new Schema(
     personalityVoters: [{ type: String, required: false }],
     contributionVoters: [{ type: String, required: false }],
     reachedVotes: { type: Boolean, default: false },
+    bf2profile: {
+      name: { type: String, required: false },
+    },
   },
   { timestamps: true }
 );

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 const membersSchema = new Schema(
   {
-    discordId: { type: String, required: true },
+    discordId: { type: String, required: true, unique: true },
     //this can include ps id and xbox id aswell
     originIds: [{ type: String, required: true }],
     platforms: [{ type: String, required: true }],

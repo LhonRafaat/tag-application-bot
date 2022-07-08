@@ -1,10 +1,12 @@
 import { Modal, showModal, TextInputComponent } from "discord-modals"; // Now we extract the showModal method
 import {
+  checkBf2Profiles,
   createMember,
   findAll,
   findByGameId,
   findOne,
   findOneByName,
+  registerBf2Account,
 } from "./services/memberService.js";
 import { getVoteEmbed } from "./UI/embeds/voteEmbed.js";
 import { getPlate } from "./UI/userPlate.js";
@@ -20,13 +22,18 @@ import {
 } from "./services/settingService.js";
 import { questionsEmbed } from "./UI/embeds/questionsEmbed.js";
 import { getUserByGameId, getUserProfile } from "./utils/utils.js";
+import { getBf2Modal } from "./UI/bf2Modal.js";
 
 export const getModal = (client) => {
   let interactionType = null;
   let mentionedProfile = null;
 
   client.on("interactionCreate", async (interaction) => {
-    if (!["registerButton", "wantToRegister"].includes(interaction.customId)) {
+    if (
+      !["registerButton", "wantToRegister", "registerBf2"].includes(
+        interaction.customId
+      )
+    ) {
       if (interaction.commandName !== "getregister") {
         await interaction.deferReply({
           ephemeral: true,
@@ -455,9 +462,10 @@ export const getModal = (client) => {
         });
     } else if (interaction.customId === "registerBf2") {
       //use discord js input component to get name input
-      interaction.editReply({
-        content: "Please enter your BF2 name",
-        ephemeral: true,
+
+      await showModal(getBf2Modal(), {
+        client: client, // Client to show the Modal through the Discord API.
+        interaction: interaction, // Show the modal with interaction data.
       });
     } else if (interaction.customId === "wantToRegister") {
       showModal(linkAnotherAccountModal(), {
@@ -505,28 +513,53 @@ export const getModal = (client) => {
     const gameVal = await modal.getTextInputValue("gameVal");
     const gameNameVal = await modal.getTextInputValue("gameNameVal");
     const platformVal = await modal.getTextInputValue("platformVal");
-    if (
-      !["pc", "xboxone", "ps4", "ps3", "xbox360"].includes(
-        platformVal.trim().toLowerCase()
-      )
-    ) {
+    const bf2NameVal = await modal.getTextInputValue("bf2NameVal");
+
+    // we need to check here if its not the bf2 modal
+    if (!modal.customId === "bf2Modal") {
+      if (
+        !["pc", "xboxone", "ps4", "ps3", "xbox360"].includes(
+          platformVal.trim().toLowerCase()
+        )
+      ) {
+        await modal.deferReply({ ephemeral: true });
+        return await modal.followUp({
+          content: "Please enter a correct platform and try again",
+
+          ephemeral: true,
+        });
+      } else if (
+        !["bf1", "bfv", "bf3", "bf4"].includes(gameVal.trim().toLowerCase())
+      ) {
+        await modal.deferReply({ ephemeral: true });
+        return await modal.followUp({
+          content: "Please enter a correct game and try again",
+
+          ephemeral: true,
+        });
+      }
+    }
+    //if its for voting we dont want to create a user
+
+    if (modal.customId === "bf2Modal") {
+      const doesExist = await checkBf2Profiles(bf2NameVal);
+      if (doesExist) {
+        await modal.deferReply({ ephemeral: true });
+        return await modal.followUp({
+          content: "This profile already exists",
+        });
+      }
+      await registerBf2Account(
+        modal.member.id,
+        bf2NameVal,
+        modal.user.username
+      );
       await modal.deferReply({ ephemeral: true });
       return await modal.followUp({
-        content: "Please enter a correct platform and try again",
-
-        ephemeral: true,
-      });
-    } else if (
-      !["bf1", "bfv", "bf3", "bf4"].includes(gameVal.trim().toLowerCase())
-    ) {
-      await modal.deferReply({ ephemeral: true });
-      return await modal.followUp({
-        content: "Please enter a correct game and try again",
-
+        content: "successfully registered",
         ephemeral: true,
       });
     }
-    //if its for voting we dont want to create a user
 
     getUserProfile(gameVal, gameNameVal, platformVal, modal).then(
       async (returnedMember) => {
@@ -545,6 +578,7 @@ export const getModal = (client) => {
               ephemeral: true,
             });
           }
+
           if (interactionType === "register") {
             //if the user's profile exists , then we create a new member in the db
 

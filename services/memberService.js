@@ -84,7 +84,6 @@ export const getMembersRanking = async () => {
       },
     },
   ]);
-  console.log(members);
   let ranking = "";
   members = members.slice(0, 10);
 
@@ -95,4 +94,45 @@ export const getMembersRanking = async () => {
   if (!ranking.length > 0) ranking = "No members found";
 
   return ranking;
+};
+
+export const registerBf2Account = async (discordId, bf2Name, fullName) => {
+  const member = await Members.findOne({ discordId });
+
+  if (member) {
+    if (!member.userNames.includes(bf2Name)) {
+      member.userNames.push(bf2Name);
+      await member.save();
+    }
+    if (!member.bf2profile.name) {
+      member.bf2profile.name = bf2Name;
+      await member.save();
+      return member;
+    }
+  } else {
+    const bf2profile = {
+      name: bf2Name,
+    };
+    const newMember = await Members.create({
+      discordId,
+      userNames: [bf2Name],
+      fullName,
+      bf2profile,
+    });
+
+    return newMember;
+  }
+};
+
+export const checkBf2Profiles = async (gameName) => {
+  const members = await Members.find({
+    bf2profile: {
+      $exists: true,
+    },
+  });
+
+  // check if gameName exists in members
+  const member = members.find((el) => el.bf2profile.name === gameName);
+  if (member) return true;
+  return false;
 };

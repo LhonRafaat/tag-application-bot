@@ -5,11 +5,11 @@ const membersSchema = new Schema(
   {
     discordId: { type: String, required: true, unique: true },
     //this can include ps id and xbox id aswell
-    originIds: [{ type: String, required: true }],
-    platforms: [{ type: String, required: true }],
-    userNames: [{ type: String, required: true }],
-    hasTag: { type: Boolean, required: true },
-    avatar: { type: String, required: true },
+    originIds: [{ type: String }],
+    platforms: [{ type: String }],
+    userNames: [{ type: String }],
+    hasTag: { type: Boolean },
+    avatar: { type: String },
     fullName: { type: String, required: true },
     skills: { type: Number, default: 0 },
     karma: { type: Number, default: 0 },
@@ -20,7 +20,7 @@ const membersSchema = new Schema(
     contributionVoters: [{ type: String, required: false }],
     reachedVotes: { type: Boolean, default: false },
     bf2profile: {
-      name: { type: String, required: false },
+      name: { type: String, required: false, unique: true },
     },
   },
   { timestamps: true }

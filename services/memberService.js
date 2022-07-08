@@ -117,6 +117,7 @@ export const registerBf2Account = async (discordId, bf2Name, fullName) => {
       discordId,
       userNames: [bf2Name],
       fullName,
+      avatar: "./assets/images/default-avatar.jpg",
       bf2profile,
     });
 

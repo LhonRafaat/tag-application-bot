@@ -13,7 +13,12 @@ import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
 import jwt from "jsonwebtoken";
 import { loginCont } from "./controllers/adminController.js";
-import { games, getUserByGameId, getUserProfile } from "./utils/utils.js";
+import {
+  games,
+  getBf2Profile,
+  getUserByGameId,
+  getUserProfile,
+} from "./utils/utils.js";
 
 env.config();
 const app = express();
@@ -70,6 +75,7 @@ client.on("ready", async () => {
       ],
     });
   } catch (error) {
+    console.log(error);
     return;
   }
 
@@ -181,14 +187,23 @@ client.on("messageCreate", async (msg) => {
 
   if (msg.content.toLowerCase() === "!myvotes") {
     const user = await findOne(msg.author.id);
+    let isBf2 = false;
     try {
       if (!user) return await msg.reply("you are not registered");
       // console.log(user.originIds[0]);
       // let platform;
       let gameProfileData = null;
-      for (let index = 0; index < games.length; index++) {
+      for await (const game of games) {
+        if (game === "bf2") {
+          const bf2Profile = await getBf2Profile(user.bf2profile?.name);
+          if (bf2Profile?.data) {
+            gameProfileData = bf2Profile.data;
+            isBf2 = true;
+            break;
+          }
+        }
         const gameProfile = await getUserProfile(
-          games[index],
+          game,
           user.userNames[0],
           user.platforms[0]
         );
@@ -197,12 +212,14 @@ client.on("messageCreate", async (msg) => {
           break;
         }
       }
-      if (!gameProfileData?.data) return msg.reply("Game profile not found");
+      if (!gameProfileData?.data && !gameProfileData)
+        return msg.reply("Game profile not found");
       const plate = await getPlate(
         // taking the first username, maybe we increase it  ?
-        gameProfileData.data.userName,
+        !isBf2 ? gameProfileData.data.userName : user.userNames[0],
         user.discordId,
-        gameProfileData.data.avatar,
+        gameProfileData.data?.avatar,
+
         user.userNames[1] ? user.userNames[1] : undefined
       );
 

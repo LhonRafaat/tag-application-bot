@@ -41,7 +41,7 @@ export const getUserByGameId = async (gameId, gameVal, platform) => {
 export const getBf2Profile = async (name) => {
   try {
     const user = await axios.get(
-      `https://api.gametools.network/bf2/stats/?format_values=false&name=${name}&lang=en-us&platform=pc`
+      `https://api.gametools.network/bf2/stats/?format_values=false&name=${name}&lang=en-us&platform=bf2hub`
     );
     return user;
   } catch (e) {
@@ -49,4 +49,4 @@ export const getBf2Profile = async (name) => {
   }
 };
 
-export const games = ["bfv", "bf1", "bf4", "bf3"];
+export const games = ["bfv", "bf2", "bf1", "bf4", "bf3"];

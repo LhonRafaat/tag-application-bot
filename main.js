@@ -24,7 +24,7 @@ import { questionsEmbed } from "./UI/embeds/questionsEmbed.js";
 import { getUserByGameId, getUserProfile } from "./utils/utils.js";
 import { getBf2Modal } from "./UI/bf2Modal.js";
 
-export const getModal = (client) => {
+export const getMain = (client) => {
   let interactionType = null;
   let mentionedProfile = null;
 

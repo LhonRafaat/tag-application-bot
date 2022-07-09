@@ -6,7 +6,7 @@ import memberRoutes from "./routes/memberRoutes.js";
 import settingsRoute from "./routes/settingsRoute.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import discordModals from "discord-modals";
-import { getModal } from "./modal.js";
+import { getMain } from "./main.js";
 import { getPlate } from "./UI/userPlate.js";
 import { findOne, getMembersRanking } from "./services/memberService.js";
 import { getButton } from "./UI/button.js";
@@ -164,7 +164,7 @@ client.on("ready", async () => {
 });
 discordModals(client);
 
-getModal(client);
+getMain(client);
 
 client.on("messageCreate", async (msg) => {
   const settings = await getSettings();

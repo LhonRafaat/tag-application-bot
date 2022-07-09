@@ -1,13 +1,12 @@
 import { showModal } from "discord-modals";
 import { MessageButton } from "discord.js";
-import { findOne } from "../services/memberService";
-import { getButton } from "../UI/button";
-import { getRegisterModal } from "../UI/registerModal";
+import { findOne } from "../services/memberService.js";
+import { getButton } from "../UI/button.js";
+import { getRegisterModal } from "../UI/registerModal.js";
 
-export const register = async (interaction, interactionType, client) => {
+export const register = async (interaction, client) => {
   const user = await findOne(interaction.member.id);
 
-  interactionType = "register";
   if (user) {
     await interaction.deferReply({ ephemeral: true });
     await interaction.editReply({
@@ -33,5 +32,4 @@ export const register = async (interaction, interactionType, client) => {
       interaction: interaction, // Show the modal with interaction data.
     });
 
-  return interactionType;
 };

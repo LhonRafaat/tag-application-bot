@@ -1,7 +1,7 @@
-import { setRequiredPoints } from "../services/settingService";
-import { isMod } from "../utils/isMod";
+import { setRequiredPoints } from "../services/settingService.js";
+import { isMod } from "../utils/isMod.js";
 
-export const setPoints = async (interaction, settings) => {
+export const setPoints = async (interaction) => {
   // check user if is head admin or founder
   const isAuthorized = await isMod(interaction, setPoints);
   if (!isAuthorized) {

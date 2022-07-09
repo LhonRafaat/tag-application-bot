@@ -1,6 +1,6 @@
-import { findOne } from "../services/memberService";
-import { getPlate } from "../UI/userPlate";
-import { isMod } from "../utils/isMod";
+import { findOne } from "../services/memberService.js";
+import { getPlate } from "../UI/userPlate.js";
+import { isMod } from "../utils/isMod.js";
 
 export const getStatus = async (interaction, settings) => {
   const isAuthorized = await isMod(interaction, settings);

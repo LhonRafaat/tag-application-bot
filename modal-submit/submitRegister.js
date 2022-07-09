@@ -1,5 +1,5 @@
-import { createMember } from "../services/memberService";
-import { addRole } from "../utils/addRole";
+import { createMember } from "../services/memberService.js";
+import { addRole } from "../utils/addRole.js";
 
 export const submitRegister = async (
   modal,
@@ -12,7 +12,7 @@ export const submitRegister = async (
 
   createMember(
     modal.user.id,
-    returnedMember.data.id,
+    returnedMember.data?.id,
     platformVal,
     await modal.member.roles.cache.some((role) =>
       [
@@ -23,8 +23,8 @@ export const submitRegister = async (
     ),
 
     modal.user.username,
-    returnedMember.data.userName,
-    returnedMember.data.avatar
+    returnedMember.data?.userName,
+    returnedMember.data?.avatar
   );
   // assign registered role
 

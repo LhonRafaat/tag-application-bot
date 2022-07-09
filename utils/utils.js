@@ -1,25 +1,13 @@
 import axios from "axios";
 
-export const getUserProfile = async (
-  gameVal,
-  gameNameVal,
-  platformVal,
-  modal
-) => {
+export const getUserProfile = async (gameVal, gameNameVal, platformVal) => {
   try {
     const user = await axios.get(
       `https://api.gametools.network/${gameVal}/all/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`
     );
     return user;
-  } catch {
-    if (modal) {
-      await modal.deferReply({ ephemeral: true });
-      return await modal.followUp({
-        content: "User not found",
-
-        ephemeral: true,
-      });
-    }
+  } catch (e) {
+    // console.log(e);
   }
 };
 export const getUserByGameId = async (gameId, gameVal, platform) => {
@@ -45,7 +33,7 @@ export const getBf2Profile = async (name) => {
     );
     return user;
   } catch (e) {
-    console.log(e);
+    // console.log(e);
   }
 };
 

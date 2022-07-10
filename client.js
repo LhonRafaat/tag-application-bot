@@ -51,7 +51,7 @@ export const client = async () => {
         console.log(`Received ${messages.size} messages`);
         //Iterate through the messages here with the variable "messages".
         messages.forEach((message) => {
-          //TODO: Add the bot id to settings schema
+          //TODO: Add the bot id to settings schema //done
           if (message.author.id === settings[0].botId) {
             message.delete();
           }
@@ -83,7 +83,7 @@ export const client = async () => {
     // message.pin();
 
     console.log(`Logged in as ${client.user.tag}!`);
-    const guild = client.guilds.cache.get(process.env.GUILD_ID + "22");
+    const guild = client.guilds.cache.get(process.env.GUILD_ID);
     let commands;
     if (guild) {
       commands = guild.commands;
@@ -178,10 +178,8 @@ export const client = async () => {
         user.msgContribution = 0;
         user.contribution += 1;
       }
-      await user.save();
-    }
-    if (msg.mentions?.roles?.first()) {
-      if (user) {
+
+      if (msg.mentions?.roles?.first()) {
         if (
           [
             settings[0].pcBfv,
@@ -202,10 +200,20 @@ export const client = async () => {
             user.rolePingContribution = 0;
             user.contribution += 1;
           }
-          await user.save();
         }
       }
+
+      if (msg.channelId === settings[0].contentCreatorsId) {
+        console.log("here");
+        user.contentContribution += settings[0].contentValue;
+        if (user.contentContribution >= 1) {
+          user.contentContribution = 0;
+          user.contribution += 1;
+        }
+      }
+      await user.save();
     }
+
     //we dont want messages from the bot
 
     if (msg.author.bot) return;

@@ -6,6 +6,7 @@ const settingSchema = new Schema(
     requiredPoints: { type: Number, default: 20 },
     msgValue: { type: Number, default: 0.05 },
     rolePingValue: { type: Number, default: 0.5 },
+    contentValue: { type: Number, default: 0.5 },
 
     //------------------
     // member ids
@@ -29,6 +30,7 @@ const settingSchema = new Schema(
     // channels id
     votingChannelId: { type: String, default: "968131185668665404" },
     ticketsParentId: { type: String, default: "946010863805014037" },
+    contentCreatorsId: { type: String, default: "548861901539639313" },
     //------------
     //bot id
 

@@ -3,7 +3,11 @@ import discordModals from "discord-modals";
 import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
 import { getUserProfile } from "./utils/utils.js";
-import { findAll, getMembersRanking } from "./services/memberService.js";
+import {
+  findAll,
+  findOne,
+  getMembersRanking,
+} from "./services/memberService.js";
 import { getRequiredPoints } from "./services/settingService.js";
 import { getByGameName } from "./interactions/getByGameName.js";
 import { closeTicket } from "./interactions/closeTicket.js";
@@ -166,9 +170,17 @@ export const client = async () => {
   discordModals(client);
 
   client.on("messageCreate", async (msg) => {
-    const settings = await getSettings();
+    console.log(msg.mentions.roles.first());
     if (settings.length === 0) return;
-
+    const user = await findOne(msg.author.id);
+    if (user) {
+      user.msgContribution += settings[0].msgValue;
+      if (user.msgContribution === 1) {
+        user.msgContribution = 0;
+        user.contribution += 1;
+      }
+      await user.save();
+    }
     //we dont want messages from the bot
 
     if (msg.author.bot) return;
@@ -218,8 +230,6 @@ export const client = async () => {
     } else if (interaction.commandName === "requiredpoints") {
       getRequiredPoints(interaction, settings);
     } else if (interaction.commandName === "getstatus") {
-      console.log(interaction.customId);
-
       await getStatus(interaction, settings);
     } else if (interaction.commandName === "vote") {
       await vote(interaction, settings);
@@ -242,7 +252,6 @@ export const client = async () => {
     }
   });
   client.on("modalSubmit", async (modal) => {
-    console.log(modal.customId);
     const gameVal = await modal.getTextInputValue("gameVal");
     const gameNameVal = await modal.getTextInputValue("gameNameVal");
     const platformVal = await modal.getTextInputValue("platformVal");
@@ -275,49 +284,51 @@ export const client = async () => {
 
     if (modal.customId === "bf2Modal") {
       await submitRegisterBf2(modal, settings);
-    }
+    } else if (
+      ["registerModal", "linkAnotherAccount"].includes(modal.customId)
+    ) {
+      getUserProfile(gameVal, gameNameVal, platformVal, modal)
+        .then(async (returnedMember) => {
+          //check if the user's profile exists
+          // we got a problem here, names are case sensitive
+          if (returnedMember?.data?.id) {
+            console.log(returnedMember.data.id);
+            // we check if this account is linked by someone else already
+            let members = await findAll();
+            let originIds = [];
+            members.map((member) => originIds.push(...member.originIds));
+            if (originIds.includes(returnedMember.data?.id)) {
+              await modal.deferReply({ ephemeral: true });
+              await modal.followUp({
+                content: "This account is already linked",
 
-    getUserProfile(gameVal, gameNameVal, platformVal, modal)
-      .then(async (returnedMember) => {
-        //check if the user's profile exists
-        // we got a problem here, names are case sensitive
-        if (returnedMember?.data?.id) {
-          console.log(returnedMember.data.id);
-          // we check if this account is linked by someone else already
-          let members = await findAll();
-          let originIds = [];
-          members.map((member) => originIds.push(...member.originIds));
-          if (originIds.includes(returnedMember.data?.id)) {
-            await modal.deferReply({ ephemeral: true });
-            await modal.followUp({
-              content: "This account is already linked",
-
-              ephemeral: true,
-            });
+                ephemeral: true,
+              });
+            }
+            if (modal.customId === "registerModal") {
+              await submitRegister(
+                modal,
+                settings,
+                returnedMember,
+                client,
+                platformVal
+              );
+            } else if (modal.customId === "linkAnotherAccount") {
+              await subLinkAlt(modal, returnedMember, platformVal);
+              // }
+              // show them their plate here
+            }
           }
-          if (modal.customId === "registerModal") {
-            await submitRegister(
-              modal,
-              settings,
-              returnedMember,
-              client,
-              platformVal
-            );
-          } else if (modal.customId === "linkAnotherAccount") {
-            await subLinkAlt(modal, returnedMember, platformVal);
-            // }
-            // show them their plate here
-          }
-        }
-      })
-      .catch(async (error) => {
-        console.log(error);
-        await modal.deferReply({ ephemeral: true });
-        await modal.followUp({
-          content: "profile not found",
+        })
+        .catch(async (error) => {
+          console.log(error);
+          await modal.deferReply({ ephemeral: true });
+          await modal.followUp({
+            content: "profile not found",
 
-          ephemeral: true,
+            ephemeral: true,
+          });
         });
-      });
+    }
   });
 };

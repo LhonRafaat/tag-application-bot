@@ -4,6 +4,7 @@ const { Schema, model } = mongoose;
 const settingSchema = new Schema(
   {
     requiredPoints: { type: Number, default: 20 },
+    msgValue: { type: Number, default: 0.05 },
     //------------------
     // member ids
     moderatorId: { type: String, default: "977520328404262943" },

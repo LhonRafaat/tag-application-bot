@@ -1,5 +1,5 @@
 import { showModal } from "discord-modals";
-import { linkAnotherAccountModal } from "../UI/linkAnotherAccountModal.ts";
+import { linkAnotherAccountModal } from "../UI/linkAnotherAccountModal";
 
 export const linkAnotherAccount = async (interaction, client) => {
   showModal(linkAnotherAccountModal(), {

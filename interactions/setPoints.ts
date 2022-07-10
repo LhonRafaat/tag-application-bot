@@ -1,5 +1,5 @@
-import { setRequiredPoints } from "../services/settingService.ts";
-import { isMod } from "../utils/isMod.ts";
+import { setRequiredPoints } from "../services/settingService";
+import { isMod } from "../utils/isMod";
 
 export const setPoints = async (interaction) => {
   // check user if is head admin or founder

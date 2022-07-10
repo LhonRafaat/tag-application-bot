@@ -1,4 +1,4 @@
-import { Setting } from "../schemas/settings.ts";
+import { ISetting, Setting } from "../schemas/settings";
 
 export const getRequiredPoints = async () => {
   const setting = await Setting.find();
@@ -6,7 +6,7 @@ export const getRequiredPoints = async () => {
   return setting[0].requiredPoints;
 };
 
-export const setRequiredPoints = async (requiredPoints) => {
+export const setRequiredPoints = async (requiredPoints: number) => {
   const settings = await Setting.find();
   if (settings.length === 0) {
     return await Setting.create({
@@ -15,9 +15,9 @@ export const setRequiredPoints = async (requiredPoints) => {
   } else {
     const setting = await Setting.findById(settings[0]._id);
 
-    setting.requiredPoints = requiredPoints;
+    if (setting) setting.requiredPoints = requiredPoints;
 
-    await setting.save();
+    await setting?.save();
     return setting;
   }
 };
@@ -28,12 +28,12 @@ export const getSettings = async () => {
   return setting;
 };
 
-export const setSettings = async (settingsData) => {
+export const setSettings = async (settingsData: ISetting) => {
   const settings = await Setting.create(settingsData);
   return settings;
 };
 
-export const editSettings = async (settingsData) => {
+export const editSettings = async (settingsData: ISetting) => {
   const allSettings = await Setting.find();
 
   if (allSettings.length === 0) throw new Error("No settings found");
@@ -48,5 +48,3 @@ export const editSettings = async (settingsData) => {
 
   return settings;
 };
-
-

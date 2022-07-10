@@ -1,7 +1,7 @@
-import { findByGameId } from "../services/memberService.ts";
-import { getPlate } from "../UI/userPlate.ts";
-import { isMod } from "../utils/isMod.ts";
-import { getUserProfile } from "../utils/utils.ts";
+import { findByGameId } from "../services/memberService";
+import { getPlate } from "../UI/userPlate";
+import { isMod } from "../utils/isMod";
+import { getUserProfile } from "../utils/utils";
 
 export const getByGameName = async (interaction, settings) => {
   if (interaction.commandName === "getbygamename") {

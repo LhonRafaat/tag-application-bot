@@ -1,6 +1,6 @@
-import { findOne } from "../services/memberService.ts";
-import { getPlate } from "../UI/userPlate.ts";
-import { games, getBf2Profile, getUserProfile } from "../utils/utils.ts";
+import { findOne } from "../services/memberService";
+import { getPlate } from "../UI/userPlate";
+import { games, getBf2Profile, getUserProfile } from "../utils/utils";
 
 export const myVotes = async (interaction) => {
   const user = await findOne(interaction.member.id);

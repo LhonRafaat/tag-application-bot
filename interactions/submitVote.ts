@@ -1,6 +1,6 @@
-import { findOne } from "../services/memberService.ts";
-import { getRequiredPoints } from "../services/settingService.ts";
-import { questionsEmbed } from "../UI/embeds/questionsEmbed.ts";
+import { findOne } from "../services/memberService";
+import { getRequiredPoi } from "../services/settingService";
+import { questionsEmbed } from "../UI/embeds/questionsEmbed";
 
 export const submitVote = async (interaction, settings, client) => {
   {

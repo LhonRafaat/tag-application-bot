@@ -1,8 +1,8 @@
 import {
   checkBf2Profiles,
   registerBf2Account,
-} from "../services/memberService.ts";
-import { addRole } from "../utils/addRole.ts";
+} from "../services/memberService";
+import { addRole } from "../utils/addRole";
 
 export const submitRegisterBf2 = async (modal, settings) => {
   const bf2NameVal = await modal.getTextInputValue("bf2NameVal");

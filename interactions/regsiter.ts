@@ -1,8 +1,8 @@
 import { showModal } from "discord-modals";
 import { MessageButton } from "discord.js";
-import { findOne } from "../services/memberService.ts";
-import { getButton } from "../UI/button.ts";
-import { getRegisterModal } from "../UI/registerModal.ts";
+import { findOne } from "../services/memberService";
+import { getButton } from "../UI/button";
+import { getRegisterModal } from "../UI/registerModal";
 
 export const register = async (interaction, client) => {
   const user = await findOne(interaction.member.id);

@@ -1,13 +1,13 @@
-import { Interaction } from "discord.js";
+import { Interaction, MessageComponentInteraction, MessageInteraction } from "discord.js";
 import { isMod } from "../utils/isMod";
 
 export const closeTicket = async (interaction: Interaction, settings) => {
-  interaction.reply
+  interaction.
   const isAuthorized = await isMod(interaction, settings);
   if (!isAuthorized) {
     return await interaction.editReply({
       content: "You are not authorized",
-      ephemeral: true,
+      ephemeral: true,  
     });
   }
   if (interaction.channel.parentId === settings[0].ticketsParentId) {

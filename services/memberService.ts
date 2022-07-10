@@ -1,18 +1,18 @@
-import { Members } from "../schemas/member.ts";
+import { Members } from "../schemas/member";
 
 export const findAll = async () => {
   const members = await Members.find();
   return members;
 };
 
-export const findOne = async (discordId) => {
+export const findOne = async (discordId: string) => {
   return await Members.findOne({ discordId });
 };
-export const findByGameId = async (gameId) => {
+export const findByGameId = async (gameId: string) => {
   const member = await Members.findOne({ originIds: gameId });
   return member;
 };
-export const findOneByName = async (name) => {
+export const findOneByName = async (name: string) => {
   // this is case sensitive which I have to fix.
   return await Members.findOne({
     userNames: { $regex: name, $options: "i" },
@@ -20,13 +20,13 @@ export const findOneByName = async (name) => {
 };
 
 export const createMember = async (
-  discordId,
-  originIds,
-  platforms,
-  hasTag,
-  fullName,
-  userNames,
-  avatar
+  discordId: string,
+  originIds: string,
+  platforms: string,
+  hasTag: boolean,
+  fullName: string,
+  userNames: string,
+  avatar: string
 ) => {
   const member = new Members({
     discordId,
@@ -41,21 +41,21 @@ export const createMember = async (
   return await member.save();
 };
 
-export const deleteOne = async (id) => {
+export const deleteOne = async (id: string) => {
   const member = await Members.findById(id);
   if (!member) console.log("member not found");
 
   await Members.findByIdAndDelete(id);
 };
 
-export const updateUser = async (data) => {
+export const updateUser = async (data: any) => {
   return await Members.findOneAndUpdate({ discordId: data.discordId }, data, {
     new: true,
     runValidators: true,
   });
 };
 
-export const updateTag = async (discordId, hasTag) => {
+export const updateTag = async (discordId: string, hasTag: boolean) => {
   return await Members.findOneAndUpdate(
     { discordId },
     { hasTag },
@@ -91,12 +91,16 @@ export const getMembersRanking = async () => {
     members.map((el, i) => {
       ranking = ranking + `\n${i + 1}- ${el._id}`;
     });
-  if (!ranking.length > 0) ranking = "No members found";
+  if (ranking.length < 1) ranking = "No members found";
 
   return ranking;
 };
 
-export const registerBf2Account = async (discordId, bf2Name, fullName) => {
+export const registerBf2Account = async (
+  discordId: string,
+  bf2Name: string,
+  fullName: string
+) => {
   const member = await Members.findOne({ discordId });
 
   if (member) {
@@ -125,7 +129,7 @@ export const registerBf2Account = async (discordId, bf2Name, fullName) => {
   }
 };
 
-export const checkBf2Profiles = async (gameName) => {
+export const checkBf2Profiles = async (gameName: string) => {
   const members = await Members.find({
     bf2profile: {
       $exists: true,

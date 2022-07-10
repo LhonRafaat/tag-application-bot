@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
-const settingSchema = new Schema(
+const settingSchema = new Schema<ISetting>(
   {
     requiredPoints: { type: Number, default: 20 },
     //------------------
@@ -41,3 +41,42 @@ const settingSchema = new Schema(
 );
 
 export const Setting = model("Setting", settingSchema);
+
+export interface ISetting {
+  _id: string;
+  requiredPoints: number;
+  //------------------
+  // member ids
+  moderatorId: string;
+  seniorModeratorId: string;
+  trialModeratorId: string;
+  designId: string;
+  forceCodeId: string;
+  adminId: string;
+  modId: string;
+  founderId: string;
+  headAdminId: string;
+  // -----------------
+  // registered members id
+  registeredMember: string;
+  registeredStaff: string;
+  registeredMangment: string;
+  candidateId: string;
+
+  // -----------------
+  // channels id
+  votingChannelId: string;
+  ticketsParentId: string;
+  //------------
+  //bot id
+
+  botId: string;
+  idfBotChannelId: string;
+
+  // idf roles
+  idfXboxId: string;
+  idfPcId: string;
+  idfPsId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

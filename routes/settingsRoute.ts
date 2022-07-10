@@ -3,7 +3,7 @@ import {
   getSetting,
   patchSettings,
   postSettings,
-} from "../controllers/settingController.ts";
+} from "../controllers/settingController";
 
 const router = express.Router();
 

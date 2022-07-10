@@ -4,10 +4,10 @@ import {
   CONTRIBUTION_EMOJI,
   PERSONALITY_EMOJI,
   SKILL_EMOJI,
-} from "../../emojies/emojies.ts";
+} from "../../emojies/emojies";
 
 // inside a command, event listener, etc.
-export const getVoteEmbed = (name) => {
+export const getVoteEmbed = (name: string) => {
   const voteEmbed = new MessageEmbed()
     .setColor("#0099ff")
     .setTitle(`Vote for a ${name}`)

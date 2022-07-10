@@ -1,9 +1,15 @@
-import { Admin } from "../schemas/admin.ts";
+import { Admin } from "../schemas/admin";
 import jwt from "jsonwebtoken";
 
 import bcrypt from "bcrypt";
 
-export const signup = async (userData) => {
+type TUserData = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export const signup = async (userData: TUserData) => {
   if (!userData.email || !userData.password)
     throw new Error("Username and password are required");
 
@@ -14,11 +20,11 @@ export const signup = async (userData) => {
     password: await bcrypt.hash(userData.password, 10),
     confirmPassword: undefined,
   });
-  jwt.sign({ id: admin._id }, process.env.JWT_SECRET);
+  jwt.sign({ id: admin._id }, process.env.JWT_SECRET!);
   return admin;
 };
 
-export const login = async (userData) => {
+export const login = async (userData: TUserData) => {
   const admin = await Admin.findOne({ email: userData.email });
   if (!admin) {
     throw new Error("Invalid Credentials");
@@ -27,7 +33,7 @@ export const login = async (userData) => {
   if (!isMatch) {
     throw new Error("Invalid Credentials");
   }
-  const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET);
+  const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET!);
 
   return { admin, token };
 };

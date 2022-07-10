@@ -1,8 +1,8 @@
 import { MessageButton } from "discord.js";
-import { findOne } from "../services/memberService.ts";
-import { getButton } from "../UI/button.ts";
-import { getVoteEmbed } from "../UI/embeds/voteEmbed.ts";
-import { getPlate } from "../UI/userPlate.ts";
+import { findOne } from "../services/memberService";
+import { getButton } from "../UI/button";
+import { getVoteEmbed } from "../UI/embeds/voteEmbed";
+import { getPlate } from "../UI/userPlate";
 
 export const vote = async (interaction, settings, mentionedProfile) => {
   const canVote = await interaction.member.roles.cache.find((role) => {

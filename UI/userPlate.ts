@@ -1,7 +1,7 @@
 import Canvas from "canvas";
 import { MessageAttachment } from "discord.js";
-import { findOne } from "../services/memberService.ts";
-import { getRequiredPoints } from "../services/settingService.ts";
+import { findOne } from "../services/memberService";
+import { getRequiredPoints } from "../services/settingService";
 
 export const getPlate = async (name, discordId, userAvatar, secondName) => {
   //required points for the votes

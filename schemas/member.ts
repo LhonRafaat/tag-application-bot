@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
-const membersSchema = new Schema(
+const membersSchema = new Schema<IMember>(
   {
     discordId: { type: String, required: true, unique: true },
     //this can include ps id and xbox id aswell
@@ -27,3 +27,27 @@ const membersSchema = new Schema(
 );
 
 export const Members = model("Members", membersSchema);
+
+export interface IMember {
+  _id: string;
+  discordId: string;
+  originIds: string[];
+  platforms: string[];
+  userNames: string[];
+  hasTag: boolean;
+  avatar: string;
+  fullName: string;
+  skills: number;
+  karma: number;
+  personality: number;
+  contribution: number;
+  skillVoters: string[];
+  personalityVoters: string[];
+  contributionVoters: string[];
+  reachedVotes: boolean;
+  bf2profile: {
+    name: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}

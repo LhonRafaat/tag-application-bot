@@ -1,6 +1,8 @@
-import { isMod } from "../utils/isMod.js";
+import { Interaction } from "discord.js";
+import { isMod } from "../utils/isMod";
 
-export const closeTicket = async (interaction, settings) => {
+export const closeTicket = async (interaction: Interaction, settings) => {
+  interaction.reply
   const isAuthorized = await isMod(interaction, settings);
   if (!isAuthorized) {
     return await interaction.editReply({

@@ -1,5 +1,5 @@
 import { MessageButton } from "discord.js";
-import { getButton } from "../UI/button.js";
+import { getButton } from "../UI/button.ts";
 
 export const getRegister = async (interaction, settings) => {
   await interaction.deferReply();

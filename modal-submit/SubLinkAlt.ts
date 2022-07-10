@@ -1,4 +1,4 @@
-import { findOne } from "../services/memberService.js";
+import { findOne } from "../services/memberService.ts";
 
 export const subLinkAlt = async (modal, returnedMember, platformVal) => {
   const user = await findOne(modal.member.id);

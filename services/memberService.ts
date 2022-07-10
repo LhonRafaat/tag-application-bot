@@ -1,4 +1,4 @@
-import { Members } from "../schemas/member.js";
+import { Members } from "../schemas/member.ts";
 
 export const findAll = async () => {
   const members = await Members.find();

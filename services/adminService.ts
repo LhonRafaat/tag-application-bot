@@ -1,4 +1,4 @@
-import { Admin } from "../schemas/admin.js";
+import { Admin } from "../schemas/admin.ts";
 import jwt from "jsonwebtoken";
 
 import bcrypt from "bcrypt";

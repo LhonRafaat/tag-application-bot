@@ -1,12 +1,12 @@
 import express from "express";
 import env from "dotenv";
 import cors from "cors";
-import memberRoutes from "./routes/memberRoutes.js";
-import settingsRoute from "./routes/settingsRoute.js";
-import adminRoutes from "./routes/adminRoutes.js";
+import memberRoutes from "./routes/memberRoutes";
+import settingsRoute from "./routes/settingsRoute";
+import adminRoutes from "./routes/adminRoutes";
 import jwt from "jsonwebtoken";
-import { loginCont } from "./controllers/adminController.js";
-import { client } from "./client.js";
+import { loginCont } from "./controllers/adminController";
+import { client } from "./client";
 
 env.config();
 const app = express();
@@ -18,8 +18,11 @@ client();
 
 app.use("/api/auth/login", loginCont);
 app.use((req, res, next) => {
+  const token = req.headers?.authorization?.split(" ")[1];
   try {
-    jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET);
+    if (token && process.env.JWT_SECRET)
+      jwt.verify(token, process.env.JWT_SECRET);
+
     //check for token
   } catch (error) {
     return res.status(401).json({

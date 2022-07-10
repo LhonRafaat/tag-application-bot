@@ -1,4 +1,4 @@
-import { isMod } from "../utils/isMod.js";
+import { isMod } from "../utils/isMod.ts";
 
 export const getRequiredPoints = async (interaction, settings) => {
   const isAuthorized = await isMod(interaction, settings);

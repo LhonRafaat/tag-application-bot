@@ -4,7 +4,7 @@ import {
   CONTRIBUTION_EMOJI,
   PERSONALITY_EMOJI,
   SKILL_EMOJI,
-} from "../../emojies/emojies.js";
+} from "../../emojies/emojies.ts";
 
 // inside a command, event listener, etc.
 export const getVoteEmbed = (name) => {

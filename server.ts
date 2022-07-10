@@ -1,10 +1,8 @@
-import app from "./app.js";
+import app from "./app";
 import mongoose from "mongoose";
 
-mongoose.connect(process.env.DB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const url: string = process.env.MONGODB_URI ? process.env.MONGODB_URI : "";
+mongoose.connect(url);
 app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}`);
 });

@@ -1,4 +1,4 @@
-import { Setting } from "../schemas/settings.js";
+import { Setting } from "../schemas/settings.ts";
 
 export const getRequiredPoints = async () => {
   const setting = await Setting.find();

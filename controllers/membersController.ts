@@ -1,24 +1,25 @@
+import { Request, Response } from "express";
 import {
   deleteOne,
   findAll,
   findOne,
   updateUser,
-} from "../services/memberService.js";
+} from "../services/memberService";
 
-export const getMembers = async (req, res) => {
+export const getMembers = async (req: Request, res: Response) => {
   const members = await findAll();
 
   res.status(200).json(members);
 };
 
-export const getMember = async (req, res) => {
+export const getMember = async (req: Request, res: Response) => {
   const member = await findOne(req.params.discordId);
   if (!member) return res.status(404).json({ message: "Member not found" });
 
   res.status(200).json(member);
 };
 
-export const deleteMember = async (req, res) => {
+export const deleteMember = async (req: Request, res: Response) => {
   try {
     await deleteOne(req.params.id);
     return res.status(200).json({ message: "Member deleted" });
@@ -27,7 +28,7 @@ export const deleteMember = async (req, res) => {
   }
 };
 
-export const patchUser = async (req, res) => {
+export const patchUser = async (req: Request, res: Response) => {
   try {
     const user = await updateUser(req.body);
     return res.status(200).json(user);

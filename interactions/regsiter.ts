@@ -1,8 +1,8 @@
 import { showModal } from "discord-modals";
 import { MessageButton } from "discord.js";
-import { findOne } from "../services/memberService.js";
-import { getButton } from "../UI/button.js";
-import { getRegisterModal } from "../UI/registerModal.js";
+import { findOne } from "../services/memberService.ts";
+import { getButton } from "../UI/button.ts";
+import { getRegisterModal } from "../UI/registerModal.ts";
 
 export const register = async (interaction, client) => {
   const user = await findOne(interaction.member.id);
@@ -31,5 +31,4 @@ export const register = async (interaction, client) => {
       client: client, // Client to show the Modal through the Discord API.
       interaction: interaction, // Show the modal with interaction data.
     });
-
 };

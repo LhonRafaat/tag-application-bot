@@ -1,5 +1,5 @@
-import { createMember } from "../services/memberService.js";
-import { addRole } from "../utils/addRole.js";
+import { createMember } from "../services/memberService.ts";
+import { addRole } from "../utils/addRole.ts";
 
 export const submitRegister = async (
   modal,

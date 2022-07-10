@@ -3,7 +3,7 @@ import {
   deleteMember,
   getMembers,
   patchUser,
-} from "../controllers/membersController.js";
+} from "../controllers/membersController.ts";
 
 const router = express.Router();
 

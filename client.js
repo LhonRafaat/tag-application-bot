@@ -175,7 +175,7 @@ export const client = async () => {
     const user = await findOne(msg.author.id);
     if (user) {
       user.msgContribution += settings[0].msgValue;
-      if (user.msgContribution === 1) {
+      if (user.msgContribution >= 1) {
         user.msgContribution = 0;
         user.contribution += 1;
       }

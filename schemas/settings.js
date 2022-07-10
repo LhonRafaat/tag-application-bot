@@ -5,6 +5,8 @@ const settingSchema = new Schema(
   {
     requiredPoints: { type: Number, default: 20 },
     msgValue: { type: Number, default: 0.05 },
+    rolePingValue: { type: Number, default: 0.5 },
+
     //------------------
     // member ids
     moderatorId: { type: String, default: "977520328404262943" },
@@ -37,6 +39,18 @@ const settingSchema = new Schema(
     idfXboxId: { type: String, default: "977951821194727434" },
     idfPcId: { type: String, default: "666198649746751499" },
     idfPsId: { type: String, default: "977951821194727434" },
+
+    // df roles
+    pcBfv: { type: String, default: "859378094450933790" },
+    pcBf1: { type: String, default: "859378753728544799" },
+    pcBf4: { type: String, default: "859378575945760780" },
+    ps4Bfv: { type: String, default: "859378977872019496" },
+    ps4Bf1: { type: String, default: "859379127278633021" },
+    ps4Bf4: { type: String, default: "859378977872019496" },
+    xboxBfv: { type: String, default: "859379195787345920" },
+    xboxBf1: { type: String, default: "859379127278633021" },
+    xboxBf4: { type: String, default: "859379271642644480" },
+    allBf2042: { type: String, default: "906472474366083082" },
   },
   { timestamps: true }
 );

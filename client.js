@@ -48,7 +48,6 @@ export const client = async () => {
     try {
       const channel = client.channels.cache.get(settings[0].votingChannelId);
       channel.messages.fetch({ limit: 100 }).then((messages) => {
-        console.log(`Received ${messages.size} messages`);
         //Iterate through the messages here with the variable "messages".
         messages.forEach((message) => {
           //TODO: Add the bot id to settings schema //done
@@ -204,7 +203,6 @@ export const client = async () => {
       }
 
       if (msg.channelId === settings[0].contentCreatorsId) {
-        console.log("here");
         user.contentContribution += settings[0].contentValue;
         if (user.contentContribution >= 1) {
           user.contentContribution = 0;
@@ -334,7 +332,6 @@ export const client = async () => {
           //check if the user's profile exists
           // we got a problem here, names are case sensitive
           if (returnedMember?.data?.id) {
-            console.log(returnedMember.data.id);
             // we check if this account is linked by someone else already
             let members = await findAll();
             let originIds = [];

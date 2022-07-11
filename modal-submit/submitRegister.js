@@ -30,7 +30,7 @@ export const submitRegister = async (
 
   // addes a role when user is registered, hardcoded for now
 
-  addRole(modal, settings);
+  await addRole(modal, settings);
   try {
     const channel = await client.channels.cache.get(
       settings[0].idfBotChannelId
@@ -46,8 +46,7 @@ export const submitRegister = async (
     console.log(error);
   }
 
-  await modal.deferReply({ ephemeral: true });
-  return await modal.followUp({
+  return await modal.editReply({
     content: "response collected",
 
     ephemeral: true,

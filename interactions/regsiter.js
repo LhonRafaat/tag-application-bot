@@ -9,7 +9,7 @@ export const register = async (interaction, client) => {
 
   if (user) {
     await interaction.deferReply({ ephemeral: true });
-    await interaction.editReply({
+    return await interaction.editReply({
       content: "You are already registered , want to link another account?",
       ephemeral: true,
 
@@ -31,5 +31,4 @@ export const register = async (interaction, client) => {
       client: client, // Client to show the Modal through the Discord API.
       interaction: interaction, // Show the modal with interaction data.
     });
-
 };

@@ -8,8 +8,7 @@ export const submitRegisterBf2 = async (modal, settings) => {
   const bf2NameVal = await modal.getTextInputValue("bf2NameVal");
   const doesExist = await checkBf2Profiles(bf2NameVal);
   if (doesExist) {
-    await modal.deferReply({ ephemeral: true });
-    return await modal.followUp({
+    return await modal.editReply({
       content: "This profile already exists",
     });
   }
@@ -17,8 +16,7 @@ export const submitRegisterBf2 = async (modal, settings) => {
 
   addRole(modal, settings);
 
-  await modal.deferReply({ ephemeral: true });
-  return await modal.followUp({
+  return await modal.editReply({
     content: "successfully registered",
     ephemeral: true,
   });

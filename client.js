@@ -292,9 +292,14 @@ export const client = async () => {
     }
   });
   client.on("modalSubmit", async (modal) => {
-    const gameVal = await modal.getTextInputValue("gameVal");
+    await modal.deferReply({
+      ephemeral: true,
+    });
+    let gameVal = await modal.getSelectMenuValues("gameVal");
     const gameNameVal = await modal.getTextInputValue("gameNameVal");
-    const platformVal = await modal.getTextInputValue("platformVal");
+    let platformVal = await modal.getSelectMenuValues("platformVal");
+    if (platformVal?.length > 0) platformVal = platformVal[0];
+    if (gameVal?.length > 0) gameVal = gameVal[0];
 
     // we need to check here if its not the bf2 modal
     if (!modal.customId === "bf2Modal") {
@@ -303,8 +308,7 @@ export const client = async () => {
           platformVal.trim().toLowerCase()
         )
       ) {
-        await modal.deferReply({ ephemeral: true });
-        return await modal.followUp({
+        return await modal.editReply({
           content: "Please enter a correct platform and try again",
 
           ephemeral: true,
@@ -312,8 +316,7 @@ export const client = async () => {
       } else if (
         !["bf1", "bfv", "bf3", "bf4"].includes(gameVal.trim().toLowerCase())
       ) {
-        await modal.deferReply({ ephemeral: true });
-        return await modal.followUp({
+        return await modal.editReply({
           content: "Please enter a correct game and try again",
 
           ephemeral: true,
@@ -327,47 +330,61 @@ export const client = async () => {
     } else if (
       ["registerModal", "linkAnotherAccount"].includes(modal.customId)
     ) {
-      getUserProfile(gameVal, gameNameVal, platformVal, modal)
-        .then(async (returnedMember) => {
-          //check if the user's profile exists
-          // we got a problem here, names are case sensitive
-          if (returnedMember?.data?.id) {
-            // we check if this account is linked by someone else already
-            let members = await findAll();
-            let originIds = [];
-            members.map((member) => originIds.push(...member.originIds));
-            if (originIds.includes(returnedMember.data?.id)) {
-              await modal.deferReply({ ephemeral: true });
-              await modal.followUp({
-                content: "This account is already linked",
+      console.log("here");
+      console.log(gameVal);
+      console.log(gameNameVal);
+      console.log(platformVal);
+      console.log(modal.customId);
 
-                ephemeral: true,
-              });
-            }
-            if (modal.customId === "registerModal") {
-              await submitRegister(
-                modal,
-                settings,
-                returnedMember,
-                client,
-                platformVal
-              );
-            } else if (modal.customId === "linkAnotherAccount") {
-              await subLinkAlt(modal, returnedMember, platformVal);
-              // }
-              // show them their plate here
-            }
+      try {
+        const returnedMember = await getUserProfile(
+          gameVal,
+          gameNameVal,
+          platformVal,
+          modal
+        );
+        if (returnedMember?.data?.id) {
+          // we check if this account is linked by someone else already
+          let members = await findAll();
+          let originIds = [];
+          members.map((member) => originIds.push(...member.originIds));
+          if (originIds.includes(returnedMember.data?.id)) {
+            return await modal.editReply({
+              content: "This account is already linked",
+
+              ephemeral: true,
+            });
           }
-        })
-        .catch(async (error) => {
-          console.log(error);
-          await modal.deferReply({ ephemeral: true });
-          await modal.followUp({
-            content: "profile not found",
+          if (modal.customId === "registerModal") {
+            console.log("hi");
+            await submitRegister(
+              modal,
+              settings,
+              returnedMember,
+              client,
+              platformVal
+            );
+          } else if (modal.customId === "linkAnotherAccount") {
+            console.log("submit");
+            await subLinkAlt(modal, returnedMember, platformVal);
+            // }
+            // show them their plate here
+          }
+        } else {
+          return await modal.editReply({
+            content: "game profile not found",
 
             ephemeral: true,
           });
+        }
+      } catch (error) {
+        console.log(error);
+        return await modal.editReply({
+          content: "profile not found",
+
+          ephemeral: true,
         });
+      }
     }
   });
 };

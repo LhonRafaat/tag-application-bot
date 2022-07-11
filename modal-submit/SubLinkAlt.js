@@ -3,8 +3,7 @@ import { findOne } from "../services/memberService.js";
 export const subLinkAlt = async (modal, returnedMember, platformVal) => {
   const user = await findOne(modal.member.id);
   if (user.originIds.includes(returnedMember.data?.id)) {
-    await modal.deferReply({ ephemeral: true });
-    return await modal.followUp({
+    return await modal.editReply({
       content: "you have already registered this account",
 
       ephemeral: true,
@@ -17,8 +16,7 @@ export const subLinkAlt = async (modal, returnedMember, platformVal) => {
   if (!user.platforms.includes(platformVal)) user.platforms.push(platformVal);
 
   await user.save();
-  await modal.deferReply({ ephemeral: true });
-  await modal.followUp({
+  return await modal.editReply({
     content: "response collected",
 
     ephemeral: true,

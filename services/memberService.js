@@ -104,15 +104,16 @@ export const registerBf2Account = async (discordId, bf2Name, fullName) => {
       member.userNames.push(bf2Name);
       await member.save();
     }
-    if (!member.bf2profile.name) {
-      member.bf2profile.name = bf2Name;
+    if (!member.bf2profile.includes({ name: bf2Name })) {
+      member.bf2profile.push({ name: bf2Name });
       await member.save();
-      return member;
     }
   } else {
-    const bf2profile = {
-      name: bf2Name,
-    };
+    const bf2profile = [
+      {
+        name: bf2Name,
+      },
+    ];
     const newMember = await Members.create({
       discordId,
       userNames: [bf2Name],
@@ -130,10 +131,13 @@ export const checkBf2Profiles = async (gameName) => {
     bf2profile: {
       $exists: true,
     },
-  });
+  }).select("bf2profile");
 
   // check if gameName exists in members
-  const member = members.find((el) => el.bf2profile.name === gameName);
-  if (member) return true;
-  return false;
+  const exists = members.some((member) => {
+    return member.bf2profile.some((profile) => {
+      return profile.name === gameName;
+    });
+  });
+  return exists;
 };

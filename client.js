@@ -301,28 +301,6 @@ export const client = async () => {
     if (platformVal?.length > 0) platformVal = platformVal[0];
     if (gameVal?.length > 0) gameVal = gameVal[0];
 
-    // we need to check here if its not the bf2 modal
-    if (!modal.customId === "bf2Modal") {
-      if (
-        !["pc", "xboxone", "ps4", "ps3", "xbox360"].includes(
-          platformVal.trim().toLowerCase()
-        )
-      ) {
-        return await modal.editReply({
-          content: "Please enter a correct platform and try again",
-
-          ephemeral: true,
-        });
-      } else if (
-        !["bf1", "bfv", "bf3", "bf4"].includes(gameVal.trim().toLowerCase())
-      ) {
-        return await modal.editReply({
-          content: "Please enter a correct game and try again",
-
-          ephemeral: true,
-        });
-      }
-    }
     //if its for voting we dont want to create a user
 
     if (modal.customId === "bf2Modal") {

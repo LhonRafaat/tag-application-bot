@@ -24,6 +24,7 @@ import { linkAnotherAccount } from "./interactions/linkAnotherAccount.js";
 import { denyLinkAnotherAccount } from "./interactions/denyLinkAnotherAccount.js";
 import { registerBf2 } from "./interactions/registerBf2.js";
 import { myVotes } from "./interactions/myVotes.js";
+import { YES_EMOJI } from "./emojies/emojies.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -212,6 +213,27 @@ export const client = async () => {
       await user.save();
     }
 
+    if (msg.mentions?.roles?.first()) {
+      if (
+        [
+          settings[0].pcBfv,
+          settings[0].pcBf1,
+          settings[0].pcBf4,
+          settings[0].ps4Bfv,
+          settings[0].ps4Bf1,
+          settings[0].ps4Bf4,
+          settings[0].xboxBfv,
+          settings[0].xboxBf1,
+          settings[0].xboxBf4,
+          settings[0].allBf2042,
+        ].includes(msg.mentions.roles.first().id)
+      ) {
+        const botMsg = await msg.reply(
+          "Please only react if you going to participate in the dogfight"
+        );
+        await botMsg.react(YES_EMOJI);
+      }
+    }
     //we dont want messages from the bot
 
     if (msg.author.bot) return;
@@ -230,7 +252,7 @@ export const client = async () => {
     if (msg.content.toLowerCase() === "!voteranking") {
       try {
         const members = await getMembersRanking();
-        msg.reply(members);
+        await msg.reply(members);
       } catch (error) {
         console.log(error);
       }
@@ -308,12 +330,6 @@ export const client = async () => {
     } else if (
       ["registerModal", "linkAnotherAccount"].includes(modal.customId)
     ) {
-      console.log("here");
-      console.log(gameVal);
-      console.log(gameNameVal);
-      console.log(platformVal);
-      console.log(modal.customId);
-
       try {
         const returnedMember = await getUserProfile(
           gameVal,
@@ -363,6 +379,18 @@ export const client = async () => {
           ephemeral: true,
         });
       }
+    }
+  });
+
+  client.on("messageReactionAdd", async (reaction, user) => {
+    if (user.bot) return;
+    if (reaction.emoji.name === YES_EMOJI) {
+      const member = await findOne(user.id);
+      // if(member){
+
+      // }
+      const msg = await reaction.message.fetch();
+      msg.edit(`${msg.content} \n - ${user.username} \n`);
     }
   });
 };

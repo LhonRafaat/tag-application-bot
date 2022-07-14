@@ -2,7 +2,7 @@ import { findOne } from "../services/memberService.js";
 import { getPlate } from "../UI/userPlate.js";
 import { games, getBf2Profile, getUserProfile } from "../utils/utils.js";
 
-export const myVotes = async (interaction) => {
+export const myStatus = async (interaction) => {
   const user = await findOne(interaction.member.id);
   let isBf2 = false;
   try {

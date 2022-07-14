@@ -23,7 +23,7 @@ import { subLinkAlt } from "./modal-submit/SubLinkAlt.js";
 import { linkAnotherAccount } from "./interactions/linkAnotherAccount.js";
 import { denyLinkAnotherAccount } from "./interactions/denyLinkAnotherAccount.js";
 import { registerBf2 } from "./interactions/registerBf2.js";
-import { myVotes } from "./interactions/myVotes.js";
+import { myStatus } from "./interactions/myStatus.js";
 import { YES_EMOJI } from "./emojies/emojies.js";
 
 export const client = async () => {
@@ -103,7 +103,7 @@ export const client = async () => {
       ],
     });
     commands?.create({
-      name: "myvotes",
+      name: "mystatus",
       description: "check your status",
     });
     commands?.create({
@@ -274,15 +274,15 @@ export const client = async () => {
         interaction.customId
       )
     ) {
-      if (!["getregister", "myvotes"].includes(interaction.commandName)) {
+      if (!["getregister", "mystatus"].includes(interaction.commandName)) {
         await interaction.deferReply({
           ephemeral: true,
         });
       }
     }
-    if (interaction.commandName === "myvotes") {
+    if (interaction.commandName === "mystatus") {
       await interaction.deferReply();
-      await myVotes(interaction);
+      await myStatus(interaction);
     } else if (interaction.commandName === "getbygamename") {
       await getByGameName(interaction, settings);
     } else if (interaction.commandName === "closeticket") {

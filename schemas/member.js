@@ -18,6 +18,7 @@ const membersSchema = new Schema(
     msgContribution: { type: Number, default: 0 },
     rolePingContribution: { type: Number, default: 0 },
     contentContribution: { type: Number, default: 0 },
+    dfReactionContribution: { type: Number, default: 0 },
     skillVoters: [{ type: String, required: false }],
     personalityVoters: [{ type: String, required: false }],
     contributionVoters: [{ type: String, required: false }],

@@ -7,6 +7,7 @@ const settingSchema = new Schema(
     msgValue: { type: Number, default: 0.05 },
     rolePingValue: { type: Number, default: 0.5 },
     contentValue: { type: Number, default: 0.5 },
+    dfReactionValue: { type: Number, default: 0.5 },
 
     //------------------
     // member ids

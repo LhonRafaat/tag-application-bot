@@ -198,7 +198,7 @@ export const client = async () => {
 
           if (user.rolePingContribution >= 1) {
             user.rolePingContribution = 0;
-            user.contribution += 1;
+            user.skills += 1;
           }
         }
       }
@@ -229,7 +229,7 @@ export const client = async () => {
         ].includes(msg.mentions.roles.first().id)
       ) {
         const botMsg = await msg.reply(
-          "Please only react if you going to participate in the dogfight"
+          `Please only react if you going to participate in the dogfight \n - ${msg.author.username} \n`
         );
         await botMsg.react(YES_EMOJI);
       }
@@ -384,13 +384,52 @@ export const client = async () => {
 
   client.on("messageReactionAdd", async (reaction, user) => {
     if (user.bot) return;
+    const dateNow = new Date();
     if (reaction.emoji.name === YES_EMOJI) {
-      const member = await findOne(user.id);
-      // if(member){
+      const msgTime = reaction.message.createdAt;
+      if (dateNow.getDay() === msgTime.getDay()) {
+        if (dateNow.getHours() - msgTime.getHours() <= 2) {
+          const msg = await reaction.message.fetch();
+          const askedForDf = msg.content.includes(user.username);
+          const member = await findOne(user.id);
+          if (member && !askedForDf) {
+            member.dfReactionContribution += settings[0].dfReactionValue;
 
-      // }
-      const msg = await reaction.message.fetch();
-      msg.edit(`${msg.content} \n - ${user.username} \n`);
+            if (member.dfReactionContribution >= 1) {
+              member.dfReactionContribution = 0;
+              member.skills += 1;
+            }
+            if (!msg.content.toString().includes(user.username)) {
+              await msg.edit(`${msg.content} \n - ${user.username} \n`);
+            }
+            await member.save();
+          }
+        }
+      }
+    }
+  });
+  client.on("messageReactionRemove", async (reaction, user) => {
+    if (user.bot) return;
+    const dateNow = new Date();
+
+    if (reaction.emoji.name === YES_EMOJI) {
+      const msgTime = reaction.message.createdAt;
+      if (dateNow.getDay() === msgTime.getDay()) {
+        if (dateNow.getHours() - msgTime.getHours() <= 2) {
+          const msg = await reaction.message.fetch();
+          const askedForDf = msg.content.includes(user.username);
+
+          const member = await findOne(user.id);
+          if (member && !askedForDf) {
+            if (member.dfReactionContribution > 0) {
+              member.dfReactionContribution -= settings[0].dfReactionValue;
+            }
+            const newMsg = msg.content.replace(` - ${user.username}`, "");
+            await msg.edit(newMsg);
+            await member.save();
+          }
+        }
+      }
     }
   });
 };

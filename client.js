@@ -2,7 +2,7 @@ import { Client, Intents, MessageButton } from "discord.js";
 import discordModals from "discord-modals";
 import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
-import { getUserProfile } from "./utils/utils.js";
+import { getUserProfile, matchYoutubeUrl } from "./utils/utils.js";
 import {
   findAll,
   findOne,
@@ -203,7 +203,11 @@ export const client = async () => {
         }
       }
 
-      if (msg.channelId === settings[0].contentCreatorsId) {
+      if (
+        msg.channelId === settings[0].contentCreatorsId &&
+        matchYoutubeUrl(msg.content)
+      ) {
+        console.log("here");
         user.contentContribution += settings[0].contentValue;
         if (user.contentContribution >= 1) {
           user.contentContribution = 0;

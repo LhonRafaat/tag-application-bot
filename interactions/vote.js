@@ -4,7 +4,7 @@ import { getButton } from "../UI/button.js";
 import { getVoteEmbed } from "../UI/embeds/voteEmbed.js";
 import { getPlate } from "../UI/userPlate.js";
 
-export const vote = async (interaction, settings, mentionedProfile) => {
+export const vote = async (interaction, settings) => {
   const canVote = await interaction.member.roles.cache.find((role) => {
     return [
       settings[0].candidateId,
@@ -24,7 +24,6 @@ export const vote = async (interaction, settings, mentionedProfile) => {
   const discordUser = await findOne(mentionedUser.id);
 
   // recheck this
-  mentionedProfile = discordUser;
 
   if (!discordUser) {
     return await interaction.editReply({
@@ -88,6 +87,4 @@ export const vote = async (interaction, settings, mentionedProfile) => {
       ]),
     ],
   });
-
-  return mentionedProfile;
 };

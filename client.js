@@ -306,7 +306,7 @@ export const client = async () => {
         interaction.customId?.split("-")[0]
       )
     ) {
-      submitVote(interaction, settings);
+      await submitVote(interaction, settings, client);
     } else if (interaction.customId === "wantToRegister") {
       await linkAnotherAccount(interaction, client);
     } else if (interaction.customId === "refuseToRegister") {

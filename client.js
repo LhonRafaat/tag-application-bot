@@ -321,11 +321,17 @@ export const client = async () => {
     await modal.deferReply({
       ephemeral: true,
     });
-    let gameVal = await modal.getSelectMenuValues("gameVal");
+
+    // this is for the dropdowns we will use it when mobile app is updated
+    // let gameVal = await modal.getSelectMenuValues("gameVal");
+    // const gameNameVal = await modal.getTextInputValue("gameNameVal");
+    // let platformVal = await modal.getSelectMenuValues("platformVal");
+    // if (platformVal?.length > 0) platformVal = platformVal[0];
+    // if (gameVal?.length > 0) gameVal = gameVal[0];
+
+    const gameVal = await modal.getTextInputValue("gameVal");
     const gameNameVal = await modal.getTextInputValue("gameNameVal");
-    let platformVal = await modal.getSelectMenuValues("platformVal");
-    if (platformVal?.length > 0) platformVal = platformVal[0];
-    if (gameVal?.length > 0) gameVal = gameVal[0];
+    const platformVal = await modal.getTextInputValue("platformVal");
 
     //if its for voting we dont want to create a user
 
@@ -334,6 +340,25 @@ export const client = async () => {
     } else if (
       ["registerModal", "linkAnotherAccount"].includes(modal.customId)
     ) {
+      if (
+        !["bfv", "bf1", "bf4", "bf3"].includes(gameVal?.toLowerCase()?.trim())
+      )
+        return await modal.editReply({
+          content: "Please try again and enter correct game",
+
+          ephemeral: true,
+        });
+
+      if (
+        !["pc", "ps4", "ps3", "xbox360", "xboxone"].includes(
+          platformVal?.toLowerCase()?.trim()
+        )
+      )
+        return await modal.editReply({
+          content: "Please try again and enter correct platform",
+
+          ephemeral: true,
+        });
       try {
         const returnedMember = await getUserProfile(
           gameVal,

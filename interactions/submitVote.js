@@ -39,8 +39,9 @@ export const submitVote = async (interaction, settings, client) => {
           dbUser.skillVoters.push(interaction.member.id);
           // here we check if the user has reached the required points at least in two categories
           if (
-            dbUser.contribution === requiredPoints ||
-            dbUser.personality === requiredPoints
+            dbUser.skills === requiredPoints &&
+            (dbUser.contribution === requiredPoints ||
+              dbUser.personality === requiredPoints)
           ) {
             dbUser.reachedVotes = true;
           }
@@ -55,8 +56,9 @@ export const submitVote = async (interaction, settings, client) => {
 
           // here we check if user has reached the required points at least in two categories
           if (
-            dbUser.skills === requiredPoints ||
-            dbUser.personality === requiredPoints
+            dbUser.contribution === requiredPoints &&
+            (dbUser.skills === requiredPoints ||
+              dbUser.personality === requiredPoints)
           ) {
             dbUser.reachedVotes = true;
           }
@@ -71,8 +73,9 @@ export const submitVote = async (interaction, settings, client) => {
 
           // here we check if user has reached the required points at least in two categories
           if (
-            dbUser.skills === requiredPoints ||
-            dbUser.contribution === requiredPoints
+            dbUser.personality === requiredPoints &&
+            (dbUser.skills === requiredPoints ||
+              dbUser.contribution === requiredPoints)
           ) {
             dbUser.reachedVotes = true;
           }
@@ -87,7 +90,7 @@ export const submitVote = async (interaction, settings, client) => {
           if (dbUser.reachedVotes) {
             try {
               const newChannel = await guild.channels.create(
-                "submit a ticket",
+                dbUser.userNames[0],
                 {
                   parent: settings[0].ticketsParentId,
                   permissionOverwrites: [
@@ -101,7 +104,7 @@ export const submitVote = async (interaction, settings, client) => {
                     },
                     {
                       id: mods.id,
-                      allow: ["ADMINISTRATOR"],
+                      allow: ["ADMINISTRATOR", "VIEW_CHANNEL"],
                     },
                   ],
                 }

@@ -179,30 +179,6 @@ export const client = async () => {
         user.contribution += 1;
       }
 
-      if (msg.mentions?.roles?.first()) {
-        if (
-          [
-            settings[0].pcBfv,
-            settings[0].pcBf1,
-            settings[0].pcBf4,
-            settings[0].ps4Bfv,
-            settings[0].ps4Bf1,
-            settings[0].ps4Bf4,
-            settings[0].xboxBfv,
-            settings[0].xboxBf1,
-            settings[0].xboxBf4,
-            settings[0].allBf2042,
-          ].includes(msg.mentions.roles.first().id)
-        ) {
-          user.rolePingContribution += settings[0].rolePingValue;
-
-          if (user.rolePingContribution >= 1) {
-            user.rolePingContribution = 0;
-            user.skills += 1;
-          }
-        }
-      }
-
       if (
         msg.channelId === settings[0].contentCreatorsId &&
         matchYoutubeUrl(msg.content)
@@ -422,6 +398,32 @@ export const client = async () => {
           const askedForDf = msg.content.includes(user.username);
           const member = await findOne(user.id);
           if (member && !askedForDf) {
+            const user = await findOne(
+              reaction.message.mentions.repliedUser.id
+            );
+            if (msg.mentions?.roles?.first()) {
+              if (
+                [
+                  settings[0].pcBfv,
+                  settings[0].pcBf1,
+                  settings[0].pcBf4,
+                  settings[0].ps4Bfv,
+                  settings[0].ps4Bf1,
+                  settings[0].ps4Bf4,
+                  settings[0].xboxBfv,
+                  settings[0].xboxBf1,
+                  settings[0].xboxBf4,
+                  settings[0].allBf2042,
+                ].includes(msg.mentions.roles.first().id)
+              ) {
+                user.rolePingContribution += settings[0].rolePingValue;
+
+                if (user.rolePingContribution >= 1) {
+                  user.rolePingContribution = 0;
+                  user.skills += 1;
+                }
+              }
+            }
             member.dfReactionContribution += settings[0].dfReactionValue;
 
             if (member.dfReactionContribution >= 1) {

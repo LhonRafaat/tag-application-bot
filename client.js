@@ -209,7 +209,7 @@ export const client = async () => {
         ].includes(msg.mentions.roles.first().id)
       ) {
         const botMsg = await msg.reply(
-          `Please only react if you going to participate in the dogfight \n - ${msg.author.username} \n`
+          `Please only react if you going to participate in the dogfight \n - ${user.userNames[0]} \n`
         );
         await botMsg.react(YES_EMOJI);
       }
@@ -395,7 +395,7 @@ export const client = async () => {
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const msg = await reaction.message.fetch();
-          const askedForDf = msg.content.includes(user.username);
+          const askedForDf = msg.content.includes(member.userNames[0]);
           const gotPoints = msg.content.includes("**");
           const member = await findOne(user.id);
           if (member && !askedForDf) {
@@ -419,8 +419,8 @@ export const client = async () => {
               member.dfReactionContribution = 0;
               member.skills += 1;
             }
-            if (!msg.content.toString().includes(user.username)) {
-              await msg.edit(`${msg.content} \n - ${user.username} \n`);
+            if (!msg.content.toString().includes(member.userNames[0])) {
+              await msg.edit(`${msg.content} \n - ${member.userNames[0]} \n`);
             }
             await member.save();
           }

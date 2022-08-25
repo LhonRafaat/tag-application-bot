@@ -410,6 +410,7 @@ export const client = async () => {
               if (mainUser.rolePingContribution >= 1) {
                 mainUser.rolePingContribution = 0;
                 mainUser.skills += 1;
+                await mainUser.save();
               }
             }
             member.dfReactionContribution += settings[0].dfReactionValue;

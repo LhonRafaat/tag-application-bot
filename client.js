@@ -400,16 +400,16 @@ export const client = async () => {
           const member = await findOne(user.id);
           if (member && !askedForDf) {
             console.log("here");
-            const user = await findOne(
+            const mainUser = await findOne(
               reaction.message.mentions.repliedUser.id
             );
             if (!gotPoints) {
-              user.rolePingContribution += settings[0].rolePingValue;
-              msg.edit(`${msg.content} **`);
+              mainUser.rolePingContribution += settings[0].rolePingValue;
+              await msg.edit(`${msg.content} **`);
 
-              if (user.rolePingContribution >= 1) {
-                user.rolePingContribution = 0;
-                user.skills += 1;
+              if (mainUser.rolePingContribution >= 1) {
+                mainUser.rolePingContribution = 0;
+                mainUser.skills += 1;
               }
             }
             member.dfReactionContribution += settings[0].dfReactionValue;

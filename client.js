@@ -395,9 +395,9 @@ export const client = async () => {
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const msg = await reaction.message.fetch();
+          const member = await findOne(user.id);
           const askedForDf = msg.content.includes(member.userNames[0]);
           const gotPoints = msg.content.includes("**");
-          const member = await findOne(user.id);
           if (member && !askedForDf) {
             console.log("here");
             const mainUser = await findOne(

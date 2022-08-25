@@ -87,7 +87,7 @@ export const submitVote = async (interaction, settings, client) => {
         ) {
           await dbUser.save();
 
-          if (dbUser.reachedVotes) {
+          if (dbUser.reachedVotes && !dbUser.votingChannelEnabled) {
             try {
               const newChannel = await guild.channels.create(
                 dbUser.userNames[0],
@@ -109,7 +109,9 @@ export const submitVote = async (interaction, settings, client) => {
                   ],
                 }
               );
-              await newChannel.send({ embeds: [questionsEmbed] });
+              await newChannel.send("please be patient");
+              dbUser.votingChannelEnabled = true;
+              await dbUser.save();
             } catch (error) {
               console.log(error);
             }

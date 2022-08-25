@@ -12,7 +12,7 @@ export const submitVote = async (interaction, settings, client) => {
       if (interaction.member.username !== "tag") {
         const requiredPoints = await getRequiredPoints();
 
-        const guild = await client.guilds.cache.get(process.env.GUILD_ID);
+        const guild = await client.guilds?.cache.get(process.env.GUILD_ID);
         if (!guild)
           return await interaction.editReply({
             content: "Error (guild not found)",

@@ -25,6 +25,7 @@ import { denyLinkAnotherAccount } from "./interactions/denyLinkAnotherAccount.js
 import { registerBf2 } from "./interactions/registerBf2.js";
 import { myStatus } from "./interactions/myStatus.js";
 import { YES_EMOJI } from "./emojies/emojies.js";
+import { hasReachedVotes } from "./utils/hasReachedVotes.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -191,6 +192,7 @@ export const client = async () => {
         }
       }
       await user.save();
+      await hasReachedVotes(user, settings, client);
     }
 
     if (msg.mentions?.roles?.first()) {
@@ -411,6 +413,7 @@ export const client = async () => {
                 mainUser.rolePingContribution = 0;
                 mainUser.skills += 1;
                 await mainUser.save();
+                await hasReachedVotes(mainUser, settings, client);
               }
             }
             member.dfReactionContribution += settings[0].dfReactionValue;
@@ -423,6 +426,7 @@ export const client = async () => {
               await msg.edit(`${msg.content} \n - ${member.userNames[0]} \n`);
             }
             await member.save();
+            await hasReachedVotes(member, settings, client);
           }
         }
       }

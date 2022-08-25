@@ -1,8 +1,9 @@
-import { getRequiredPoints } from "../services/settingService";
-import { questionsEmbed } from "../UI/embeds/questionsEmbed";
+import { getRequiredPoints } from "../services/settingService.js";
+import { questionsEmbed } from "../UI/embeds/questionsEmbed.js";
 
 export const hasReachedVotes = async (member, settings, client) => {
   const requiredPoints = await getRequiredPoints();
+  if (member.votingChannelEnabled) return;
   const guild = await client.guilds?.cache.get(process.env.GUILD_ID);
   if (!guild) return;
   const role = await guild.roles.cache.find((role) => {
@@ -29,6 +30,7 @@ export const hasReachedVotes = async (member, settings, client) => {
     member.reachedVotes = true;
     await member.save();
     try {
+      console.log(settings[0].ticketsParentId);
       const newChannel = await guild.channels.create(member.userNames[0], {
         parent: settings[0].ticketsParentId,
         permissionOverwrites: [
@@ -46,7 +48,10 @@ export const hasReachedVotes = async (member, settings, client) => {
           },
         ],
       });
-      await newChannel.send({ embeds: [questionsEmbed] });
+      await newChannel.send("please be patient");
+
+      member.votingChannelEnabled = true;
+      await member.save();
     } catch (error) {
       console.log(error);
     }

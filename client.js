@@ -173,6 +173,7 @@ export const client = async () => {
   client.on("messageCreate", async (msg) => {
     if (settings.length === 0) return;
     const user = await findOne(msg.author.id);
+    if (!user) return;
     if (user) {
       user.msgContribution += settings[0].msgValue;
       if (user.msgContribution >= 1) {
@@ -398,7 +399,7 @@ export const client = async () => {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const msg = await reaction.message.fetch();
           const member = await findOne(user.id);
-          const askedForDf = msg.content.includes(member.userNames[0]);
+          const askedForDf = msg.content.includes(member?.userNames[0]);
           const gotPoints = msg.content.includes("**");
           if (member && !askedForDf) {
             console.log("here");
@@ -440,15 +441,15 @@ export const client = async () => {
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
-          const msg = await reaction.message.fetch();
-          const askedForDf = msg.content.includes(user.username);
-
           const member = await findOne(user.id);
+          const msg = await reaction.message.fetch();
+          const askedForDf = msg.content.includes(member.userNames[0]);
+
           if (member && !askedForDf) {
             if (member.dfReactionContribution > 0) {
               member.dfReactionContribution -= settings[0].dfReactionValue;
             }
-            const newMsg = msg.content.replace(` - ${user.username}`, "");
+            const newMsg = msg.content.replace(` - ${member.userNames[0]}`, "");
             await msg.edit(newMsg);
             await member.save();
           }

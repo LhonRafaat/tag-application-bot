@@ -410,6 +410,7 @@ export const client = async () => {
               mainUser.rolePingContribution += settings[0].rolePingValue;
               await msg.edit(`${msg.content} **`);
               mainUser.rolePingContribution += settings[0].rolePingValue;
+              await mainUser.save();
               if (mainUser.rolePingContribution >= 1) {
                 mainUser.rolePingContribution = 0;
                 mainUser.skills += 1;

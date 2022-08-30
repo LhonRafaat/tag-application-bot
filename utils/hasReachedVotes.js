@@ -44,7 +44,7 @@ export const hasReachedVotes = async (member, settings, client) => {
           },
           {
             id: mods.id,
-            allow: ["VIEW_CHANNEL", "ADMINISTRATOR"],
+            allow: ["VIEW_CHANNEL"],
           },
         ],
       });

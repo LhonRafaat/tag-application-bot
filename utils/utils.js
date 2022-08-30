@@ -40,7 +40,7 @@ export const getBf2Profile = async (name) => {
 export const games = ["bfv", "bf2", "bf1", "bf4", "bf3"];
 
 export function matchYoutubeUrl(url) {
-  const links = ["https://youtu.be", "https://youtube.com"];
+  const links = ["youtu.be", "youtube.com"];
   const match = links.some((link) => url.includes(link));
   return match;
 }

@@ -185,7 +185,6 @@ export const client = async () => {
         msg.channelId === settings[0].contentCreatorsId &&
         matchYoutubeUrl(msg.content)
       ) {
-        console.log("here");
         user.contentContribution += settings[0].contentValue;
         if (user.contentContribution >= 1) {
           user.contentContribution = 0;

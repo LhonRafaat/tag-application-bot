@@ -1,6 +1,6 @@
 import { getRequiredPoints } from "../services/settingService.js";
 import { questionsEmbed } from "../UI/embeds/questionsEmbed.js";
-
+import { getiDFJson } from "./getiDFJson.js";
 export const hasReachedVotes = async (member, settings, client) => {
   const requiredPoints = await getRequiredPoints();
   if (member.votingChannelEnabled) return;
@@ -11,9 +11,10 @@ export const hasReachedVotes = async (member, settings, client) => {
   });
   const mods = await guild.roles.cache.find((role) => {
     return [
-      settings[0].modId,
       settings[0].founderId,
       settings[0].headAdminId,
+      settings[0].modId,
+      settings[0].moderatorId,
     ].includes(role.id);
   });
   if (
@@ -48,7 +49,10 @@ export const hasReachedVotes = async (member, settings, client) => {
           },
         ],
       });
-      await newChannel.send("please be patient");
+
+      console.log(getiDFJson());
+      const memberId = member.discordId;
+      await newChannel.send({ embeds: [getiDFJson(memberId)] });
 
       member.votingChannelEnabled = true;
       await member.save();

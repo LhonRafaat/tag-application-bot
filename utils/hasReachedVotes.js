@@ -50,7 +50,6 @@ export const hasReachedVotes = async (member, settings, client) => {
         ],
       });
 
-      console.log(getiDFJson());
       const memberId = member.discordId;
       await newChannel.send({ embeds: [getiDFJson(memberId)] });
 

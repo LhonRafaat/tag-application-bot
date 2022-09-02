@@ -403,7 +403,7 @@ export const client = async () => {
           if (member && !askedForDf) {
             console.log("here");
             const mainUser = await findOne(
-              reaction.message.mentions.repliedUser.id
+              reaction.message.mentions?.repliedUser?.id
             );
             if (!gotPoints) {
               mainUser.rolePingContribution += settings[0].rolePingValue;

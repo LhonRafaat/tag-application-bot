@@ -14,9 +14,9 @@ export const hasReachedVotes = async (member, settings, client) => {
       settings[0].founderId,
       settings[0].headAdminId,
       settings[0].modId,
-      settings[0].moderatorId,
     ].includes(role.id);
   });
+  console.log(mods.id);
   if (
     (member.skills === requiredPoints &&
       (member.contribution === requiredPoints ||
@@ -31,7 +31,6 @@ export const hasReachedVotes = async (member, settings, client) => {
     member.reachedVotes = true;
     await member.save();
     try {
-      console.log(settings[0].ticketsParentId);
       const newChannel = await guild.channels.create(member.userNames[0], {
         parent: settings[0].ticketsParentId,
         permissionOverwrites: [

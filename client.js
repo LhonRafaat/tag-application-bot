@@ -26,6 +26,7 @@ import { registerBf2 } from "./interactions/registerBf2.js";
 import { myStatus } from "./interactions/myStatus.js";
 import { YES_EMOJI } from "./emojies/emojies.js";
 import { hasReachedVotes } from "./utils/hasReachedVotes.js";
+import { getTournamentPlate } from "./UI/tournamentPlate.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -122,6 +123,11 @@ export const client = async () => {
     commands?.create({
       name: "getregister",
       description: "get register button",
+    });
+
+    commands?.create({
+      name: "gettournament",
+      description: "get tournament",
     });
     commands?.create({
       name: "getbygamename",
@@ -261,6 +267,10 @@ export const client = async () => {
           ephemeral: true,
         });
       }
+    }
+    if (interaction.commandName === "gettournament") {
+      const plate = await getTournamentPlate();
+      await interaction.editReply({ files: [plate] });
     }
     if (interaction.commandName === "mystatus") {
       await interaction.deferReply();

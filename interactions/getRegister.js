@@ -17,6 +17,7 @@ export const getRegister = async (interaction, settings) => {
     });
   }
   await interaction.editReply({
+    content: "Please register by clicking the green button below.",
     components: [
       getButton([
         new MessageButton()

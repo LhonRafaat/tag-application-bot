@@ -393,11 +393,12 @@ export const client = async () => {
     if (user.bot) return;
     const dateNow = new Date();
     if (reaction.emoji.name === YES_EMOJI) {
-      if (!reaction.message.member.id === settings[0].botId) return;
+      const msg = await reaction.message.fetch();
+      if (msg.author.id !== settings[0].botId) return;
+      console.log("hi");
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
-          const msg = await reaction.message.fetch();
           const member = await findOne(user.id);
           const askedForDf = msg.content.includes(member?.userNames[0]);
           const gotPoints = msg.content.includes("**");
@@ -439,7 +440,9 @@ export const client = async () => {
     const dateNow = new Date();
 
     if (reaction.emoji.name === YES_EMOJI) {
-      if (!reaction.message.member.id === settings[0].botId) return;
+      const msg = await reaction.message.fetch();
+      if (msg.author.id !== settings[0].botId) return;
+      console.log("hi");
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {

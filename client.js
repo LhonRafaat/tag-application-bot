@@ -393,6 +393,7 @@ export const client = async () => {
     if (user.bot) return;
     const dateNow = new Date();
     if (reaction.emoji.name === YES_EMOJI) {
+      if (!reaction.message.member.id === settings[0].botId) return;
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
@@ -438,20 +439,27 @@ export const client = async () => {
     const dateNow = new Date();
 
     if (reaction.emoji.name === YES_EMOJI) {
+      if (!reaction.message.member.id === settings[0].botId) return;
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
-          const member = await findOne(user.id);
           const msg = await reaction.message.fetch();
-          const askedForDf = msg.content.includes(member.userNames[0]);
-
+          const member = await findOne(user.id);
+          const askedForDf = msg.content.includes(member?.userNames[0]);
           if (member && !askedForDf) {
-            if (member.dfReactionContribution > 0) {
-              member.dfReactionContribution -= settings[0].dfReactionValue;
+            member.dfReactionContribution -= settings[0].dfReactionValue;
+
+            if (member.dfReactionContribution >= 1) {
+              member.dfReactionContribution = 0;
+              member.skills -= 1;
             }
-            const newMsg = msg.content.replace(` - ${member.userNames[0]}`, "");
-            await msg.edit(newMsg);
+            if (!msg.content.toString().includes(member.userNames[0])) {
+              await msg.edit(
+                msg.content.replace(`\n - ${member.userNames[0]} \n`, "")
+              );
+            }
             await member.save();
+            await hasReachedVotes(member, settings, client);
           }
         }
       }

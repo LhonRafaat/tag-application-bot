@@ -1,6 +1,7 @@
 import { findOne } from "../services/memberService.js";
 import { getRequiredPoints } from "../services/settingService.js";
 import { questionsEmbed } from "../UI/embeds/questionsEmbed.js";
+import { hasReachedVotes } from "../utils/hasReachedVotes.js";
 
 export const submitVote = async (interaction, settings, client) => {
   {
@@ -18,16 +19,6 @@ export const submitVote = async (interaction, settings, client) => {
             content: "Error (guild not found)",
             ephemeral: true,
           });
-        const role = await guild.roles.cache.find((role) => {
-          return role.name === "@everyone";
-        });
-        const mods = await guild.roles.cache.find((role) => {
-          return [
-            settings[0].modId,
-            settings[0].founderId,
-            settings[0].headAdminId,
-          ].includes(role.id);
-        });
 
         if (interaction.customId.split("-")[0] === "skillsId") {
           if (dbUser.skillVoters.includes(interaction.member.id))
@@ -86,36 +77,7 @@ export const submitVote = async (interaction, settings, client) => {
           )
         ) {
           await dbUser.save();
-
-          if (dbUser.reachedVotes && !dbUser.votingChannelEnabled) {
-            try {
-              const newChannel = await guild.channels.create(
-                dbUser.userNames[0],
-                {
-                  parent: settings[0].ticketsParentId,
-                  permissionOverwrites: [
-                    {
-                      id: role.id,
-                      deny: ["VIEW_CHANNEL"],
-                    },
-                    {
-                      id: dbUser.discordId,
-                      allow: ["VIEW_CHANNEL"],
-                    },
-                    {
-                      id: mods.id,
-                      allow: ["ADMINISTRATOR", "VIEW_CHANNEL"],
-                    },
-                  ],
-                }
-              );
-              await newChannel.send("please be patient");
-              dbUser.votingChannelEnabled = true;
-              await dbUser.save();
-            } catch (error) {
-              console.log(error);
-            }
-          }
+          await hasReachedVotes(dbUser, settings, client);
 
           return await interaction.editReply({
             content: "successfully voted!",

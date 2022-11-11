@@ -16,7 +16,6 @@ export const hasReachedVotes = async (member, settings, client) => {
       settings[0].modId,
     ].includes(role.id);
   });
-  console.log(mods.id);
   if (
     (member.skills === requiredPoints &&
       (member.contribution === requiredPoints ||

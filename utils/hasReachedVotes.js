@@ -10,11 +10,7 @@ export const hasReachedVotes = async (member, settings, client) => {
     return role.name === "@everyone";
   });
   const mods = await guild.roles.cache.find((role) => {
-    return [
-      settings[0].founderId,
-      settings[0].headAdminId,
-      settings[0].modId,
-    ].includes(role.id);
+    return role.id === settings[0].modId;
   });
   if (
     (member.skills === requiredPoints &&

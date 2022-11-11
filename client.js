@@ -108,6 +108,10 @@ export const client = async () => {
       description: "check your status",
     });
     commands?.create({
+      name: "addme",
+      description: "test",
+    });
+    commands?.create({
       name: "getstatus",
       description: "get user status plate",
       options: [
@@ -265,6 +269,37 @@ export const client = async () => {
     if (interaction.commandName === "mystatus") {
       await interaction.deferReply();
       await myStatus(interaction);
+    } else if (interaction.commandName === "addme") {
+      try {
+        const guild = await client.guilds?.cache.get(process.env.GUILD_ID);
+        const role = await guild.roles.cache.find((role) => {
+          return role.name === "@everyone";
+        });
+        const mod = await guild.roles.cache.find((role) => {
+          return role.id === "548861871013494784";
+        });
+        console.log(interaction.user);
+        const newChannel = await guild.channels.create("test", {
+          parent: settings[0].ticketsParentId,
+          permissionOverwrites: [
+            {
+              id: role?.id,
+              deny: ["VIEW_CHANNEL"],
+            },
+            {
+              id: interaction.user.id,
+              allow: ["VIEW_CHANNEL"],
+            },
+            {
+              id: mod?.id,
+              allow: ["VIEW_CHANNEL"],
+            },
+          ],
+        });
+        return await interaction.editReply("ok");
+      } catch (error) {
+        console.log(error);
+      }
     } else if (interaction.commandName === "getbygamename") {
       await getByGameName(interaction, settings);
     } else if (interaction.commandName === "closeticket") {

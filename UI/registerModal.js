@@ -17,7 +17,7 @@ export const getRegisterModal = () => {
         .setRequired(true), // If it's required or not
       new TextInputComponent() // We create a Text Input Component
         .setCustomId("gameVal")
-        .setLabel("game (bf1,bfv,bf3,bf4)")
+        .setLabel("game (bf1,bfv,bf3,bf4,bf2042)")
         .setStyle("SHORT") //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
         .setRequired(true) // If it's required or not
       //   new SelectMenuComponent()

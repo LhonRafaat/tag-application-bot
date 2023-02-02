@@ -354,7 +354,9 @@ export const client = async () => {
       ["registerModal", "linkAnotherAccount"].includes(modal.customId)
     ) {
       if (
-        !["bfv", "bf1", "bf4", "bf3"].includes(gameVal?.toLowerCase()?.trim())
+        !["bfv", "bf1", "bf4", "bf3", "bf2042"].includes(
+          gameVal?.toLowerCase()?.trim()
+        )
       )
         return await modal.editReply({
           content: "Please try again and enter correct game",

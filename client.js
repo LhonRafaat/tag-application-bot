@@ -212,7 +212,8 @@ export const client = async () => {
           settings[0].xboxBf1,
           settings[0].xboxBf4,
           settings[0].allBf2042,
-        ].includes(msg.mentions.roles.first().id)
+        ].includes(msg.mentions.roles.first().id) &&
+        msg.channelId.toString() === settings[0].dogfightChannelId.toString()
       ) {
         const botMsg = await msg.reply(
           `Please only react if you going to participate in the dogfight \n - ${user.userNames[0]} \n`

@@ -2,7 +2,11 @@ import { Client, Intents, MessageButton } from "discord.js";
 import discordModals from "discord-modals";
 import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
-import { getUserProfile, matchYoutubeUrl } from "./utils/utils.js";
+import {
+  getUserByGameId,
+  getUserProfile,
+  matchYoutubeUrl,
+} from "./utils/utils.js";
 import {
   findAll,
   findOne,
@@ -26,6 +30,7 @@ import { registerBf2 } from "./interactions/registerBf2.js";
 import { myStatus } from "./interactions/myStatus.js";
 import { YES_EMOJI } from "./emojies/emojies.js";
 import { hasReachedVotes } from "./utils/hasReachedVotes.js";
+import { Members } from "./schemas/member.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -215,6 +220,11 @@ export const client = async () => {
         ].includes(msg.mentions.roles.first().id) &&
         msg.channelId?.toString() === settings[0].dogfightChannelId?.toString()
       ) {
+        // update usernames
+        // const user = await findOne(msg.author.id);
+        // const gameProfile = await getUserProfile(user.userNames[0], user.platforms[0], );
+        // console.log(user);
+
         const botMsg = await msg.reply(
           `Please only react if you going to participate in the dogfight \n - ${user.userNames[0]} \n`
         );
@@ -382,6 +392,7 @@ export const client = async () => {
           platformVal,
           modal
         );
+        console.log(returnedMember.data);
         if (returnedMember?.data?.id) {
           // we check if this account is linked by someone else already
           let members = await findAll();
@@ -401,7 +412,8 @@ export const client = async () => {
               settings,
               returnedMember,
               client,
-              platformVal
+              platformVal,
+              gameVal
             );
           } else if (modal.customId === "linkAnotherAccount") {
             console.log("submit");

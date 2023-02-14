@@ -8,6 +8,7 @@ const membersSchema = new Schema(
     originIds: [{ type: String }],
     platforms: [{ type: String }],
     userNames: [{ type: String }],
+    games: [{ type: String }],
     hasTag: { type: Boolean },
     avatar: { type: String },
     fullName: { type: String, required: true },

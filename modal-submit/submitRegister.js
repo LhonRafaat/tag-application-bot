@@ -6,7 +6,8 @@ export const submitRegister = async (
   settings,
   returnedMember,
   client,
-  platformVal
+  platformVal,
+  gameVal
 ) => {
   //if the user's profile exists , then we create a new member in the db
 
@@ -24,7 +25,8 @@ export const submitRegister = async (
 
     modal.user.username,
     returnedMember.data?.userName,
-    returnedMember.data?.avatar
+    returnedMember.data?.avatar,
+    gameVal
   );
   // assign registered role
 

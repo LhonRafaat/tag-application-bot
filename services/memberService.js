@@ -26,7 +26,8 @@ export const createMember = async (
   hasTag,
   fullName,
   userNames,
-  avatar
+  avatar,
+  games
 ) => {
   const member = new Members({
     discordId,
@@ -36,6 +37,7 @@ export const createMember = async (
     fullName,
     userNames,
     avatar,
+    games,
   });
 
   return await member.save();

@@ -251,9 +251,15 @@ export const client = async () => {
 
   client.on(Events.InteractionCreate, async (interaction) => {
     // return null if the interaction is from the modal submit
-    if (interaction.isCommand()) await interaction.deferReply();
+
+    if (
+      !["wantToRegister", "registerButton"].includes(interaction.customId) &&
+      !["mystatus", "getregister"].includes(interaction.commandName)
+    )
+      await interaction.deferReply({ ephemeral: true });
 
     if (interaction.commandName === "mystatus") {
+      await interaction.deferReply();
       await myStatus(interaction);
     } else if (interaction.commandName === "addme") {
       try {
@@ -291,6 +297,7 @@ export const client = async () => {
     } else if (interaction.commandName === "closeticket") {
       await closeTicket(interaction, settings);
     } else if (interaction.commandName === "getregister") {
+      await interaction.deferReply();
       await getRegister(interaction, settings);
     } else if (interaction.commandName === "requiredpoints") {
       getRequiredPoints(interaction, settings);

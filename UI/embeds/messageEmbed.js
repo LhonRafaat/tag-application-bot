@@ -1,5 +1,5 @@
 // at the top of your file
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 const description = `
    iDF is a community of players who enjoy playing games together.
@@ -9,7 +9,7 @@ const description = `
    `;
 
 // inside a command, event listener, etc.
-export const tagEmbed = new MessageEmbed()
+export const tagEmbed = new EmbedBuilder()
   .setColor("#0099ff")
   .setTitle("iDF Tag Appplication")
   // .setURL("https://discord.js.org/")

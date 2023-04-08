@@ -1,5 +1,5 @@
 // at the top of your file
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import {
   CONTRIBUTION_EMOJI,
   PERSONALITY_EMOJI,
@@ -8,7 +8,7 @@ import {
 
 // inside a command, event listener, etc.
 export const getVoteEmbed = (name) => {
-  const voteEmbed = new MessageEmbed()
+  const voteEmbed = new EmbedBuilder()
     .setColor("#0099ff")
     .setTitle(`Vote for a ${name}`)
     .setURL("https://discord.js.org/")

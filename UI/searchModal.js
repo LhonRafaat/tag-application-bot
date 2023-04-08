@@ -1,7 +1,7 @@
-import { Modal, TextInputComponent } from "discord-modals";
-
+import { ModalBuilder } from "@discordjs/builders";
+import { TextInputComponent } from "discord.js";
 export const getSearchModal = () => {
-  return new Modal() // We create a Modal
+  return new ModalBuilder() // We create a Modal
     .setCustomId("searchModal")
     .setTitle("Search For A User")
     .addComponents(

@@ -1,7 +1,7 @@
-import { Modal, SelectMenuComponent, TextInputComponent } from "discord-modals";
+import { ModalBuilder, TextInputComponent } from "discord.js";
 
 export const linkAnotherAccountModal = () => {
-  return new Modal() // We create a Modal
+  return new ModalBuilder() // We create a Modal
     .setCustomId("linkAnotherAccount")
     .setTitle("Member Registration")
     .addComponents(

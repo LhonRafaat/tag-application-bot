@@ -1,4 +1,4 @@
-import { MessageButton } from "discord.js";
+import { ButtonBuilder, ButtonStyle } from "discord.js";
 import { findOne } from "../services/memberService.js";
 import { getButton } from "../UI/button.js";
 import { getVoteEmbed } from "../UI/embeds/voteEmbed.js";
@@ -59,14 +59,14 @@ export const vote = async (interaction, settings) => {
     files: [attachment],
     components: [
       getButton([
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId(`skillsId-${discordUser.discordId}`)
           .setDisabled(
             discordUser.skillVoters.includes(interaction.member.id.toString())
           )
           .setLabel("Skills")
-          .setStyle("DANGER"),
-        new MessageButton()
+          .setStyle(ButtonStyle.Danger),
+        new ButtonBuilder()
           .setCustomId(`contributionId-${discordUser.discordId}`)
           .setDisabled(
             discordUser.contributionVoters.includes(
@@ -74,8 +74,8 @@ export const vote = async (interaction, settings) => {
             )
           )
           .setLabel("Contribution")
-          .setStyle("SUCCESS"),
-        new MessageButton()
+          .setStyle(ButtonStyle.Success),
+        new ButtonBuilder()
           .setCustomId(`personalityId-${discordUser.discordId}`)
           .setDisabled(
             discordUser.personalityVoters.includes(
@@ -83,7 +83,7 @@ export const vote = async (interaction, settings) => {
             )
           )
           .setLabel("Personality")
-          .setStyle("PRIMARY"),
+          .setStyle(ButtonStyle.Primary),
       ]),
     ],
   });

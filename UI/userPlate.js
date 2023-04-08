@@ -1,5 +1,5 @@
 import Canvas from "canvas";
-import { MessageAttachment } from "discord.js";
+import { AttachmentBuilder } from "discord.js";
 import { findOne } from "../services/memberService.js";
 import { getRequiredPoints } from "../services/settingService.js";
 
@@ -215,7 +215,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   );
 
   // Use the helpful Attachment class structure to process the file for you
-  const attachment = new MessageAttachment(
+  const attachment = new AttachmentBuilder(
     canvas.toBuffer(),
     "profile-image.png"
   );

@@ -1,5 +1,4 @@
-import { showModal } from "discord-modals";
-import { MessageButton } from "discord.js";
+import { ButtonBuilder, ButtonStyle } from "discord.js";
 import { findOne } from "../services/memberService.js";
 import { getButton } from "../UI/button.js";
 import { getRegisterModal } from "../UI/registerModal.js";
@@ -15,20 +14,16 @@ export const register = async (interaction, client) => {
 
       components: [
         getButton([
-          new MessageButton()
+          new ButtonBuilder()
             .setCustomId("wantToRegister")
             .setLabel("Yes")
-            .setStyle("SUCCESS"),
-          new MessageButton()
+            .setStyle(ButtonStyle.Success),
+          new ButtonBuilder()
             .setCustomId("refuseToRegister")
             .setLabel("No")
-            .setStyle("DANGER"),
+            .setStyle(ButtonStyle.Danger),
         ]),
       ],
     });
-  } else
-    showModal(getRegisterModal(), {
-      client: client, // Client to show the Modal through the Discord API.
-      interaction: interaction, // Show the modal with interaction data.
-    });
+  } else return getRegisterModal();
 };

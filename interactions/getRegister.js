@@ -1,4 +1,4 @@
-import { MessageButton } from "discord.js";
+import { ButtonBuilder, ButtonStyle } from "discord.js";
 import { getButton } from "../UI/button.js";
 
 export const getRegister = async (interaction, settings) => {
@@ -20,10 +20,10 @@ export const getRegister = async (interaction, settings) => {
     content: "Please register by clicking the green button below.",
     components: [
       getButton([
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId("registerButton")
           .setLabel("Register")
-          .setStyle("SUCCESS"),
+          .setStyle(ButtonStyle.Success),
       ]),
     ],
   });

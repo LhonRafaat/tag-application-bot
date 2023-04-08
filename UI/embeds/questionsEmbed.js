@@ -1,5 +1,5 @@
 // at the top of your file
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 const description = `
        Please answer questions below : 
@@ -16,7 +16,7 @@ const description = `
    `;
 
 // inside a command, event listener, etc.
-export const questionsEmbed = new MessageEmbed()
+export const questionsEmbed = new EmbedBuilder()
   .setColor("#0099ff")
   .setTitle("iDF Tag Appplication")
   // .setURL("https://discord.js.org/")

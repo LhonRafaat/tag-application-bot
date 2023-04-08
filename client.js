@@ -1,5 +1,10 @@
-import { Client, Intents, MessageButton } from "discord.js";
-import discordModals from "discord-modals";
+import {
+  Client,
+  GatewayIntentBits,
+  ButtonBuilder,
+  Partials,
+  ApplicationCommandOptionType,
+} from "discord.js";
 import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
 import {
@@ -37,12 +42,12 @@ export const client = async () => {
 
   const client = new Client({
     intents: [
-      Intents.FLAGS.GUILDS,
-      Intents.FLAGS.GUILD_MESSAGES,
-      Intents.FLAGS.GUILD_INTEGRATIONS,
-      Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.GuildIntegrations,
+      GatewayIntentBits.GuildMessageReactions,
     ],
-    partials: ["USER", "REACTION", "MESSAGE"],
+    partials: [Partials.User, Partials.Reaction, Partials.Message],
   });
 
   client
@@ -67,20 +72,7 @@ export const client = async () => {
 
       //TODO move the button to its own file
 
-      await channel.send({
-        components: [
-          getButton([
-            new MessageButton()
-              .setCustomId("registerButton")
-              .setLabel("Register")
-              .setStyle("PRIMARY"),
-            new MessageButton()
-              .setCustomId("registerBf2")
-              .setLabel("Register your BF2 account")
-              .setStyle("SECONDARY"),
-          ]),
-        ],
-      });
+      // await channel.send({});
     } catch (error) {
       console.log(error);
       return;
@@ -104,7 +96,7 @@ export const client = async () => {
           name: "username",
           required: true,
           description: "username of the user to vote for",
-          type: "USER",
+          type: ApplicationCommandOptionType.User,
         },
       ],
     });
@@ -124,7 +116,7 @@ export const client = async () => {
           name: "username",
           required: true,
           description: "username of the user to get the status",
-          type: "USER",
+          type: ApplicationCommandOptionType.User,
         },
       ],
     });
@@ -140,19 +132,19 @@ export const client = async () => {
           name: "username",
           required: true,
           description: "username of the user to get the status",
-          type: "STRING",
+          type: ApplicationCommandOptionType.String,
         },
         {
           name: "game",
           required: true,
           description: "game name of the user to get the status",
-          type: "STRING",
+          type: ApplicationCommandOptionType.String,
         },
         {
           name: "platform",
           required: true,
           description: "platform of the user to get the status",
-          type: "STRING",
+          type: ApplicationCommandOptionType.String,
         },
       ],
     });
@@ -164,7 +156,7 @@ export const client = async () => {
           name: "points",
           required: true,
           description: "enter the required points",
-          type: "NUMBER",
+          type: ApplicationCommandOptionType.Number,
         },
       ],
     });
@@ -177,7 +169,7 @@ export const client = async () => {
       description: "delete current channel",
     });
   });
-  discordModals(client);
+  // discordModals(client);
 
   client.on("messageCreate", async (msg) => {
     if (settings.length === 0) return;
@@ -290,7 +282,7 @@ export const client = async () => {
           return role.id === "548861871013494784";
         });
         console.log(interaction.user);
-        const newChannel = await guild.channels.create("test", {
+        await guild.channels.create("test", {
           parent: settings[0].ticketsParentId,
           permissionOverwrites: [
             {

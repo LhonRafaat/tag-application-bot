@@ -1,7 +1,8 @@
-import { Modal, TextInputComponent } from "discord-modals";
+import { ModalBuilder } from "@discordjs/builders";
+import { TextInputComponent } from "discord.js";
 
 export const getBf2Modal = () => {
-  return new Modal() // We create a Modal
+  return new ModalBuilder() // We create a Modal
     .setCustomId("bf2Modal")
     .setTitle("Register your BF2 account")
     .addComponents(

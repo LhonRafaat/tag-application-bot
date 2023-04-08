@@ -3,12 +3,11 @@ import { findOne } from "../services/memberService.js";
 import { getButton } from "../UI/button.js";
 import { getRegisterModal } from "../UI/registerModal.js";
 
-export const register = async (interaction, client) => {
+export const register = async (interaction) => {
   const user = await findOne(interaction.member.id);
 
   if (user) {
-    await interaction.deferReply({ ephemeral: true });
-    return await interaction.editReply({
+    return await interaction.reply({
       content: "You are already registered , want to link another account?",
       ephemeral: true,
 
@@ -25,5 +24,5 @@ export const register = async (interaction, client) => {
         ]),
       ],
     });
-  } else return getRegisterModal();
+  } else return await interaction.showModal(getRegisterModal());
 };

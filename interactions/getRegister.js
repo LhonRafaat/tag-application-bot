@@ -2,7 +2,6 @@ import { ButtonBuilder, ButtonStyle } from "discord.js";
 import { getButton } from "../UI/button.js";
 
 export const getRegister = async (interaction, settings) => {
-  await interaction.deferReply();
   const isAuthorized = await interaction.member.roles.cache.find((role) => {
     return [
       settings[0].founderId,

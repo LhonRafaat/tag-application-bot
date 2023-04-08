@@ -172,7 +172,7 @@ export const client = async () => {
   });
   // discordModals(client);
 
-  client.on("messageCreate", async (msg) => {
+  client.on(Events.MessageCreate, async (msg) => {
     if (settings.length === 0) return;
     const user = await findOne(msg.author.id);
     if (!user) return;
@@ -250,29 +250,10 @@ export const client = async () => {
   });
 
   client.on(Events.InteractionCreate, async (interaction) => {
-    console.log(interaction.customId);
     // return null if the interaction is from the modal submit
-    if (
-      ["bf2Modal", "registerModal", "linkAnotherAccount"].includes(
-        interaction.customId
-      )
-    ) {
-      return;
-    }
+    if (interaction.isCommand()) await interaction.deferReply();
 
-    if (
-      !["registerButton", "wantToRegister", "registerBf2"].includes(
-        interaction.customId
-      )
-    ) {
-      if (!["getregister", "mystatus"].includes(interaction.commandName)) {
-        await interaction.deferReply({
-          ephemeral: true,
-        });
-      }
-    }
     if (interaction.commandName === "mystatus") {
-      await interaction.deferReply();
       await myStatus(interaction);
     } else if (interaction.commandName === "addme") {
       try {
@@ -334,11 +315,8 @@ export const client = async () => {
     } else if (interaction.customId === "registerBf2") {
       await registerBf2(interaction, client);
     }
-  });
-  client.on("modalSubmit", async (modal) => {
-    await modal.deferReply({
-      ephemeral: true,
-    });
+
+    // ------------ Modal Submit ------------------------------
 
     // this is for the dropdowns we will use it when mobile app is updated
     // let gameVal = await modal.getSelectMenuValues("gameVal");
@@ -347,23 +325,25 @@ export const client = async () => {
     // if (platformVal?.length > 0) platformVal = platformVal[0];
     // if (gameVal?.length > 0) gameVal = gameVal[0];
 
-    const gameVal = await modal.getTextInputValue("gameVal");
-    const gameNameVal = await modal.getTextInputValue("gameNameVal");
-    const platformVal = await modal.getTextInputValue("platformVal");
+    if (!interaction.isModalSubmit()) return;
 
-    //if its for voting we dont want to create a user
+    const gameVal = interaction.fields.getTextInputValue("gameVal");
+    console.log(gameVal);
+    const gameNameVal = interaction.fields.getTextInputValue("gameNameVal");
+    const platformVal = interaction.fields.getTextInputValue("platformVal");
 
-    if (modal.customId === "bf2Modal") {
-      await submitRegisterBf2(modal, settings);
+    if (interaction.customId === "bf2Modal") {
+      await submitRegisterBf2(interaction, settings);
     } else if (
-      ["registerModal", "linkAnotherAccount"].includes(modal.customId)
+      ["registerModal", "linkAnotherAccount"].includes(interaction.customId)
     ) {
+      console.log("here");
       if (
         !["bfv", "bf1", "bf4", "bf3", "bf2042"].includes(
           gameVal?.toLowerCase()?.trim()
         )
       )
-        return await modal.editReply({
+        return await interaction.editReply({
           content: "Please try again and enter correct game",
 
           ephemeral: true,
@@ -374,7 +354,7 @@ export const client = async () => {
           platformVal?.toLowerCase()?.trim()
         )
       )
-        return await modal.editReply({
+        return await interaction.editReply({
           content: "Please try again and enter correct platform",
 
           ephemeral: true,
@@ -383,40 +363,38 @@ export const client = async () => {
         const returnedMember = await getUserProfile(
           gameVal,
           gameNameVal,
-          platformVal,
-          modal
+          platformVal
         );
-        console.log(returnedMember.data);
         if (returnedMember?.data?.id) {
           // we check if this account is linked by someone else already
           let members = await findAll();
           let originIds = [];
           members.map((member) => originIds.push(...member.originIds));
           if (originIds.includes(returnedMember.data?.id)) {
-            return await modal.editReply({
+            return await interaction.editReply({
               content: "This account is already linked",
 
               ephemeral: true,
             });
           }
-          if (modal.customId === "registerModal") {
+          if (interaction.customId === "registerModal") {
             console.log("hi");
             await submitRegister(
-              modal,
+              interaction,
               settings,
               returnedMember,
               client,
               platformVal,
               gameVal
             );
-          } else if (modal.customId === "linkAnotherAccount") {
+          } else if (interaction.customId === "linkAnotherAccount") {
             console.log("submit");
-            await subLinkAlt(modal, returnedMember, platformVal);
+            await subLinkAlt(interaction, returnedMember, platformVal);
             // }
             // show them their plate here
           }
         } else {
-          return await modal.editReply({
+          return await interaction.editReply({
             content: "game profile not found",
 
             ephemeral: true,
@@ -424,7 +402,7 @@ export const client = async () => {
         }
       } catch (error) {
         console.log(error);
-        return await modal.editReply({
+        return await interaction.editReply({
           content: "profile not found",
 
           ephemeral: true,
@@ -432,6 +410,7 @@ export const client = async () => {
       }
     }
   });
+  // client.on("modalSubmit", async (modal) => {});
 
   client.on(Events.MessageReactionAdd, async (reaction, user) => {
     if (user.bot) return;

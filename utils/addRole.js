@@ -1,13 +1,13 @@
-export const addRole = async (modal, settings) => {
+export const addRole = async (interaction, settings) => {
   if (
-    (await modal.member.roles.cache.some((role) => {
+    (await interaction.member.roles.cache.some((role) => {
       return [
         settings[0].idfXboxId,
         settings[0].idfPcId,
         settings[0].idfPsId,
       ].includes(role.id);
     })) &&
-    !(await modal.member.roles.cache.some((role) => {
+    !(await interaction.member.roles.cache.some((role) => {
       return [
         settings[0].moderatorId,
         settings[0].seniorModeratorId,
@@ -22,12 +22,14 @@ export const addRole = async (modal, settings) => {
     }))
   ) {
     // idf registered tag
-    await modal.member.roles.add(settings[0].registeredMember).catch((err) => {
-      console.log("Error" + err);
-    });
+    await interaction.member.roles
+      .add(settings[0].registeredMember)
+      .catch((err) => {
+        console.log("Error" + err);
+      });
   } else if (
     //staff
-    await modal.member.roles.cache.some((role) => {
+    await interaction.member.roles.cache.some((role) => {
       return [
         settings[0].moderatorId,
         settings[0].seniorModeratorId,
@@ -38,11 +40,13 @@ export const addRole = async (modal, settings) => {
       ].includes(role.id);
     })
   ) {
-    await modal.member.roles.add(settings[0].registeredStaff).catch((err) => {
-      console.log("Error" + err);
-    });
+    await interaction.member.roles
+      .add(settings[0].registeredStaff)
+      .catch((err) => {
+        console.log("Error" + err);
+      });
   } else if (
-    await modal.member.roles.cache.some((role) => {
+    await interaction.member.roles.cache.some((role) => {
       return [
         settings[0].modId,
         settings[0].founderId,
@@ -51,13 +55,13 @@ export const addRole = async (modal, settings) => {
     })
   ) {
     // admins
-    await modal.member.roles
+    await interaction.member.roles
       .add(settings[0].registeredMangment)
       .catch((err) => {
         console.log("Error" + err);
       });
   } else {
-    await modal.member.roles.add(settings[0].candidateId).catch((err) => {
+    await interaction.member.roles.add(settings[0].candidateId).catch((err) => {
       console.log("Error" + err);
     });
   }

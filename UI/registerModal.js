@@ -1,4 +1,4 @@
-import { ModalBuilder, TextInputBuilder } from "discord.js";
+import { ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 
 export const getRegisterModal = () => {
   return new ModalBuilder()
@@ -8,17 +8,17 @@ export const getRegisterModal = () => {
       new TextInputBuilder()
         .setCustomId("gameNameVal")
         .setLabel("Ingame nickname")
-        .setStyle("SHORT")
+        .setStyle(TextInputStyle.Short)
         .setRequired(true),
       new TextInputBuilder()
         .setCustomId("platformVal")
         .setLabel("platform (pc,xboxone,ps4,ps3,xbox360)")
-        .setStyle("SHORT")
+        .setStyle(TextInputStyle.Short)
         .setRequired(true),
       new TextInputBuilder()
         .setCustomId("gameVal")
         .setLabel("game (bf1,bfv,bf3,bf4,bf2042)")
-        .setStyle("SHORT")
+        .setStyle(TextInputStyle.Short)
         .setRequired(true)
       //   new SelectMenuComponent()
       //     .setCustomId("platformVal")

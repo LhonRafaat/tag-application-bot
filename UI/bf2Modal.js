@@ -1,5 +1,5 @@
 import { ModalBuilder } from "@discordjs/builders";
-import { TextInputBuilder } from "discord.js";
+import { TextInputBuilder, TextInputStyle } from "discord.js";
 
 export const getBf2Modal = () => {
   return new ModalBuilder() // We create a Modal
@@ -9,6 +9,6 @@ export const getBf2Modal = () => {
       new TextInputBuilder() // We create a Text Input Component
         .setCustomId("bf2NameVal")
         .setLabel("Ingame nickname")
-        .setStyle("SHORT") //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
+        .setStyle(TextInputStyle.Short) //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
     );
 };

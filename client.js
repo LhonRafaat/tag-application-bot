@@ -250,6 +250,7 @@ export const client = async () => {
   });
 
   client.on(Events.InteractionCreate, async (interaction) => {
+    console.log(interaction.customId);
     // return null if the interaction is from the modal submit
     if (
       ["bf2Modal", "registerModal", "linkAnotherAccount"].includes(

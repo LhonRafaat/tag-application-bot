@@ -4,6 +4,7 @@ import {
   ButtonBuilder,
   Partials,
   ApplicationCommandOptionType,
+  Events,
 } from "discord.js";
 import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
@@ -55,7 +56,7 @@ export const client = async () => {
     .then(() => console.log("connected the bot"))
     .catch((err) => console.log(err));
 
-  client.on("ready", async () => {
+  client.on(Events.ClientReady, async () => {
     if (settings.length === 0) return;
     try {
       const channel = client.channels.cache.get(settings[0].votingChannelId);
@@ -248,7 +249,7 @@ export const client = async () => {
     }
   });
 
-  client.on("interactionCreate", async (interaction) => {
+  client.on(Events.InteractionCreate, async (interaction) => {
     // return null if the interaction is from the modal submit
     if (
       ["bf2Modal", "registerModal", "linkAnotherAccount"].includes(
@@ -431,7 +432,7 @@ export const client = async () => {
     }
   });
 
-  client.on("messageReactionAdd", async (reaction, user) => {
+  client.on(Events.MessageReactionAdd, async (reaction, user) => {
     if (user.bot) return;
     const dateNow = new Date();
     if (reaction.emoji.name === YES_EMOJI) {
@@ -477,7 +478,7 @@ export const client = async () => {
       }
     }
   });
-  client.on("messageReactionRemove", async (reaction, user) => {
+  client.on(Events.MessageReactionRemove, async (reaction, user) => {
     if (user.bot) return;
     const dateNow = new Date();
 

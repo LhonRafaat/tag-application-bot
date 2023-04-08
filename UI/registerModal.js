@@ -1,25 +1,25 @@
-import { ModalBuilder, TextInputComponent } from "discord.js";
+import { ModalBuilder, TextInputBuilder } from "discord.js";
 
 export const getRegisterModal = () => {
-  return new ModalBuilder() // We create a Modal
+  return new ModalBuilder()
     .setCustomId("registerModal")
     .setTitle("Member Registration")
     .addComponents(
-      new TextInputComponent() // We create a Text Input Component
+      new TextInputBuilder()
         .setCustomId("gameNameVal")
         .setLabel("Ingame nickname")
-        .setStyle("SHORT") //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
-        .setRequired(true), // If it's required or not
-      new TextInputComponent() // We create a Text Input Component
+        .setStyle("SHORT")
+        .setRequired(true),
+      new TextInputBuilder()
         .setCustomId("platformVal")
         .setLabel("platform (pc,xboxone,ps4,ps3,xbox360)")
-        .setStyle("SHORT") //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
-        .setRequired(true), // If it's required or not
-      new TextInputComponent() // We create a Text Input Component
+        .setStyle("SHORT")
+        .setRequired(true),
+      new TextInputBuilder()
         .setCustomId("gameVal")
         .setLabel("game (bf1,bfv,bf3,bf4,bf2042)")
-        .setStyle("SHORT") //IMPORTANT: Text Input Component Style can be 'SHORT' or 'LONG'
-        .setRequired(true) // If it's required or not
+        .setStyle("SHORT")
+        .setRequired(true)
       //   new SelectMenuComponent()
       //     .setCustomId("platformVal")
       //     .setPlaceholder("Please select a platform")

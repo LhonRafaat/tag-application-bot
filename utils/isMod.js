@@ -1,5 +1,4 @@
 export const isMod = async (interaction, settings) => {
-  console.log(settings);
   const isAuthorized = await interaction.member.roles.cache.find((role) => {
     return [
       settings[0].founderId,

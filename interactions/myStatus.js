@@ -1,6 +1,6 @@
 import { findOne } from "../services/memberService.js";
 import { getPlate } from "../UI/userPlate.js";
-import { games, getBf2Profile, getUserProfile } from "../utils/utils.js";
+import { games, getBf2Profile, getUserByGameId } from "../utils/utils.js";
 
 export const myStatus = async (interaction) => {
   const user = await findOne(interaction.member.id);
@@ -21,9 +21,9 @@ export const myStatus = async (interaction) => {
       }
 
       try {
-        const gameProfile = await getUserProfile(
+        const gameProfile = await getUserByGameId(
+          user.originIds[0],
           game,
-          user.userNames[0],
           user.platforms[0]
         );
         if (gameProfile?.data) {

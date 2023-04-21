@@ -3,7 +3,14 @@ import { isMod } from "../utils/isMod.js";
 import { games, getUserByGameId } from "../utils/utils.js";
 
 export const updateNicks = async (interaction, settings) => {
-  await isMod(interaction,settings);
+  const isAuthorized = await isMod(interaction, settings);
+
+  if (!isAuthorized) {
+    return await interaction.editReply({
+      content: "You are not authorized",
+      ephemeral: true,
+    });
+  }
   const members = await findAll();
   let usersUpdated = "";
 

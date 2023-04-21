@@ -37,6 +37,7 @@ import { myStatus } from "./interactions/myStatus.js";
 import { YES_EMOJI } from "./emojies/emojies.js";
 import { hasReachedVotes } from "./utils/hasReachedVotes.js";
 import { Members } from "./schemas/member.js";
+import { updateNicks } from "./interactions/updateNicks.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -105,6 +106,13 @@ export const client = async () => {
       name: "mystatus",
       description: "check your status",
     });
+
+    commands?.create({
+      name: "updatenicks",
+      description:
+        "Does a api call to get users latest nickname for each user in the database.",
+    });
+
     commands?.create({
       name: "addme",
       description: "test",
@@ -270,7 +278,6 @@ export const client = async () => {
         const mod = await guild.roles.cache.find((role) => {
           return role.id === "548861871013494784";
         });
-        console.log(interaction.user);
         await guild.channels.create("test", {
           parent: settings[0].ticketsParentId,
           permissionOverwrites: [
@@ -294,6 +301,8 @@ export const client = async () => {
       }
     } else if (interaction.commandName === "getbygamename") {
       await getByGameName(interaction, settings);
+    } else if (interaction.commandName === "updatenicks") {
+      await updateNicks(interaction, settings);
     } else if (interaction.commandName === "closeticket") {
       await closeTicket(interaction, settings);
     } else if (interaction.commandName === "getregister") {
@@ -335,7 +344,6 @@ export const client = async () => {
     if (!interaction.isModalSubmit()) return;
 
     const gameVal = interaction.fields.getTextInputValue("gameVal");
-    console.log(gameVal);
     const gameNameVal = interaction.fields.getTextInputValue("gameNameVal");
     const platformVal = interaction.fields.getTextInputValue("platformVal");
 
@@ -385,7 +393,6 @@ export const client = async () => {
             });
           }
           if (interaction.customId === "registerModal") {
-            console.log("hi");
             await submitRegister(
               interaction,
               settings,
@@ -395,7 +402,6 @@ export const client = async () => {
               gameVal
             );
           } else if (interaction.customId === "linkAnotherAccount") {
-            console.log("submit");
             await subLinkAlt(interaction, returnedMember, platformVal);
             // }
             // show them their plate here
@@ -408,7 +414,6 @@ export const client = async () => {
           });
         }
       } catch (error) {
-        console.log(error);
         return await interaction.editReply({
           content: "profile not found",
 
@@ -425,7 +430,6 @@ export const client = async () => {
     if (reaction.emoji.name === YES_EMOJI) {
       const msg = await reaction.message.fetch();
       if (msg.author.id !== settings[0].botId) return;
-      console.log("hi");
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
@@ -433,7 +437,6 @@ export const client = async () => {
           const askedForDf = msg.content.includes(member?.userNames[0]);
           const gotPoints = msg.content.includes("**");
           if (member && !askedForDf) {
-            console.log("here");
             const mainUser = await findOne(
               reaction.message.mentions?.repliedUser?.id
             );
@@ -472,7 +475,6 @@ export const client = async () => {
     if (reaction.emoji.name === YES_EMOJI) {
       const msg = await reaction.message.fetch();
       if (msg.author.id !== settings[0].botId) return;
-      console.log("hi");
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {

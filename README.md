@@ -1,2 +1,2 @@
 # tag-application-bot
-No description yet
+A discord bot I made for our game team (iDF).

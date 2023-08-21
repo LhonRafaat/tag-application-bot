@@ -20,6 +20,9 @@ const settingSchema = new Schema(
     modId: { type: String, default: "548861871013494784" },
     founderId: { type: String, default: "977522446427103262" },
     headAdminId: { type: String, default: "977522446427103262" },
+    strikeOne: { type: String },
+    strikeTwo: { type: String },
+    strikeThree: { type: String },
     // -----------------
     // registered members id
     registeredMember: { type: String, default: "977951821194727434" },

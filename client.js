@@ -38,6 +38,7 @@ import { YES_EMOJI } from "./emojies/emojies.js";
 import { hasReachedVotes } from "./utils/hasReachedVotes.js";
 import { Members } from "./schemas/member.js";
 import { updateNicks } from "./interactions/updateNicks.js";
+import { strikeMember } from "./interactions/strikeMember.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -48,6 +49,7 @@ export const client = async () => {
       GatewayIntentBits.GuildMessages,
       GatewayIntentBits.GuildIntegrations,
       GatewayIntentBits.GuildMessageReactions,
+      GatewayIntentBits.MessageContent,
     ],
     partials: [Partials.User, Partials.Reaction, Partials.Message],
   });
@@ -126,6 +128,31 @@ export const client = async () => {
           required: true,
           description: "username of the user to get the status",
           type: ApplicationCommandOptionType.User,
+        },
+      ],
+    });
+
+    commands?.create({
+      name: "strike",
+      description: "Strike a member",
+      options: [
+        {
+          name: "username",
+          required: true,
+          description: "username of the user",
+          type: ApplicationCommandOptionType.User,
+        },
+        {
+          name: "degree",
+          required: true,
+          description: "Degree of the strike",
+          type: ApplicationCommandOptionType.Number,
+        },
+        {
+          name: "reason",
+          required: true,
+          description: "Reason for the strike",
+          type: ApplicationCommandOptionType.String,
         },
       ],
     });
@@ -237,14 +264,15 @@ export const client = async () => {
     if (msg.author.bot) return;
 
     // in case you are very bored
+
     if (msg.content.toLowerCase() === "who is the best pilot in the universe") {
-      msg.reply("LhonXD");
+      return msg.reply("LhonXD");
     }
     if (
       msg.content.toLowerCase() ===
       "who lies about who is the worst pilot in the universe"
     ) {
-      msg.reply("MrIcePops");
+      return msg.reply("MrIcePops");
     }
 
     if (msg.content.toLowerCase() === "!voteranking") {
@@ -301,6 +329,8 @@ export const client = async () => {
       }
     } else if (interaction.commandName === "getbygamename") {
       await getByGameName(interaction, settings);
+    } else if (interaction.commandName === "strike") {
+      await strikeMember(interaction, settings);
     } else if (interaction.commandName === "updatenicks") {
       await updateNicks(interaction, settings);
     } else if (interaction.commandName === "closeticket") {

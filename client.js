@@ -39,6 +39,7 @@ import { hasReachedVotes } from "./utils/hasReachedVotes.js";
 import { Members } from "./schemas/member.js";
 import { updateNicks } from "./interactions/updateNicks.js";
 import { strikeMember } from "./interactions/strikeMember.js";
+import { getMemberStrikes } from "./interactions/getMemberStrikes.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -153,6 +154,18 @@ export const client = async () => {
           required: true,
           description: "Reason for the strike",
           type: ApplicationCommandOptionType.String,
+        },
+      ],
+    });
+    commands?.create({
+      name: "getmemberstrikes",
+      description: "Get member strikes",
+      options: [
+        {
+          name: "username",
+          required: true,
+          description: "username of the user",
+          type: ApplicationCommandOptionType.User,
         },
       ],
     });
@@ -331,6 +344,8 @@ export const client = async () => {
       await getByGameName(interaction, settings);
     } else if (interaction.commandName === "strike") {
       await strikeMember(interaction, settings);
+    } else if (interaction.commandName === "getmemberstrikes") {
+      await getMemberStrikes(interaction, settings);
     } else if (interaction.commandName === "updatenicks") {
       await updateNicks(interaction, settings);
     } else if (interaction.commandName === "closeticket") {

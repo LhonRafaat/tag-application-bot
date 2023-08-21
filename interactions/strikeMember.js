@@ -3,14 +3,14 @@ import { strikeUser } from "../services/strikeService.js";
 import { isMod } from "../utils/isMod.js";
 
 export const strikeMember = async (interaction, settings) => {
-  //   const isAuthorized = await isMod(interaction, settings);
+    const isAuthorized = await isMod(interaction, settings);
 
-  //   if (!isAuthorized) {
-  //     return await interaction.editReply({
-  //       content: "You are not authorized",
-  //       ephemeral: true,
-  //     });
-  //   }
+    if (!isAuthorized) {
+      return await interaction.editReply({
+        content: "You are not authorized",
+        ephemeral: true,
+      });
+    }
 
   const username = interaction.options.get("username");
   const degree = interaction.options.get("degree");

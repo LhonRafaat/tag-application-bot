@@ -41,7 +41,7 @@ import { Members } from "./schemas/member.js";
 import { updateNicks } from "./interactions/updateNicks.js";
 import { strikeMember } from "./interactions/strikeMember.js";
 import { getMemberStrikes } from "./interactions/getMemberStrikes.js";
-import { getAllStrikes } from "./services/strikeService.js";
+import { getAllActiveStrikes } from "./services/strikeService.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -229,7 +229,7 @@ export const client = async () => {
 
     //Checking the strikes
 
-    const strikes = await getAllStrikes();
+    const strikes = await getAllActiveStrikes();
 
     if (strikes && strikes.length > 0) {
       const todaysDate = new Date();

@@ -35,7 +35,7 @@ export const getStrikes = async (member) => {
   return result;
 };
 
-export const getAllStrikes = async () => {
-  const strikes = await Strike.find();
+export const getAllActiveStrikes = async () => {
+  const strikes = await Strike.find({ status: "active" });
   return strikes;
 };

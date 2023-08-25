@@ -34,3 +34,8 @@ export const getStrikes = async (member) => {
 
   return result;
 };
+
+export const getAllStrikes = async () => {
+  const strikes = await Strike.find();
+  return strikes;
+};

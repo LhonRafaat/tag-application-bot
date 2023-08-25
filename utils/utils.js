@@ -44,3 +44,14 @@ export function matchYoutubeUrl(url) {
   const match = links.some((link) => url.includes(link));
   return match;
 }
+
+export function isDifferenceGreaterThanMonths(date1, date2, months) {
+  // Calculate the difference in milliseconds
+  const differenceInMilliseconds = Math.abs(date1 - date2);
+
+  // Define the number of milliseconds in the specified number of months
+  const millisecondsInMonths = months * 30 * 24 * 60 * 60 * 1000;
+
+  // Compare the difference with the specified number of months
+  return differenceInMilliseconds > millisecondsInMonths;
+}

@@ -25,7 +25,8 @@ export const getStrikes = async (member) => {
   let result = `${user.fullName} \n`;
   strikes.map((el) => {
     return (result +=
-      `\n degree: ${el.degree} \n reason: ${el.reason}` +
+      `\n Degree: ${el.degree} \n Reason: ${el.reason}` +
+      `\n Date: ${el.createdAt}` +
       "\n -----------------");
   });
 

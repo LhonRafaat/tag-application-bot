@@ -23,9 +23,11 @@ export const getStrikes = async (member) => {
   const strikes = await Strike.find({ member });
 
   let result = `${user.fullName} \n`;
-  strikes.map((el) => {
+  strikes.map((el, index) => {
     return (result +=
+      `\n${index + 1}-` +
       `\n Degree: ${el.degree} \n Reason: ${el.reason}` +
+      `\n Status: ${el.status}` +
       `\n Date: ${el.createdAt}` +
       "\n -----------------");
   });

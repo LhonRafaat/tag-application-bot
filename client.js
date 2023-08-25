@@ -11,6 +11,7 @@ import { getSettings } from "./services/settingService.js";
 import {
   getUserByGameId,
   getUserProfile,
+  isDifferenceGreaterThanMonths,
   matchYoutubeUrl,
 } from "./utils/utils.js";
 import {
@@ -40,6 +41,7 @@ import { Members } from "./schemas/member.js";
 import { updateNicks } from "./interactions/updateNicks.js";
 import { strikeMember } from "./interactions/strikeMember.js";
 import { getMemberStrikes } from "./interactions/getMemberStrikes.js";
+import { getAllStrikes } from "./services/strikeService.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -224,6 +226,52 @@ export const client = async () => {
     if (settings.length === 0) return;
     const user = await findOne(msg.author.id);
     if (!user) return;
+
+    //Checking the strikes
+
+    const strikes = await getAllStrikes();
+
+    if (strikes && strikes.length > 0) {
+      const todaysDate = new Date();
+      strikes.forEach(async (strike) => {
+        if (strike.status === "active") {
+          if (strike.degree === 1) {
+            if (
+              isDifferenceGreaterThanMonths(
+                todaysDate,
+                new Date(strike.createdAt),
+                3
+              )
+            ) {
+              strike.status = "resolved";
+              await strike.save();
+              await msg.member.roles
+                .remove(settings[0].strikeOne)
+                .catch((err) => {
+                  console.log("Error" + err);
+                });
+            }
+          } else if (strike.degree === 2) {
+            if (
+              isDifferenceGreaterThanMonths(
+                todaysDate,
+                new Date(strike.createdAt),
+                6
+              )
+            ) {
+              strike.status = "resolved";
+              await strike.save();
+              await msg.member.roles
+                .remove(settings[0].strikeTwo)
+                .catch((err) => {
+                  console.log("Error" + err);
+                });
+            }
+          }
+        }
+      });
+    }
+
     if (user) {
       user.msgContribution += settings[0].msgValue;
       if (user.msgContribution >= 1) {

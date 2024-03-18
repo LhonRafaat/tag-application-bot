@@ -2,13 +2,13 @@
 import { EmbedBuilder } from "discord.js";
 
 const description = `
-:BF4: PC-DF-BF4 
+<:BF4:930520954717757470> PC-DF-BF4 
 ------------------
-:BFV: PC-DF-BFV 
+<:bfv:665843736667881503> PC-DF-BFV 
 ------------------
-:BF1: PC-DF-BF1 
+<:BF1:930520402764111942> PC-DF-BF1 
 ------------------
-:BF2042: PC-DF-BF2042 
+<:BF2042:930520459777290270> PC-DF-BF2042 
 ------------------
    `;
 

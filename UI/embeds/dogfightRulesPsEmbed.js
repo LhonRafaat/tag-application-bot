@@ -2,13 +2,13 @@
 import { EmbedBuilder } from "discord.js";
 
 const description = `
-:BF4: PS-DF-BF4
+<:BF4:930520954717757470> PS-DF-BF4
 ------------------
-:BFV: PS-DF-BFV
+<:bfv:665843736667881503> PS-DF-BFV
 ------------------
-:BF1: PS-DF-BF1
+<:BF1:930520402764111942> PS-DF-BF1
 ------------------
-:BF2042: PS-DF-BF2042
+<:BF2042:930520459777290270> PS-DF-BF2042
    `;
 
 // inside a command, event listener, etc.

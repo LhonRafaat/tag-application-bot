@@ -36,7 +36,7 @@ const settingSchema = new Schema(
     ticketsParentId: { type: String, default: "946010863805014037" },
     contentCreatorsId: { type: String, default: "548861901539639313" },
     dogfightChannelId: { type: String, default: "916452721341661245" },
-    dogfightRolesChannelId: { type: String, default: "969248528935309353" },
+    dogfightRolesChannelId: { type: String, default: "916452721341661245" },
     //------------
     //bot id
 

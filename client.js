@@ -717,7 +717,7 @@ export const client = async () => {
         }
 
         if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
-          user.roles.remove(settings[0].allBf2042).catch((err) => {
+          member.roles.remove(settings[0].allBf2042).catch((err) => {
             console.log("Error" + err);
           });
         }
@@ -737,7 +737,7 @@ export const client = async () => {
         }
 
         if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
-          user.roles.remove(settings[0].allBf2042).catch((err) => {
+          member.roles.remove(settings[0].allBf2042).catch((err) => {
             console.log("Error" + err);
           });
         }
@@ -757,7 +757,7 @@ export const client = async () => {
         }
 
         if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
-          user.roles.remove(settings[0].allBf2042).catch((err) => {
+          member.roles.remove(settings[0].allBf2042).catch((err) => {
             console.log("Error" + err);
           });
         }

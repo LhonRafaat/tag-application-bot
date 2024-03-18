@@ -35,13 +35,16 @@ import { linkAnotherAccount } from "./interactions/linkAnotherAccount.js";
 import { denyLinkAnotherAccount } from "./interactions/denyLinkAnotherAccount.js";
 import { registerBf2 } from "./interactions/registerBf2.js";
 import { myStatus } from "./interactions/myStatus.js";
-import { YES_EMOJI } from "./emojies/emojies.js";
+import { BF1, BF2042, BF3, BF4, BFV, YES_EMOJI } from "./emojies/emojies.js";
 import { hasReachedVotes } from "./utils/hasReachedVotes.js";
 import { Members } from "./schemas/member.js";
 import { updateNicks } from "./interactions/updateNicks.js";
 import { strikeMember } from "./interactions/strikeMember.js";
 import { getMemberStrikes } from "./interactions/getMemberStrikes.js";
 import { getAllActiveStrikes } from "./services/strikeService.js";
+import { dogfightRulesPcEmbed } from "./UI/embeds/dogfightRulesPcEmbed copy.js";
+import { dogfightRulesPsEmbed } from "./UI/embeds/dogfightRulesPsEmbed.js";
+import { dogfightRulesXboxEmbed } from "./UI/embeds/dogfightRulesXboxEmbed.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -83,6 +86,45 @@ export const client = async () => {
     } catch (error) {
       console.log(error);
       return;
+    }
+
+    // dogfight roles
+
+    const dogfightRolesChannelId = settings[0].dogfightRolesChannelId;
+
+    try {
+      const dogfightRolesChannel = await client.channels.fetch(
+        dogfightRolesChannelId
+      );
+
+      dogfightRolesChannel
+        .send({
+          content:
+            "React to add a specific role. These roles can be pinged by everyone. Use it to find dogfight partners for a certain title. Make sure you pick the right platform.",
+          embeds: [dogfightRulesPcEmbed],
+        })
+        .then((embedMessage) => {
+          const bf4Emoji = client.emojis.cache.get(BF4);
+          if (bf4Emoji) {
+            embedMessage.react(bf4Emoji);
+          }
+        });
+      dogfightRolesChannel
+        .send({
+          embeds: [dogfightRulesPsEmbed],
+        })
+        .then((embedMessage) => {
+          embedMessage.react("👍");
+        });
+      dogfightRolesChannel
+        .send({
+          embeds: [dogfightRulesXboxEmbed],
+        })
+        .then((embedMessage) => {
+          embedMessage.react("👍");
+        });
+    } catch (error) {
+      console.log(error);
     }
 
     // message.pin();

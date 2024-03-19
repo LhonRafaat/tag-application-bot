@@ -7,7 +7,7 @@ export const PERSONALITY_EMOJI = "🥰";
 // BF titles
 
 export const BF4 = "<:BF4:930520954717757470>";
-export const BFV = ":BFV:";
+export const BFV = "<:bfv:665843736667881503>";
 export const BF3 = ":BF3:";
-export const BF1 = ":BF1:";
-export const BF2042 = ":BF2042:";
+export const BF1 = "<:BF1:930520402764111942>";
+export const BF2042 = "<:BF2042:930520459777290270>";

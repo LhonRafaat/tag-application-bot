@@ -1,15 +1,12 @@
 import {
   Client,
   GatewayIntentBits,
-  ButtonBuilder,
   Partials,
   ApplicationCommandOptionType,
   Events,
 } from "discord.js";
-import { getButton } from "./UI/button.js";
 import { getSettings } from "./services/settingService.js";
 import {
-  getUserByGameId,
   getUserProfile,
   isDifferenceGreaterThanMonths,
   matchYoutubeUrl,
@@ -35,16 +32,13 @@ import { linkAnotherAccount } from "./interactions/linkAnotherAccount.js";
 import { denyLinkAnotherAccount } from "./interactions/denyLinkAnotherAccount.js";
 import { registerBf2 } from "./interactions/registerBf2.js";
 import { myStatus } from "./interactions/myStatus.js";
-import { BF1, BF2042, BF3, BF4, BFV, YES_EMOJI } from "./emojies/emojies.js";
+import { YES_EMOJI } from "./emojies/emojies.js";
 import { hasReachedVotes } from "./utils/hasReachedVotes.js";
-import { Members } from "./schemas/member.js";
 import { updateNicks } from "./interactions/updateNicks.js";
 import { strikeMember } from "./interactions/strikeMember.js";
 import { getMemberStrikes } from "./interactions/getMemberStrikes.js";
 import { getAllActiveStrikes } from "./services/strikeService.js";
-import { dogfightRulesPcEmbed } from "./UI/embeds/dogfightRulesPcEmbed.js";
-import { dogfightRulesPsEmbed } from "./UI/embeds/dogfightRulesPsEmbed.js";
-import { dogfightRulesXboxEmbed } from "./UI/embeds/dogfightRulesXboxEmbed.js";
+import { getDogfightRoles } from "./interactions/getDogfightRoles.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -67,69 +61,6 @@ export const client = async () => {
 
   client.on(Events.ClientReady, async () => {
     if (settings.length === 0) return;
-    try {
-      const channel = client.channels.cache.get(settings[0].votingChannelId);
-      channel.messages.fetch({ limit: 100 }).then((messages) => {
-        //Iterate through the messages here with the variable "messages".
-        messages.forEach((message) => {
-          //TODO: Add the bot id to settings schema //done
-          if (message.author.id === settings[0].botId) {
-            message.delete();
-          }
-        });
-      });
-      // channel.bulkDelete(100);
-
-      //TODO move the button to its own file
-
-      // await channel.send({});
-    } catch (error) {
-      console.log(error);
-      return;
-    }
-
-    // dogfight roles
-
-    const dogfightRolesChannelId = settings[0].dogfightRolesChannelId;
-
-    try {
-      const dogfightRolesChannel = await client.channels.fetch(
-        dogfightRolesChannelId
-      );
-
-      dogfightRolesChannel
-        .send({
-          content:
-            "React to add a specific role. These roles can be pinged by everyone. Use it to find dogfight partners for a certain title. Make sure you pick the right platform.",
-          embeds: [dogfightRulesPcEmbed],
-        })
-        .then((embedMessage) => {
-          console.log(BF4);
-          const bf4Emoji = client.emojis.cache.get(BF4);
-          console.log(bf4Emoji);
-          if (bf4Emoji) {
-            embedMessage.react(bf4Emoji);
-          }
-        });
-      dogfightRolesChannel
-        .send({
-          embeds: [dogfightRulesPsEmbed],
-        })
-        .then((embedMessage) => {
-          embedMessage.react("👍");
-        });
-      dogfightRolesChannel
-        .send({
-          embeds: [dogfightRulesXboxEmbed],
-        })
-        .then((embedMessage) => {
-          embedMessage.react("👍");
-        });
-    } catch (error) {
-      console.log(error);
-    }
-
-    // message.pin();
 
     console.log(`Logged in as ${client.user.tag}!`);
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
@@ -218,6 +149,11 @@ export const client = async () => {
     commands?.create({
       name: "getregister",
       description: "get register button",
+    });
+
+    commands?.create({
+      name: "getdogfightroles",
+      description: "returns the dogfight roles embeds",
     });
     commands?.create({
       name: "getbygamename",
@@ -395,7 +331,9 @@ export const client = async () => {
 
     if (
       !["wantToRegister", "registerButton"].includes(interaction.customId) &&
-      !["mystatus", "getregister"].includes(interaction.commandName)
+      !["mystatus", "getregister", "getdogfightroles"].includes(
+        interaction.commandName
+      )
     )
       await interaction.deferReply({ ephemeral: true });
 
@@ -432,6 +370,8 @@ export const client = async () => {
       } catch (error) {
         console.log(error);
       }
+    } else if (interaction.commandName === "getdogfightroles") {
+      await getDogfightRoles(interaction, settings, client);
     } else if (interaction.commandName === "getbygamename") {
       await getByGameName(interaction, settings);
     } else if (interaction.commandName === "strike") {
@@ -564,8 +504,6 @@ export const client = async () => {
   client.on(Events.MessageReactionAdd, async (reaction, user) => {
     if (user.bot) return;
 
-    console.log(reaction.emoji.name);
-
     // dogfight roles
     if (
       ["bf4", "bfv", "Bf1", "bf2042"].includes(
@@ -574,10 +512,12 @@ export const client = async () => {
     ) {
       const { guild } = reaction.message;
       const msg = await reaction.message.fetch();
+      console.log(msg.author);
+      if (msg.author.id !== settings[0].botId) return;
+      console.log("hi2");
       const member = guild.members.cache.find(
         (member) => member.id === user.id
       );
-      console.log(member);
       const title = msg.embeds[0].data.title.toLowerCase();
       console.log(title);
       if (title.includes("pc")) {
@@ -695,6 +635,8 @@ export const client = async () => {
     ) {
       const { guild } = reaction.message;
       const msg = await reaction.message.fetch();
+      if (msg.author.id !== settings[0].botId) return;
+
       const member = guild.members.cache.find(
         (member) => member.id === user.id
       );

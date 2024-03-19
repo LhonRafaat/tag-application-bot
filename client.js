@@ -627,9 +627,11 @@ export const client = async () => {
   });
   client.on(Events.MessageReactionRemove, async (reaction, user) => {
     if (user.bot) return;
+    console.log(reaction.emoji.name.trim().toLowerCase());
+    console.log(reaction.emoji.name.trim().toLowerCase() === "bf1");
     const dateNow = new Date();
     if (
-      ["bf4", "bfv", "Bf1", "bf2042"].includes(
+      ["bf4", "bfv", "bf1", "bf2042"].includes(
         reaction.emoji.name?.trim()?.toLowerCase()
       )
     ) {

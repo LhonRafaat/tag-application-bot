@@ -683,7 +683,7 @@ export const client = async () => {
             console.log("Error" + err);
           });
         }
-      } else if (title.includes("ps")) {
+      } else if (title.includes("playstation")) {
         if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
           member.roles.remove(settings[0].ps4Bf4).catch((err) => {
             console.log("Error" + err);

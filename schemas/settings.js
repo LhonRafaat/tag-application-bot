@@ -55,6 +55,7 @@ const settingSchema = new Schema(
     ps4Bfv: { type: String, default: "859378977872019496" },
     ps4Bf1: { type: String, default: "859379127278633021" },
     ps4Bf4: { type: String, default: "859378977872019496" },
+    dcsPc: { type: String, default: "1014922290951106643" },
     xboxBfv: { type: String, default: "859379195787345920" },
     xboxBf1: { type: String, default: "859379127278633021" },
     xboxBf4: { type: String, default: "859379271642644480" },

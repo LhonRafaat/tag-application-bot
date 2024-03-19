@@ -504,9 +504,11 @@ export const client = async () => {
   client.on(Events.MessageReactionAdd, async (reaction, user) => {
     if (user.bot) return;
 
+    console.log(reaction.emoji.name);
+
     // dogfight roles
     if (
-      ["bf4", "bfv", "bf1", "bf2042"].includes(
+      ["bf4", "bfv", "bf1", "bf2042", "dcs"].includes(
         reaction.emoji.name?.trim()?.toLowerCase()
       )
     ) {
@@ -533,10 +535,12 @@ export const client = async () => {
           member.roles.add(settings[0].pcBf1).catch((err) => {
             console.log("Error" + err);
           });
-        }
-
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
           member.roles.add(settings[0].allBf2042).catch((err) => {
+            console.log("Error" + err);
+          });
+        } else if (reaction.emoji.name?.trim().toLowerCase() === "dcs") {
+          member.roles.add(settings[0].pcDcs).catch((err) => {
             console.log("Error" + err);
           });
         }
@@ -553,9 +557,7 @@ export const client = async () => {
           member.roles.add(settings[0].xboxBf1).catch((err) => {
             console.log("Error" + err);
           });
-        }
-
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
           member.roles.add(settings[0].allBf2042).catch((err) => {
             console.log("Error" + err);
           });
@@ -573,9 +575,7 @@ export const client = async () => {
           member.roles.add(settings[0].ps4Bf1).catch((err) => {
             console.log("Error" + err);
           });
-        }
-
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
           member.roles.add(settings[0].allBf2042).catch((err) => {
             console.log("Error" + err);
           });
@@ -631,7 +631,7 @@ export const client = async () => {
     console.log(reaction.emoji.name.trim().toLowerCase() === "bf1");
     const dateNow = new Date();
     if (
-      ["bf4", "bfv", "bf1", "bf2042"].includes(
+      ["bf4", "bfv", "bf1", "bf2042", "dcs"].includes(
         reaction.emoji.name?.trim()?.toLowerCase()
       )
     ) {
@@ -658,10 +658,12 @@ export const client = async () => {
           member.roles.remove(settings[0].pcBf1).catch((err) => {
             console.log("Error" + err);
           });
-        }
-
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
           member.roles.remove(settings[0].allBf2042).catch((err) => {
+            console.log("Error" + err);
+          });
+        } else if (reaction.emoji.name?.trim().toLowerCase() === "dcs") {
+          member.roles.remove(settings[0].dcsPc).catch((err) => {
             console.log("Error" + err);
           });
         }
@@ -678,9 +680,7 @@ export const client = async () => {
           member.roles.remove(settings[0].xboxBf1).catch((err) => {
             console.log("Error" + err);
           });
-        }
-
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
           member.roles.remove(settings[0].allBf2042).catch((err) => {
             console.log("Error" + err);
           });
@@ -698,9 +698,7 @@ export const client = async () => {
           member.roles.remove(settings[0].ps4Bf1).catch((err) => {
             console.log("Error" + err);
           });
-        }
-
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
           member.roles.remove(settings[0].allBf2042).catch((err) => {
             console.log("Error" + err);
           });

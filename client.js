@@ -506,7 +506,7 @@ export const client = async () => {
 
     // dogfight roles
     if (
-      ["bf4", "bfv", "Bf1", "bf2042"].includes(
+      ["bf4", "bfv", "bf1", "bf2042"].includes(
         reaction.emoji.name?.trim()?.toLowerCase()
       )
     ) {

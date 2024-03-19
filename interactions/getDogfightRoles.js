@@ -1,12 +1,21 @@
 import { dogfightRulesPcEmbed } from "../UI/embeds/dogfightRulesPcEmbed.js";
 import { dogfightRulesPsEmbed } from "../UI/embeds/dogfightRulesPsEmbed.js";
 import { dogfightRulesXboxEmbed } from "../UI/embeds/dogfightRulesXboxEmbed.js";
-import { BF4 } from "../emojies/emojies.js";
+import { BF1, BF2042, BF4, BFV } from "../emojies/emojies.js";
+import { isMod } from "../utils/isMod.js";
 
 export const getDogfightRoles = async (interaction, settings, client) => {
   // dogfight roles
 
   //   const dogfightRolesChannelId = settings[0].dogfightRolesChannelId;
+
+  const isAuthorized = await isMod(interaction, settings);
+  if (!isAuthorized) {
+    return await interaction.reply({
+      content: "Get out of here kid",
+      ephemeral: true,
+    });
+  }
 
   try {
     const dogfightRolesChannel = await client.channels.fetch(
@@ -20,22 +29,30 @@ export const getDogfightRoles = async (interaction, settings, client) => {
         embeds: [dogfightRulesPcEmbed],
       })
       .then((embedMessage) => {
-        console.log(BF4);
         embedMessage.react(BF4).catch((e) => console.log(e));
+        embedMessage.react(BF1).catch((e) => console.log(e));
+        embedMessage.react(BFV).catch((e) => console.log(e));
+        embedMessage.react(BF2042).catch((e) => console.log(e));
       });
     dogfightRolesChannel
       .send({
         embeds: [dogfightRulesPsEmbed],
       })
       .then((embedMessage) => {
-        embedMessage.react("👍").catch((e) => console.log(e));
+        embedMessage.react(BF4).catch((e) => console.log(e));
+        embedMessage.react(BF1).catch((e) => console.log(e));
+        embedMessage.react(BFV).catch((e) => console.log(e));
+        embedMessage.react(BF2042).catch((e) => console.log(e));
       });
     dogfightRolesChannel
       .send({
         embeds: [dogfightRulesXboxEmbed],
       })
       .then((embedMessage) => {
-        embedMessage.react("👍").catch((e) => console.log(e));
+        embedMessage.react(BF4).catch((e) => console.log(e));
+        embedMessage.react(BF1).catch((e) => console.log(e));
+        embedMessage.react(BFV).catch((e) => console.log(e));
+        embedMessage.react(BF2042).catch((e) => console.log(e));
       });
   } catch (error) {
     console.log(error);

@@ -540,7 +540,7 @@ export const client = async () => {
             console.log("Error" + err);
           });
         } else if (reaction.emoji.name?.trim().toLowerCase() === "dcs") {
-          member.roles.add(settings[0].pcDcs).catch((err) => {
+          member.roles.add(settings[0].dcsPc).catch((err) => {
             console.log("Error" + err);
           });
         }

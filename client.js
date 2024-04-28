@@ -387,8 +387,7 @@ export const client = async () => {
         const members = await getMembersRanking();
         await interaction.editReply(members);
       } catch (error) {
-        await interaction.editReply("error occured");
-        console.log(error);
+        await interaction.editReply(error.toString());
       }
     } else if (interaction.commandName === "requiredpoints") {
       getRequiredPoints(interaction, settings);

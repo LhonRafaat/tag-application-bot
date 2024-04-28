@@ -84,7 +84,7 @@ export const getMembersRanking = async () => {
     },
   ]);
   let ranking = "";
-  members = members.slice(0, 50);
+  members = members.slice(0, 25);
 
   if (members.length > 0)
     members.map((el, i) => {

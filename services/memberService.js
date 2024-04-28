@@ -73,6 +73,8 @@ export const getMembersRanking = async () => {
         totalVotes: {
           $sum: { $add: ["$skills", "$personality", "$contribution"] },
         },
+        // add userNames fields to the result
+        userNames: { $push: "$userNames" },
       },
     },
     {
@@ -86,7 +88,11 @@ export const getMembersRanking = async () => {
 
   if (members.length > 0)
     members.map((el, i) => {
-      ranking = ranking + `\n${i + 1}- ${el._id}`;
+      ranking =
+        ranking +
+        `\n${i + 1}- ${el._id} - AKA (${el.userNames?.toString()}) - (${
+          el.totalVotes
+        }) total points.`;
     });
   if (!ranking.length > 0) ranking = "No members found";
 

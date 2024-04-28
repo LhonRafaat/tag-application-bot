@@ -68,13 +68,8 @@ export const updateTag = async (discordId, hasTag) => {
 export const getMembersRanking = async () => {
   let members = await Members.aggregate([
     {
-      $unwind: {
-        path: "$userNames",
-      },
-    },
-    {
       $group: {
-        _id: "$userNames",
+        _id: "$fullName",
         totalVotes: {
           $sum: { $add: ["$skills", "$personality", "$contribution"] },
         },
@@ -87,7 +82,7 @@ export const getMembersRanking = async () => {
     },
   ]);
   let ranking = "";
-  members = members.slice(0, 10);
+  members = members.slice(0, 50);
 
   if (members.length > 0)
     members.map((el, i) => {

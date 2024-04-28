@@ -199,6 +199,11 @@ export const client = async () => {
       name: "closeticket",
       description: "delete current channel",
     });
+
+    commands?.create({
+      name: "ranking",
+      description: "Lists players ranking",
+    });
   });
   // discordModals(client);
 
@@ -315,15 +320,6 @@ export const client = async () => {
     ) {
       return msg.reply("MrIcePops");
     }
-
-    if (msg.content.toLowerCase() === "!voteranking") {
-      try {
-        const members = await getMembersRanking();
-        await msg.reply(members);
-      } catch (error) {
-        console.log(error);
-      }
-    }
   });
 
   client.on(Events.InteractionCreate, async (interaction) => {
@@ -331,7 +327,7 @@ export const client = async () => {
 
     if (
       !["wantToRegister", "registerButton"].includes(interaction.customId) &&
-      !["mystatus", "getregister", "getdogfightroles"].includes(
+      !["mystatus", "getregister", "getdogfightroles", "ranking"].includes(
         interaction.commandName
       )
     )
@@ -385,6 +381,15 @@ export const client = async () => {
     } else if (interaction.commandName === "getregister") {
       await interaction.deferReply();
       await getRegister(interaction, settings);
+    } else if (interaction.commandName === "ranking") {
+      await interaction.deferReply();
+      try {
+        const members = await getMembersRanking();
+        await interaction.editReply(members);
+      } catch (error) {
+        await interaction.editReply("error occured");
+        console.log(error);
+      }
     } else if (interaction.commandName === "requiredpoints") {
       getRequiredPoints(interaction, settings);
     } else if (interaction.commandName === "getstatus") {

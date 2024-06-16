@@ -6,6 +6,7 @@ import {
   Events,
 } from "discord.js";
 import { getSettings } from "./services/settingService.js";
+import cron from "node-cron";
 import {
   getUserProfile,
   isDifferenceGreaterThanMonths,
@@ -39,6 +40,7 @@ import { strikeMember } from "./interactions/strikeMember.js";
 import { getMemberStrikes } from "./interactions/getMemberStrikes.js";
 import { getAllActiveStrikes } from "./services/strikeService.js";
 import { getDogfightRoles } from "./interactions/getDogfightRoles.js";
+import { fetchDogfightServersBF2042 } from "./utils/fetchDogfightServersBF2042.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -204,6 +206,14 @@ export const client = async () => {
       name: "ranking",
       description: "Lists players ranking",
     });
+
+    // send dogfight data to specific channel
+    const bf2042Channel = await guild.channels.fetch(settings[0].bf2042Channel);
+
+    cron.schedule("*/5 * * * *", () =>
+      fetchDogfightServersBF2042(bf2042Channel)
+    );
+    await fetchDogfightServersBF2042(bf2042Channel);
   });
   // discordModals(client);
 

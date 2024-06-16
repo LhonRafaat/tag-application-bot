@@ -1,4 +1,6 @@
 import axios from "axios";
+import { createCanvas, loadImage } from "canvas";
+import { AttachmentBuilder } from "discord.js";
 
 export const getUserProfile = async (gameVal, gameNameVal, platformVal) => {
   try {
@@ -55,3 +57,32 @@ export function isDifferenceGreaterThanMonths(date1, date2, months) {
   // Compare the difference with the specified number of months
   return differenceInMilliseconds > millisecondsInMonths;
 }
+
+export const createAttachmentFromImageUrl = async (imageUrl) => {
+  try {
+    // Fetch the image from the URL
+    const response = await fetch(imageUrl);
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Load the image into a canvas
+    const image = await loadImage(buffer);
+
+    // Set canvas dimensions to 200x200 pixels
+    const canvas = createCanvas(200, 200);
+    const ctx = canvas.getContext("2d");
+
+    // Draw the image onto the canvas, resizing it to 200x200 pixels
+    ctx.drawImage(image, 0, 0, 200, 200);
+
+    // Create an attachment from the canvas buffer
+    const attachment = new AttachmentBuilder(canvas.toBuffer(), {
+      name: "map.png",
+    });
+
+    return attachment;
+  } catch (error) {
+    console.error("Error creating attachment:", error);
+    throw error;
+  }
+};

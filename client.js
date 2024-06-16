@@ -62,7 +62,7 @@ export const client = async () => {
     .catch((err) => console.log(err));
 
   client.on(Events.ClientReady, async () => {
-    if (settings.length === 0) return;
+    // if (settings.length === 0) return;
 
     console.log(`Logged in as ${client.user.tag}!`);
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
@@ -208,7 +208,7 @@ export const client = async () => {
     });
 
     // send dogfight data to specific channel
-    const bf2042Channel = await guild.channels.fetch(settings[0].bf2042Channel);
+    const bf2042Channel = await guild.channels.fetch("968131185668665404");
 
     cron.schedule("*/5 * * * *", () =>
       fetchDogfightServersBF2042(bf2042Channel)

@@ -86,3 +86,11 @@ export const createAttachmentFromImageUrl = async (imageUrl) => {
     throw error;
   }
 };
+
+export const fetchProfileByNucleusId = async (id, platform) => {
+  const res = await axios.get(
+    `https://api.gametools.network/bf2042/stats/?raw=false&format_values=true&nucleus_id=${id}&platform=${platform}`
+  );
+
+  return res.data;
+};

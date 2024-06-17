@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { EmbedBuilder } from "discord.js";
 
 export const generateMapEmbed = (
@@ -15,9 +14,7 @@ export const generateMapEmbed = (
     })
     .setTitle(serverName)
     .setDescription(
-      `- **Owner**: ${serverId}\n- **Current Players**: ${currentPlayers}\n- **Status**: ${status}\n- **Region**: ${region} \n- **Last Updated**: ${dayjs().format(
-        "MMMM D YYYY, h:mm:ss a"
-      )}`
+      `- **Owner**: ${serverId}\n- **Current Players**: ${currentPlayers}\n- **Status**: ${status}\n- **Region**: ${region}`
     )
     .setImage(image)
     .setThumbnail(

@@ -86,7 +86,7 @@ export const fetchDogfightServersBF2042 = async (channel) => {
       const embed = await generateMapEmbed(
         closedServer.name,
         closedServer.owner,
-        closedServer.playerAmount,
+        0,
         "CLOSED",
         closedServer.region,
         closedServer.url

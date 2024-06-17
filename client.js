@@ -210,6 +210,11 @@ export const client = async () => {
     // send dogfight data to specific channel
     const bf2042Channel = await guild.channels.fetch(settings[0].bf2042Channel);
 
+    // delete all messages in the channel
+    const messages = await bf2042Channel.messages.fetch();
+    for (const message of messages.values()) {
+      await message.delete();
+    }
     cron.schedule("*/5 * * * *", () =>
       fetchDogfightServersBF2042(bf2042Channel)
     );

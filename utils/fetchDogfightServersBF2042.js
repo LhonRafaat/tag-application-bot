@@ -9,6 +9,11 @@ import {
 } from "../services/dfserverService.js";
 
 export const fetchDogfightServersBF2042 = async (channel) => {
+  // delete all messages in the channel
+  const messages = await channel?.messages?.fetch();
+  for (const message of messages.values()) {
+    await message.delete();
+  }
   try {
     const res = await axios.get(
       "https://api.gametools.network/bf2042/servers/?name=looping station&region=all&limit=10"

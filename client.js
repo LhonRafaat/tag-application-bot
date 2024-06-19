@@ -345,7 +345,7 @@ export const client = async () => {
 
     if (interaction.commandName === "mystatus") {
       await interaction.deferReply();
-      await myStatus(interaction);
+      await myStatus(interaction, settings);
     } else if (interaction.commandName === "addme") {
       try {
         const guild = await client.guilds?.cache.get(process.env.GUILD_ID);

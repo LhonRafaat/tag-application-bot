@@ -1,4 +1,5 @@
 import { isMod } from "../utils/isMod.js";
+import { getRequiredPoints as getRequiredPointsfromDB } from "../services/settingService.js";
 
 export const getRequiredPoints = async (interaction, settings) => {
   const isAuthorized = await isMod(interaction, settings);
@@ -8,11 +9,11 @@ export const getRequiredPoints = async (interaction, settings) => {
       ephemeral: true,
     });
   }
-  const requiredPoints = await getRequiredPoints();
-  if (!requiredPoints)
+  const requiredPoints = await getRequiredPointsfromDB();
+  if (requiredPoints === undefined)
     return await interaction.editReply("No required points set");
   await interaction.editReply({
     ephemeral: true,
-    content: `Required points: ${await getRequiredPoints()}`,
+    content: `Required points: ${requiredPoints}`,
   });
 };

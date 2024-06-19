@@ -518,8 +518,6 @@ export const client = async () => {
   client.on(Events.MessageReactionAdd, async (reaction, user) => {
     if (user.bot) return;
 
-    console.log(reaction.emoji.name);
-
     // dogfight roles
     if (
       ["bf4", "bfv", "bf1", "bf2042", "dcs"].includes(
@@ -528,14 +526,11 @@ export const client = async () => {
     ) {
       const { guild } = reaction.message;
       const msg = await reaction.message.fetch();
-      console.log(msg.author);
       if (msg.author.id !== settings[0].botId) return;
-      console.log("hi2");
       const member = guild.members.cache.find(
         (member) => member.id === user.id
       );
       const title = msg.embeds[0].data.title.toLowerCase();
-      console.log(title);
       if (title.includes("pc")) {
         if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
           member.roles.add(settings[0].pcBf4).catch((err) => {
@@ -641,8 +636,6 @@ export const client = async () => {
   });
   client.on(Events.MessageReactionRemove, async (reaction, user) => {
     if (user.bot) return;
-    console.log(reaction.emoji.name.trim().toLowerCase());
-    console.log(reaction.emoji.name.trim().toLowerCase() === "bf1");
     const dateNow = new Date();
     if (
       ["bf4", "bfv", "bf1", "bf2042", "dcs"].includes(
@@ -656,9 +649,7 @@ export const client = async () => {
       const member = guild.members.cache.find(
         (member) => member.id === user.id
       );
-      console.log(member);
       const title = msg.embeds[0].data.title.toLowerCase();
-      console.log(title);
       if (title.includes("pc")) {
         if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
           member.roles.remove(settings[0].pcBf4).catch((err) => {

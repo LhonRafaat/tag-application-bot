@@ -1,14 +1,9 @@
 import { ButtonBuilder, ButtonStyle } from "discord.js";
 import { getButton } from "../UI/button.js";
+import { isMod } from "../utils/isMod.js";
 
 export const getRegister = async (interaction, settings) => {
-  const isAuthorized = await interaction.member.roles.cache.find((role) => {
-    return [
-      settings[0].founderId,
-      settings[0].headAdminId,
-      settings[0].modId,
-    ].includes(role.id);
-  });
+  const isAuthorized = await isMod(interaction, settings);
   if (!isAuthorized) {
     return interaction.editReply({
       content: "You are not authorized",

@@ -1,15 +1,34 @@
+import { ButtonBuilder, ButtonStyle } from "discord.js";
 import { findOne } from "../services/memberService.js";
+import { getRequiredPoints } from "../services/settingService.js";
+import { getButton } from "../UI/button.js";
 import { getPlate } from "../UI/userPlate.js";
+import { hasiDFTag } from "../utils/hasiDFtag.js";
 import { games, getBf2Profile, getUserByGameId } from "../utils/utils.js";
 
-export const myStatus = async (interaction) => {
+export const myStatus = async (interaction, settings) => {
   const user = await findOne(interaction.member.id);
+
   let isBf2 = false;
   try {
+    const requiredPoints = await getRequiredPoints();
+
     if (!user)
-      return await interaction.editReply({ content: "you are not registered" });
-    // console.log(user.originIds[0]);
-    // let platform;
+      return await interaction.editReply({
+        content: "you are not registered, regsiter here !",
+        components: [
+          getButton([
+            new ButtonBuilder()
+              .setCustomId("registerButton")
+              .setLabel("Register")
+              .setStyle(ButtonStyle.Success),
+          ]),
+        ],
+      });
+
+    const totalPoints = user.skills + user.contribution + user.personality;
+    const isiDF = await hasiDFTag(interaction.member, settings);
+
     let gameProfileData = null;
     for await (const game of games) {
       if (game === "bf2") {
@@ -43,7 +62,12 @@ export const myStatus = async (interaction) => {
           user.userNames[1] ? user.userNames[1] : undefined
         );
 
-        return await interaction.editReply({ files: [plate] });
+        return await interaction.editReply({
+          files: [plate],
+          content: !isiDF
+            ? `Achieve ${requiredPoints} points or more to qualify for iDF tag! your current: ${totalPoints}`
+            : `Total points: ${totalPoints}`,
+        });
       }
     }
     if (!gameProfileData?.data && !gameProfileData)

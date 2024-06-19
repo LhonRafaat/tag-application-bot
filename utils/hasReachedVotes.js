@@ -1,7 +1,15 @@
+import { ChannelType, PermissionsBitField } from "discord.js";
 import { getRequiredPoints } from "../services/settingService.js";
-import { questionsEmbed } from "../UI/embeds/questionsEmbed.js";
 import { getiDFJson } from "./getiDFJson.js";
-export const hasReachedVotes = async (member, settings, client) => {
+import { hasiDFTag } from "./hasiDFtag.js";
+export const hasReachedVotes = async (
+  member,
+  settings,
+  client,
+  discordUser
+) => {
+  const isiDF = await hasiDFTag(discordUser, settings);
+  if (isiDF) return;
   const requiredPoints = await getRequiredPoints();
   if (member.votingChannelEnabled) return;
   const guild = await client.guilds?.cache.get(process.env.GUILD_ID);
@@ -12,34 +20,28 @@ export const hasReachedVotes = async (member, settings, client) => {
   const mods = await guild.roles.cache.find((role) => {
     return role.id === settings[0].modId;
   });
-  if (
-    (member.skills === requiredPoints &&
-      (member.contribution === requiredPoints ||
-        member.personality === requiredPoints)) ||
-    (member.contribution === requiredPoints &&
-      (member.skills === requiredPoints ||
-        member.personality === requiredPoints)) ||
-    (member.personality === requiredPoints &&
-      (member.skills === requiredPoints ||
-        member.contribution === requiredPoints))
-  ) {
+  const totalPoints = member.skills + member.contribution + member.personality;
+
+  if (totalPoints >= requiredPoints) {
     member.reachedVotes = true;
     await member.save();
     try {
-      const newChannel = await guild.channels.create(member.userNames[0], {
+      const newChannel = await guild.channels.create({
+        name: member.userNames[0],
+        type: ChannelType.GuildText,
         parent: settings[0].ticketsParentId,
         permissionOverwrites: [
           {
             id: role.id,
-            deny: ["VIEW_CHANNEL"],
+            deny: [PermissionsBitField.Flags.ViewChannel],
           },
           {
             id: member.discordId,
-            allow: ["VIEW_CHANNEL"],
+            allow: [PermissionsBitField.Flags.ViewChannel],
           },
           {
             id: mods.id,
-            allow: ["VIEW_CHANNEL"],
+            allow: [PermissionsBitField.Flags.ViewChannel],
           },
         ],
       });

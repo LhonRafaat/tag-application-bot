@@ -11,7 +11,6 @@ export const hasReachedVotes = async (
   const isiDF = await hasiDFTag(discordUser, settings);
   if (isiDF) return;
   const requiredPoints = await getRequiredPoints();
-  if (member.votingChannelEnabled) return;
   const guild = await client.guilds?.cache.get(process.env.GUILD_ID);
   if (!guild) return;
   const role = await guild.roles.cache.find((role) => {

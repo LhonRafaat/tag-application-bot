@@ -1,5 +1,5 @@
-export const hasiDFTag = async (interaction, settings) => {
-  const isiDF = await interaction.member.roles.cache.some((role) => {
+export const hasiDFTag = async (member, settings) => {
+  const isiDF = await member.roles.cache.some((role) => {
     return [
       settings[0].founderId,
       settings[0].headAdminId,

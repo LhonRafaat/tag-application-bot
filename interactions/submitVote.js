@@ -1,6 +1,5 @@
 import { findOne } from "../services/memberService.js";
 import { getRequiredPoints } from "../services/settingService.js";
-import { questionsEmbed } from "../UI/embeds/questionsEmbed.js";
 import { hasReachedVotes } from "../utils/hasReachedVotes.js";
 
 export const submitVote = async (interaction, settings, client) => {

@@ -17,7 +17,6 @@ import {
   findOne,
   getMembersRanking,
 } from "./services/memberService.js";
-import { getRequiredPoints } from "./services/settingService.js";
 import { getByGameName } from "./interactions/getByGameName.js";
 import { closeTicket } from "./interactions/closeTicket.js";
 import { getRegister } from "./interactions/getRegister.js";
@@ -41,6 +40,7 @@ import { getMemberStrikes } from "./interactions/getMemberStrikes.js";
 import { getAllActiveStrikes } from "./services/strikeService.js";
 import { getDogfightRoles } from "./interactions/getDogfightRoles.js";
 import { fetchDogfightServersBF2042 } from "./utils/fetchDogfightServersBF2042.js";
+import { getRequiredPoints } from "./interactions/getRequiredPoints.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -285,7 +285,7 @@ export const client = async () => {
         }
       }
       await user.save();
-      await hasReachedVotes(user, settings, client);
+      await hasReachedVotes(user, settings, client, msg.member);
     }
 
     if (msg.mentions?.roles?.first()) {
@@ -517,6 +517,10 @@ export const client = async () => {
 
   client.on(Events.MessageReactionAdd, async (reaction, user) => {
     if (user.bot) return;
+    const { guild } = reaction.message;
+    const discordUser = guild.members.cache.find(
+      (member) => member.id === user.id
+    );
 
     // dogfight roles
     if (
@@ -615,7 +619,7 @@ export const client = async () => {
                 mainUser.rolePingContribution = 0;
                 mainUser.skills += 1;
                 await mainUser.save();
-                await hasReachedVotes(mainUser, settings, client);
+                await hasReachedVotes(mainUser, settings, client, discordUser);
               }
             }
             member.dfReactionContribution += settings[0].dfReactionValue;
@@ -628,7 +632,7 @@ export const client = async () => {
               await msg.edit(`${msg.content} \n - ${member.userNames[0]} \n`);
             }
             await member.save();
-            await hasReachedVotes(member, settings, client);
+            await hasReachedVotes(member, settings, client, discordUser);
           }
         }
       }
@@ -733,7 +737,6 @@ export const client = async () => {
               );
             }
             await member.save();
-            await hasReachedVotes(member, settings, client);
           }
         }
       }

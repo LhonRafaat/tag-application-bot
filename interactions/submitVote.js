@@ -76,7 +76,7 @@ export const submitVote = async (interaction, settings, client) => {
           )
         ) {
           await dbUser.save();
-          await hasReachedVotes(dbUser, settings, client);
+          await hasReachedVotes(dbUser, settings, client, interaction.member);
 
           return await interaction.editReply({
             content: "successfully voted!",

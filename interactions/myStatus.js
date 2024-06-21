@@ -1,4 +1,4 @@
-import { ButtonBuilder, ButtonStyle } from "discord.js";
+import { ButtonBuilder, ButtonStyle, bold } from "discord.js";
 import { findOne } from "../services/memberService.js";
 import { getRequiredPoints } from "../services/settingService.js";
 import { getButton } from "../UI/button.js";
@@ -65,8 +65,11 @@ export const myStatus = async (interaction, settings) => {
         return await interaction.editReply({
           files: [plate],
           content: !isiDF
-            ? `Achieve ${requiredPoints} points or more to qualify for iDF tag! your current: ${totalPoints}`
-            : `Total points: ${totalPoints}`,
+            ? bold(
+                `Achieve ${requiredPoints} points or more to qualify for iDF tag! your current: ${totalPoints}`
+              )
+            : bold(`Total points: ${totalPoints}`) +
+              "\ndon't forget you can vote for your friends using the /vote command !",
         });
       }
     }

@@ -5,7 +5,7 @@ import { getVoteEmbed } from "../UI/embeds/voteEmbed.js";
 import { getPlate } from "../UI/userPlate.js";
 
 export const vote = async (interaction, settings) => {
-  const canVote = await interaction.member.roles.cache.find((role) => {
+  const canVote = await interaction.member.roles.cache.some((role) => {
     return [
       settings[0].candidateId,
       settings[0].registeredStaff,
@@ -15,8 +15,17 @@ export const vote = async (interaction, settings) => {
   });
   if (!canVote) {
     return await interaction.editReply({
-      content: "Please register to be able to vote.",
+      content:
+        "You are not registered, in order to be able to vote you must register.",
       ephemeral: true,
+      components: [
+        getButton([
+          new ButtonBuilder()
+            .setCustomId("registerButton")
+            .setLabel("Register")
+            .setStyle(ButtonStyle.Success),
+        ]),
+      ],
     });
   }
   const mentionedUser = await interaction.options.getUser("username");
@@ -27,7 +36,7 @@ export const vote = async (interaction, settings) => {
 
   if (!discordUser) {
     return await interaction.editReply({
-      content: "User not found",
+      content: "Player you are trying to vote for is not registered.",
       ephemeral: true,
     });
   }
@@ -35,7 +44,7 @@ export const vote = async (interaction, settings) => {
   if (discordUser.discordId.toString() === interaction.member.id.toString()) {
     return await interaction.editReply({
       content:
-        "You cannot vote for yourself, if you wish to see your own profile, use '!myvotes'",
+        "You cannot vote for yourself noty noty, if you wish to see your own profile, use '/mystatus'",
       ephemeral: true,
     });
   }

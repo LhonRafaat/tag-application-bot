@@ -15,7 +15,7 @@ import {
 import {
   findAll,
   findOne,
-  getMembersRanking,
+  getMembersRankingData,
 } from "./services/memberService.js";
 import { getByGameName } from "./interactions/getByGameName.js";
 import { closeTicket } from "./interactions/closeTicket.js";
@@ -41,6 +41,7 @@ import { getAllActiveStrikes } from "./services/strikeService.js";
 import { getDogfightRoles } from "./interactions/getDogfightRoles.js";
 import { fetchDogfightServersBF2042 } from "./utils/fetchDogfightServersBF2042.js";
 import { getRequiredPoints } from "./interactions/getRequiredPoints.js";
+import { generateMemberTable } from "./UI/rankingPlate.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -394,8 +395,22 @@ export const client = async () => {
     } else if (interaction.commandName === "ranking") {
       await interaction.deferReply();
       try {
-        const members = await getMembersRanking();
-        await interaction.editReply(members);
+        const membersData = await getMembersRankingData();
+
+        const attachment = await generateMemberTable(
+          membersData.map((el) => {
+            return {
+              name: el._id,
+              avatar: el.avatar,
+              username: el.userNames[0],
+              totalPoints: el.totalVotes,
+            };
+          })
+        );
+
+        await interaction.editReply({
+          files: [attachment],
+        });
       } catch (error) {
         await interaction.editReply(error.toString());
       }

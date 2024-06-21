@@ -99,6 +99,30 @@ export const getMembersRanking = async () => {
   return ranking;
 };
 
+export const getMembersRankingData = async () => {
+  const members = await Members.aggregate([
+    {
+      $group: {
+        _id: "$fullName",
+        totalVotes: {
+          $sum: { $add: ["$skills", "$personality", "$contribution"] },
+        },
+        // add userNames fields to the result
+        userNames: { $first: "$userNames" },
+        avatar: { $first: "$avatar" },
+      },
+    },
+    {
+      $sort: {
+        totalVotes: -1,
+      },
+    },
+  ]);
+  members.slice(0, 10);
+
+  return members;
+};
+
 export const registerBf2Account = async (discordId, bf2Name, fullName) => {
   const member = await Members.findOne({ discordId });
 

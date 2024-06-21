@@ -24,7 +24,6 @@ export const hasReachedVotes = async (
 
   if (totalPoints >= requiredPoints) {
     member.reachedVotes = true;
-    await member.save();
     try {
       const newChannel = await guild.channels.create({
         name: member.userNames[0],

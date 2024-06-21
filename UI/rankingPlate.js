@@ -3,7 +3,7 @@ import { AttachmentBuilder } from "discord.js";
 
 export const generateMemberTable = async (members) => {
   // Canvas setup: increased width by 300px
-  const canvas = Canvas.createCanvas(1800, members.length * 100 + 200);
+  const canvas = Canvas.createCanvas(2500, members.length * 100 + 200);
   const context = canvas.getContext("2d");
 
   // Load and draw the background image

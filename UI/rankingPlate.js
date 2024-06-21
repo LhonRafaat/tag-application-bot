@@ -7,7 +7,7 @@ export const generateMemberTable = async (members) => {
   const context = canvas.getContext("2d");
 
   // Load and draw the background image
-  const background = await Canvas.loadImage("./assets/images/bf-bg.png");
+  const background = await Canvas.loadImage("./assets/images/ww2.png");
   context.drawImage(background, 0, 0, canvas.width, canvas.height);
 
   // Fonts and styles

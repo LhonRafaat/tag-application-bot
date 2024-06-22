@@ -550,63 +550,67 @@ export const client = async () => {
         (member) => member.id === user.id
       );
       const title = msg.embeds[0].data.title.toLowerCase();
-      if (title.includes("pc")) {
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
-          member.roles.add(settings[0].pcBf4).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
-          member.roles.add(settings[0].pcBfv).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
-          member.roles.add(settings[0].pcBf1).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
-          member.roles.add(settings[0].allBf2042).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "dcs") {
-          member.roles.add(settings[0].dcsPc).catch((err) => {
-            console.log("Error" + err);
-          });
-        }
-      } else if (title.includes("xbox")) {
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
-          member.roles.add(settings[0].xboxBf4).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
-          member.roles.add(settings[0].xboxBfv).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
-          member.roles.add(settings[0].xboxBf1).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
-          member.roles.add(settings[0].allBf2042).catch((err) => {
-            console.log("Error" + err);
-          });
-        }
-      } else if (title.includes("playstation")) {
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
-          member.roles.add(settings[0].ps4Bf4).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
-          member.roles.add(settings[0].ps4Bfv).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
-          member.roles.add(settings[0].ps4Bf1).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
-          member.roles.add(settings[0].allBf2042).catch((err) => {
-            console.log("Error" + err);
-          });
+      // dogfight roles
+
+      if (msg.channelId === settings[0].dogfightRolesChannelId) {
+        if (title.includes("pc")) {
+          if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
+            member.roles.add(settings[0].pcBf4).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
+            member.roles.add(settings[0].pcBfv).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
+            member.roles.add(settings[0].pcBf1).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+            member.roles.add(settings[0].allBf2042).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "dcs") {
+            member.roles.add(settings[0].dcsPc).catch((err) => {
+              console.log("Error" + err);
+            });
+          }
+        } else if (title.includes("xbox")) {
+          if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
+            member.roles.add(settings[0].xboxBf4).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
+            member.roles.add(settings[0].xboxBfv).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
+            member.roles.add(settings[0].xboxBf1).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+            member.roles.add(settings[0].allBf2042).catch((err) => {
+              console.log("Error" + err);
+            });
+          }
+        } else if (title.includes("playstation")) {
+          if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
+            member.roles.add(settings[0].ps4Bf4).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
+            member.roles.add(settings[0].ps4Bfv).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
+            member.roles.add(settings[0].ps4Bf1).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+            member.roles.add(settings[0].allBf2042).catch((err) => {
+              console.log("Error" + err);
+            });
+          }
         }
       }
     }
@@ -669,63 +673,66 @@ export const client = async () => {
         (member) => member.id === user.id
       );
       const title = msg.embeds[0].data.title.toLowerCase();
-      if (title.includes("pc")) {
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
-          member.roles.remove(settings[0].pcBf4).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
-          member.roles.remove(settings[0].pcBfv).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
-          member.roles.remove(settings[0].pcBf1).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
-          member.roles.remove(settings[0].allBf2042).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "dcs") {
-          member.roles.remove(settings[0].dcsPc).catch((err) => {
-            console.log("Error" + err);
-          });
-        }
-      } else if (title.includes("xbox")) {
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
-          member.roles.remove(settings[0].xboxBf4).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
-          member.roles.remove(settings[0].xboxBfv).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
-          member.roles.remove(settings[0].xboxBf1).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
-          member.roles.remove(settings[0].allBf2042).catch((err) => {
-            console.log("Error" + err);
-          });
-        }
-      } else if (title.includes("playstation")) {
-        if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
-          member.roles.remove(settings[0].ps4Bf4).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
-          member.roles.remove(settings[0].ps4Bfv).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
-          member.roles.remove(settings[0].ps4Bf1).catch((err) => {
-            console.log("Error" + err);
-          });
-        } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
-          member.roles.remove(settings[0].allBf2042).catch((err) => {
-            console.log("Error" + err);
-          });
+      // dogfight roles
+      if (msg.channelId === settings[0].dogfightRolesChannelId) {
+        if (title.includes("pc")) {
+          if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
+            member.roles.remove(settings[0].pcBf4).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
+            member.roles.remove(settings[0].pcBfv).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
+            member.roles.remove(settings[0].pcBf1).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+            member.roles.remove(settings[0].allBf2042).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "dcs") {
+            member.roles.remove(settings[0].dcsPc).catch((err) => {
+              console.log("Error" + err);
+            });
+          }
+        } else if (title.includes("xbox")) {
+          if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
+            member.roles.remove(settings[0].xboxBf4).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
+            member.roles.remove(settings[0].xboxBfv).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
+            member.roles.remove(settings[0].xboxBf1).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+            member.roles.remove(settings[0].allBf2042).catch((err) => {
+              console.log("Error" + err);
+            });
+          }
+        } else if (title.includes("playstation")) {
+          if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
+            member.roles.remove(settings[0].ps4Bf4).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
+            member.roles.remove(settings[0].ps4Bfv).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf1") {
+            member.roles.remove(settings[0].ps4Bf1).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
+            member.roles.remove(settings[0].allBf2042).catch((err) => {
+              console.log("Error" + err);
+            });
+          }
         }
       }
     }

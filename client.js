@@ -549,8 +549,10 @@ export const client = async () => {
       const member = guild.members.cache.find(
         (member) => member.id === user.id
       );
+      console.log(member);
       const title = msg.embeds[0].data.title.toLowerCase();
       // dogfight roles
+      console.log(msg.channelId);
 
       if (msg.channelId === settings[0].dogfightRolesChannelId) {
         if (title.includes("pc")) {
@@ -559,6 +561,7 @@ export const client = async () => {
               console.log("Error" + err);
             });
           } else if (reaction.emoji.name?.trim().toLowerCase() === "bfv") {
+            console.log("here");
             member.roles.add(settings[0].pcBfv).catch((err) => {
               console.log("Error" + err);
             });

@@ -634,7 +634,7 @@ export const client = async () => {
                 mainUser.rolePingContribution = 0;
                 mainUser.skills += 1;
                 await mainUser.save();
-                await hasReachedVotes(mainUser, settings, client, discordUser);
+                // await hasReachedVotes(mainUser, settings, client, discordUser);
               }
             }
             member.dfReactionContribution += settings[0].dfReactionValue;
@@ -647,7 +647,7 @@ export const client = async () => {
               await msg.edit(`${msg.content} \n - ${member.userNames[0]} \n`);
             }
             await member.save();
-            await hasReachedVotes(member, settings, client, discordUser);
+            // await hasReachedVotes(member, settings, client, discordUser);
           }
         }
       }

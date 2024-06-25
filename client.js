@@ -42,6 +42,7 @@ import { getDogfightRoles } from "./interactions/getDogfightRoles.js";
 import { fetchDogfightServersBF2042 } from "./utils/fetchDogfightServersBF2042.js";
 import { getRequiredPoints } from "./interactions/getRequiredPoints.js";
 import { generateMemberTable } from "./UI/rankingPlate.js";
+import { updateMyGameName } from "./interactions/updateMyGameName.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -94,6 +95,11 @@ export const client = async () => {
       name: "updatenicks",
       description:
         "Does a api call to get users latest nickname for each user in the database.",
+    });
+    commands?.create({
+      name: "updatemygamename",
+      description:
+        "Checks your latest game name and updates it in the database.",
     });
 
     commands?.create({
@@ -387,6 +393,8 @@ export const client = async () => {
       await getMemberStrikes(interaction, settings);
     } else if (interaction.commandName === "updatenicks") {
       await updateNicks(interaction, settings);
+    } else if (interaction.commandName === "updatemygamename") {
+      await updateMyGameName(interaction);
     } else if (interaction.commandName === "closeticket") {
       await closeTicket(interaction, settings);
     } else if (interaction.commandName === "getregister") {

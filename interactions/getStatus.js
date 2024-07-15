@@ -35,6 +35,12 @@ export const getStatus = async (interaction, settings) => {
 
   // big problem here, if ephemeral is true, we cannot react to the messag
   return await interaction.editReply({
+    content: `
+    All usernames: ${discordUser.userNames.join(", ")}
+    Games: ${discordUser.games.join(", ")}
+    platforms: ${discordUser.platforms.join(", ")}
+    gameIds: ${discordUser.originIds.join(", ")}
+    `,
     ephemeral: true,
     files: [attachment],
   });

@@ -103,9 +103,14 @@ export const client = async () => {
     });
 
     commands?.create({
+      name: "myvoters",
+      description: "shows the people that voted for you.",
+    });
+    commands?.create({
       name: "addme",
       description: "test",
     });
+
     commands?.create({
       name: "getstatus",
       description: "get user status plate",
@@ -426,6 +431,11 @@ export const client = async () => {
       getRequiredPoints(interaction, settings);
     } else if (interaction.commandName === "getstatus") {
       await getStatus(interaction, settings);
+    } else if (interaction.commandName === "myvoters") {
+      return await interaction.editReply({
+        content: "I lied, not gonna tell you.",
+        ephemeral: true,
+      });
     } else if (interaction.commandName === "vote") {
       await vote(interaction, settings);
     } else if (interaction.commandName === "setpoints") {

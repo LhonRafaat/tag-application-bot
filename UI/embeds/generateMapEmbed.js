@@ -22,7 +22,7 @@ export const generateMapEmbed = (
     )
     .setImage(image)
     .setThumbnail(
-      "https://eaassets-a.akamaihd.net/battlelog/prod/emblem/392/590/320/2955055690685760912.png?v=1537200736"
+      "https://i.namu.wiki/i/WWaZjrK6XJkO8IYRQSA64DSX-EISMeKLjuSMu9eXijktor1SYAqbRLX3xI-uQ4CI6v8VLkblNWYnIlwx77ngQg.webp"
     )
     .setColor("#f500d4");
 

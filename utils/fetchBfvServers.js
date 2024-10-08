@@ -25,7 +25,7 @@ export const fetchBfvServers = async (channel) => {
 
     const data = res.data?.servers;
 
-    if (data && data.length > 10) {
+    if (data && data.length > 0) {
       for await (const game of data) {
         const detailedServer = await axios.get(
           `https://api.gametools.network/bfv/players/?gameid=${game.gameId}`

@@ -38,6 +38,7 @@ const settingSchema = new Schema(
     dogfightChannelId: { type: String, default: "916452721341661245" },
     dogfightRolesChannelId: { type: String, default: "859375747432972288" },
     bf2042Channel: { type: String, default: "1252282768184971314" },
+    bfvChannel: { type: String, default: "1293264932195930234" },
     //------------
     //bot id
 

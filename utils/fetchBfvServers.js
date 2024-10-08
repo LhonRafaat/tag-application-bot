@@ -9,7 +9,7 @@ import {
 } from "../services/dfserverService.js";
 import { fetchBfvServerOwner } from "./fetchBfvServerOwner.js";
 import { generateBfvMapEmbed } from "../UI/embeds/generateBfvMapEmbed.js";
-import { time } from "discord.js";
+import { time, TimestampStyles } from "discord.js";
 
 export const fetchBfvServers = async (channel) => {
   // delete all messages in the channel
@@ -25,7 +25,7 @@ export const fetchBfvServers = async (channel) => {
 
     const data = res.data?.servers;
 
-    if (data && data.length > 0) {
+    if (data && data.length > 10) {
       for await (const game of data) {
         const detailedServer = await axios.get(
           `https://api.gametools.network/bfv/players/?gameid=${game.gameId}`
@@ -57,7 +57,10 @@ export const fetchBfvServers = async (channel) => {
         });
       }
     } else {
-      await channel.send("** No servers are online ** ");
+      const relative = time(new Date(), TimestampStyles.RelativeTime);
+      await channel.send(
+        "** No servers are online **\n\nLast updated: " + relative
+      );
     }
   } catch (error) {
     console.log("error occured ");

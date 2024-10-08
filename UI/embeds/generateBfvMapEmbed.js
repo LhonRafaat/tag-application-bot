@@ -18,7 +18,7 @@ export const generateBfvMapEmbed = (
     })
     .setTitle(serverName)
     .setDescription(
-      `- **Owner**: ${ownerName}\n- **Current Players**: ${currentPlayers}\n- **Region**: ${region}\n- **Last Updated**: ${timeString} (${relative})
+      `- **Owner**: ${ownerName}\n- **Current Players**: ${currentPlayers}\n- **Region**: ${region}\n- **Last Updated**: (${relative})
       \n- **Teams**: \n
       
       **${teams[0].name.toUpperCase()}** :flag_us: 

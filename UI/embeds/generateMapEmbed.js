@@ -22,7 +22,7 @@ export const generateMapEmbed = (
     )
     .setImage(image)
     .setThumbnail(
-      "https://upload.wikimedia.org/wikipedia/en/e/ec/Battlefield_2042_cover_art.jpg"
+      "https://i.namu.wiki/i/WWaZjrK6XJkO8IYRQSA64DSX-EISMeKLjuSMu9eXijktor1SYAqbRLX3xI-uQ4CI6v8VLkblNWYnIlwx77ngQg.webp"
     )
     .setColor("#f500d4");
 

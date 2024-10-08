@@ -43,6 +43,7 @@ import { fetchDogfightServersBF2042 } from "./utils/fetchDogfightServersBF2042.j
 import { getRequiredPoints } from "./interactions/getRequiredPoints.js";
 import { generateMemberTable } from "./UI/rankingPlate.js";
 import { updateMyGameName } from "./interactions/updateMyGameName.js";
+import { fetchBfvServers } from "./utils/fetchBfvServers.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -68,6 +69,7 @@ export const client = async () => {
 
     console.log(`Logged in as ${client.user.tag}!`);
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
+
     let commands;
     if (guild) {
       commands = guild.commands;
@@ -221,11 +223,12 @@ export const client = async () => {
 
     // send dogfight data to specific channel
     const bf2042Channel = await guild.channels.fetch(settings[0].bf2042Channel);
+    const bfvChannel = await guild.channels.fetch(settings[0].bfvChannel);
 
-    cron.schedule("*/5 * * * *", () =>
-      fetchDogfightServersBF2042(bf2042Channel)
-    );
-    await fetchDogfightServersBF2042(bf2042Channel);
+    cron.schedule("* * * * *", () => {
+      fetchDogfightServersBF2042(bf2042Channel);
+      fetchBfvServers(bfvChannel);
+    });
   });
   // discordModals(client);
 

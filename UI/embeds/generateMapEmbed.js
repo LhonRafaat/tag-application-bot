@@ -18,7 +18,7 @@ export const generateMapEmbed = (
     })
     .setTitle(serverName)
     .setDescription(
-      `- **Owner**: ${serverId}\n- **Current Players**: ${currentPlayers}\n- **Status**: ${status}\n- **Region**: ${region}\n- **Last Updated**: ${timeString} (${relative})`
+      `- **Owner**: ${serverId}\n- **Current Players**: ${currentPlayers}\n- **Status**: ${status}\n- **Region**: ${region}\n- **Last Updated**:(${relative})`
     )
     .setImage(image)
     .setThumbnail(

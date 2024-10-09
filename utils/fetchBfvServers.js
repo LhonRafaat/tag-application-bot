@@ -1,12 +1,4 @@
 import axios from "axios";
-import { generateMapEmbed } from "../UI/embeds/generateMapEmbed.js";
-import { fetchProfileByNucleusId } from "./utils.js";
-import {
-  createDFServer,
-  getClosedServers,
-  getDFServerByName,
-  updatePlayerAmount,
-} from "../services/dfserverService.js";
 import { fetchBfvServerOwner } from "./fetchBfvServerOwner.js";
 import { generateBfvMapEmbed } from "../UI/embeds/generateBfvMapEmbed.js";
 import { time, TimestampStyles } from "discord.js";
@@ -45,7 +37,7 @@ export const fetchBfvServers = async (channel) => {
         const owner = await fetchBfvServerOwner(game.ownerId);
         const embed = generateBfvMapEmbed(
           game.prefix,
-          owner,
+          owner ?? "unknown",
           game.playerAmount,
           game.region,
           game.url,

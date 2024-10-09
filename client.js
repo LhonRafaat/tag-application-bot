@@ -225,9 +225,9 @@ export const client = async () => {
     const bf2042Channel = await guild.channels.fetch(settings[0].bf2042Channel);
     const bfvChannel = await guild.channels.fetch(settings[0].bfvChannel);
 
-    cron.schedule("*/2 * * * *", () => {
-      fetchDogfightServersBF2042(bf2042Channel);
-      fetchBfvServers(bfvChannel);
+    cron.schedule("*/2 * * * *", async () => {
+      await fetchDogfightServersBF2042(bf2042Channel);
+      await fetchBfvServers(bfvChannel);
     });
   });
   // discordModals(client);

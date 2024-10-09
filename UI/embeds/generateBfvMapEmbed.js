@@ -23,7 +23,7 @@ export const generateBfvMapEmbed = (
       
       **${teams[0].name.toUpperCase()}** :flag_us: 
       ${teams[0].players.map((el) => `- ${el}`).join("\n")}
-      \n---------------------------------------------------
+      \n----------------------
        **${teams[1].name.toUpperCase()}** :flag_jp:
       ${teams[1].players.map((el) => `- ${el}`).join("\n")}
       `

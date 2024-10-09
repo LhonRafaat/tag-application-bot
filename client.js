@@ -227,7 +227,7 @@ export const client = async () => {
 
     cron.schedule("*/2 * * * *", async () => {
       await fetchDogfightServersBF2042(bf2042Channel);
-      await fetchBfvServers(bfvChannel);
+      // await fetchBfvServers(bfvChannel);
     });
   });
   // discordModals(client);

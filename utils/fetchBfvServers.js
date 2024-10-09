@@ -34,10 +34,15 @@ export const fetchBfvServers = async (channel) => {
           };
         });
 
-        const owner = await fetchBfvServerOwner(game.ownerId);
+        let owner = "unknown";
+        try {
+          owner = await fetchBfvServerOwner(game.ownerId);
+        } catch (error) {
+          console.log(error);
+        }
         const embed = generateBfvMapEmbed(
           game.prefix,
-          owner ?? "unknown",
+          owner,
           game.playerAmount,
           game.region,
           game.url,

@@ -12,12 +12,9 @@ export const subLinkAlt = async (interaction, returnedMember, platformVal) => {
     });
   }
   const user = await findOne(interaction.member.id);
-  if (user.originIds.includes(returnedMember.data?.id)) {
+  if (user.originIds.includes(returnedMember.data?.id?.toString())) {
     return await interaction.editReply({
-      content:
-        "you have already registered this account" +
-        originIds?.toString()?.slice(0, 50),
-      ephemeral: true,
+      content: "you have already registered this account",
     });
   }
   if (!user.userNames.includes(returnedMember.data?.userName))

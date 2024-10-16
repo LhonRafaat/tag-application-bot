@@ -8,15 +8,15 @@ export const subLinkAlt = async (interaction, returnedMember, platformVal) => {
   if (originIds.includes(returnedMember.data?.id)) {
     return await interaction.editReply({
       content: "This account is already linked",
-
       ephemeral: true,
     });
   }
   const user = await findOne(interaction.member.id);
   if (user.originIds.includes(returnedMember.data?.id)) {
     return await interaction.editReply({
-      content: "you have already registered this account",
-
+      content:
+        "you have already registered this account" +
+        originIds?.toString()?.slice(0, 10),
       ephemeral: true,
     });
   }

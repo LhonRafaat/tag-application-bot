@@ -1,6 +1,17 @@
-import { findOne } from "../services/memberService.js";
+import { findAll, findOne } from "../services/memberService.js";
 
 export const subLinkAlt = async (interaction, returnedMember, platformVal) => {
+  // we check if this account is linked by someone else already
+  let members = await findAll();
+  let originIds = [];
+  members.map((member) => originIds.push(...member.originIds));
+  if (originIds.includes(returnedMember.data?.id)) {
+    return await interaction.editReply({
+      content: "This account is already linked",
+
+      ephemeral: true,
+    });
+  }
   const user = await findOne(interaction.member.id);
   if (user.originIds.includes(returnedMember.data?.id)) {
     return await interaction.editReply({

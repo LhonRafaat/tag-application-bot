@@ -44,6 +44,7 @@ import { getRequiredPoints } from "./interactions/getRequiredPoints.js";
 import { generateMemberTable } from "./UI/rankingPlate.js";
 import { updateMyGameName } from "./interactions/updateMyGameName.js";
 import { fetchBfvServers } from "./utils/fetchBfvServers.js";
+import { isAccountAlreadyLinked } from "./utils/isAccountAlreadyLinked.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -511,16 +512,7 @@ export const client = async () => {
         );
         if (returnedMember?.data?.id) {
           // we check if this account is linked by someone else already
-          let members = await findAll();
-          let originIds = [];
-          members.map((member) => originIds.push(...member.originIds));
-          if (originIds.includes(returnedMember.data?.id)) {
-            return await interaction.editReply({
-              content: "This account is already linked",
-
-              ephemeral: true,
-            });
-          }
+          await isAccountAlreadyLinked(returnedMember, interaction);
           if (interaction.customId === "registerModal") {
             await submitRegister(
               interaction,

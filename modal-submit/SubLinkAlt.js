@@ -16,7 +16,7 @@ export const subLinkAlt = async (interaction, returnedMember, platformVal) => {
     return await interaction.editReply({
       content:
         "you have already registered this account" +
-        originIds?.toString()?.slice(0, 10),
+        originIds?.toString()?.slice(0, 50),
       ephemeral: true,
     });
   }

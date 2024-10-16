@@ -22,7 +22,6 @@ export const subLinkAlt = async (interaction, returnedMember, platformVal) => {
   await user.save();
   return await interaction.editReply({
     content: "response collected",
-
     ephemeral: true,
   });
 };

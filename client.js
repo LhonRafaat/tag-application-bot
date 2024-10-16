@@ -23,11 +23,9 @@ import { getRegister } from "./interactions/getRegister.js";
 import { getStatus } from "./interactions/getStatus.js";
 import { vote } from "./interactions/vote.js";
 import { submitVote } from "./interactions/submitVote.js";
-import { register } from "./interactions/regsiter.js";
 import { setPoints } from "./interactions/setPoints.js";
 import { submitRegisterBf2 } from "./modal-submit/submitRegisterBf2.js";
 import { submitRegister } from "./modal-submit/submitRegister.js";
-import { subLinkAlt } from "./modal-submit/SubLinkAlt.js";
 import { linkAnotherAccount } from "./interactions/linkAnotherAccount.js";
 import { denyLinkAnotherAccount } from "./interactions/denyLinkAnotherAccount.js";
 import { registerBf2 } from "./interactions/registerBf2.js";
@@ -45,6 +43,8 @@ import { generateMemberTable } from "./UI/rankingPlate.js";
 import { updateMyGameName } from "./interactions/updateMyGameName.js";
 import { fetchBfvServers } from "./utils/fetchBfvServers.js";
 import { isAccountAlreadyLinked } from "./utils/isAccountAlreadyLinked.js";
+import { register } from "./interactions/register.js";
+import { subLinkAlt } from "./modal-submit/subLinkAlt.js";
 
 export const client = async () => {
   const settings = await getSettings();

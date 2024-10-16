@@ -6,8 +6,8 @@ export const isAccountAlreadyLinked = async (returnedMember, interaction) => {
   const originIds = [];
   members.forEach((member) => originIds.push(...member.originIds));
   if (originIds.includes(returnedMember.data?.id?.toString())) {
-    return await interaction.editReply({
-      content: "This account is already linked",
-    });
+    return true;
   }
+
+  return false;
 };

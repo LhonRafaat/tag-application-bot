@@ -2,7 +2,11 @@ import { findOne } from "../services/memberService.js";
 import { isAccountAlreadyLinked } from "../utils/isAccountAlreadyLinked.js";
 
 export const subLinkAlt = async (interaction, returnedMember, platformVal) => {
-  await isAccountAlreadyLinked(returnedMember, interaction);
+  if (await isAccountAlreadyLinked(returnedMember, interaction)) {
+    return await interaction.editReply({
+      content: "This account is already linked",
+    });
+  }
   const user = await findOne(interaction.member.id);
   if (user.originIds.includes(returnedMember.data?.id?.toString())) {
     return await interaction.editReply({

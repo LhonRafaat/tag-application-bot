@@ -512,7 +512,11 @@ export const client = async () => {
         );
         if (returnedMember?.data?.id) {
           // we check if this account is linked by someone else already
-          await isAccountAlreadyLinked(returnedMember, interaction);
+          if (await isAccountAlreadyLinked(returnedMember, interaction)) {
+            return await interaction.editReply({
+              content: "This account is already linked",
+            });
+          }
           if (interaction.customId === "registerModal") {
             await submitRegister(
               interaction,

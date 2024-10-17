@@ -45,6 +45,7 @@ import { fetchBfvServers } from "./utils/fetchBfvServers.js";
 import { isAccountAlreadyLinked } from "./utils/isAccountAlreadyLinked.js";
 import { register } from "./interactions/register.js";
 import { subLinkAlt } from "./modal-submit/subLinkAlt.js";
+import { escape } from "validator";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -354,12 +355,16 @@ export const client = async () => {
     // return null if the interaction is from the modal submit
     // this should be removed
     if (
-      !["wantToRegister", "registerButton"].includes(interaction.customId) &&
       !["mystatus", "getregister", "getdogfightroles", "ranking"].includes(
         interaction.commandName
       )
     )
       await interaction.deferReply({ ephemeral: true });
+    else if (
+      !["wantToRegister", "registerButton"].includes(interaction.customId)
+    ) {
+      await interaction.deferReply();
+    }
 
     if (interaction.commandName === "mystatus") {
       await interaction.deferReply();

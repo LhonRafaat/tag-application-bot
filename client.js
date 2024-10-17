@@ -359,7 +359,7 @@ export const client = async () => {
         interaction.commandName
       )
     )
-      await interaction.deferReply();
+      await interaction.deferReply({ ephemeral: true });
 
     if (interaction.commandName === "mystatus") {
       await interaction.deferReply();

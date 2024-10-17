@@ -354,13 +354,14 @@ export const client = async () => {
     // return null if the interaction is from the modal submit
     // this should be removed
     if (
+      !["wantToRegister", "registerButton"].includes(interaction.customId) &&
       !["mystatus", "getregister", "getdogfightroles", "ranking"].includes(
         interaction.commandName
       )
     )
       await interaction.deferReply({ ephemeral: true });
     else if (
-      !["wantToRegister", "registerButton"].includes(interaction.customId)
+      ["wantToRegister", "registerButton"].includes(interaction.customId)
     ) {
       await interaction.deferReply();
     }

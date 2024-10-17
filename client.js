@@ -360,11 +360,6 @@ export const client = async () => {
       )
     )
       await interaction.deferReply({ ephemeral: true });
-    else if (
-      ["wantToRegister", "registerButton"].includes(interaction.customId)
-    ) {
-      await interaction.deferReply();
-    }
 
     if (interaction.commandName === "mystatus") {
       await interaction.deferReply();

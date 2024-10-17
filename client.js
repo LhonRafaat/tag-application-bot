@@ -45,7 +45,6 @@ import { fetchBfvServers } from "./utils/fetchBfvServers.js";
 import { isAccountAlreadyLinked } from "./utils/isAccountAlreadyLinked.js";
 import { register } from "./interactions/register.js";
 import { subLinkAlt } from "./modal-submit/subLinkAlt.js";
-import { escape } from "validator";
 
 export const client = async () => {
   const settings = await getSettings();

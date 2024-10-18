@@ -1,4 +1,5 @@
-export const hasiDFTag = (member, settings) => {
+export const hasiDFTag = async (member, settings) => {
+  await member.fetch();
   const idfRoleIds = [
     settings[0].founderId,
     settings[0].headAdminId,

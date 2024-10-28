@@ -3,8 +3,19 @@ import { findOne } from "../services/memberService.js";
 import { getButton } from "../UI/button.js";
 import { getVoteEmbed } from "../UI/embeds/voteEmbed.js";
 import { getPlate } from "../UI/userPlate.js";
+import { hasiDFTag } from "../utils/hasiDFtag.js";
 
 export const vote = async (interaction, settings) => {
+  await interaction?.member?.fetch();
+
+  const isiDF = await hasiDFTag(interaction.member, settings);
+
+  if (!isiDF) {
+    return await interaction.editReply(
+      "Only iDF members are eligible to vote."
+    );
+  }
+
   const canVote = await interaction.member.roles.cache.some((role) => {
     return [
       settings[0].candidateId,

@@ -12,6 +12,7 @@ export const muteUser = async (interaction, settings) => {
 
   try {
     const mentionedUser = await interaction.options.getMember("username");
+    console.log(mentionedUser);
 
     await mentionedUser.fetch();
 
@@ -45,7 +46,7 @@ export const muteUser = async (interaction, settings) => {
 
     await mentionedUser.roles.add(settings[0].muteRoleId);
     await interaction.editReply({
-      content: "User muted successfully",
+      content: `Muted user ${mentionedUser.id}`,
     });
   } catch (error) {
     await interaction.editReply({

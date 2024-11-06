@@ -46,7 +46,7 @@ export const muteUser = async (interaction, settings) => {
 
     await mentionedUser.roles.add(settings[0].muteRoleId);
     await interaction.editReply({
-      content: `Muted user ${mentionedUser.id}`,
+      content: `Muted user ${mentionedUser.nickname}`,
     });
   } catch (error) {
     await interaction.editReply({

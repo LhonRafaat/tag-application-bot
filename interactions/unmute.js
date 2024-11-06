@@ -28,7 +28,7 @@ export const unmuteUser = async (interaction, settings) => {
     });
 
     await interaction.editReply({
-      content: `user ${mentionedUser.id} has been unmuted`,
+      content: `user ${mentionedUser.nickname} has been unmuted`,
     });
   } catch (error) {
     await interaction.editReply({

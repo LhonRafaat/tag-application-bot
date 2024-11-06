@@ -45,6 +45,8 @@ import { fetchBfvServers } from "./utils/fetchBfvServers.js";
 import { isAccountAlreadyLinked } from "./utils/isAccountAlreadyLinked.js";
 import { register } from "./interactions/register.js";
 import { subLinkAlt } from "./modal-submit/subLinkAlt.js";
+import { muteUser } from "./interactions/mute.js";
+import { unmuteUser } from "./interactions/unmute.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -85,6 +87,32 @@ export const client = async () => {
           name: "username",
           required: true,
           description: "username of the user to vote for",
+          type: ApplicationCommandOptionType.User,
+        },
+      ],
+    });
+
+    commands?.create({
+      name: "mute",
+      description: "temporarly mutes a user",
+      options: [
+        {
+          name: "username",
+          required: true,
+          description: "username of the user to mute",
+          type: ApplicationCommandOptionType.User,
+        },
+      ],
+    });
+
+    commands?.create({
+      name: "unmute",
+      description: "unmute a user",
+      options: [
+        {
+          name: "username",
+          required: true,
+          description: "username of the user to mute",
           type: ApplicationCommandOptionType.User,
         },
       ],
@@ -396,6 +424,10 @@ export const client = async () => {
       }
     } else if (interaction.commandName === "getdogfightroles") {
       await getDogfightRoles(interaction, settings, client);
+    } else if (interaction.commanName === "mute") {
+      await muteUser(interaction, settings);
+    } else if (interaction.commanName === "unmute") {
+      await unmuteUser(interaction, settings);
     } else if (interaction.commandName === "getbygamename") {
       await getByGameName(interaction, settings);
     } else if (interaction.commandName === "strike") {

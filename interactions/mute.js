@@ -37,7 +37,7 @@ export const muteUser = async (interaction, settings) => {
     );
   }
 
-  await interaction.member.roles.set([]);
+  // await interaction.member.roles.set([]);
 
   await interaction.member.roles.add(settings[0].muteRoleId);
   await interaction.editReply({

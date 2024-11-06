@@ -10,37 +10,46 @@ export const muteUser = async (interaction, settings) => {
     });
   }
 
-  await interaction.member.fetch();
-  const userRoles = interaction.member.roles.cache;
+  try {
+    const mentionedUser = await interaction.options.getMember("username");
 
-  const roleIds = userRoles.map((role) => role.id);
+    await mentionedUser.fetch();
 
-  const hasMuteDoc = await Mute.findOne({
-    discordId: interaction.member?.id,
-  });
+    const userRoles = mentionedUser.roles.cache;
 
-  if (!hasMuteDoc) {
-    await Mute.create({
-      discordId: interaction.member?.id,
-      prevRoles: roleIds,
-      muted: true,
+    const roleIds = userRoles.map((role) => role.id);
+
+    const hasMuteDoc = await Mute.findOne({
+      discordId: mentionedUser?.id,
     });
-  } else {
-    await Mute.findOneAndUpdate(
-      {
-        discordId: interaction.member?.id,
-      },
-      {
+
+    if (!hasMuteDoc) {
+      await Mute.create({
+        discordId: mentionedUser?.id,
         prevRoles: roleIds,
         muted: true,
-      }
-    );
+      });
+    } else {
+      await Mute.findOneAndUpdate(
+        {
+          discordId: mentionedUser?.id,
+        },
+        {
+          prevRoles: roleIds,
+          muted: true,
+        }
+      );
+    }
+
+    await mentionedUser.roles.set([]);
+
+    await mentionedUser.roles.add(settings[0].muteRoleId);
+    await interaction.editReply({
+      content: "User muted successfully",
+    });
+  } catch (error) {
+    await interaction.editReply({
+      content: "There was an error muting the user.",
+    });
   }
-
-  // await interaction.member.roles.set([]);
-
-  await interaction.member.roles.add(settings[0].muteRoleId);
-  await interaction.editReply({
-    content: "User muted successfully",
-  });
 };

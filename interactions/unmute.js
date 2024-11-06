@@ -10,17 +10,25 @@ export const unmuteUser = async (interaction, settings) => {
     });
   }
 
-  await interaction.member.fetch();
+  const mentionedUser = await interaction.options.getMember("username");
 
-  const muteDoc = await Mute.findOne({
-    discordId: interaction.member?.id,
-  });
+  try {
+    await mentionedUser.fetch();
 
-  await interaction.member.roles.set(muteDoc.prevRoles);
+    const muteDoc = await Mute.findOne({
+      discordId: mentionedUser?.id,
+    });
 
-  await muteDoc.delete();
+    await mentionedUser.roles.set(muteDoc.prevRoles);
 
-  await interaction.editReply({
-    content: "User muted successfully",
-  });
+    await muteDoc.delete();
+
+    await interaction.editReply({
+      content: "User muted successfully",
+    });
+  } catch (error) {
+    await interaction.editReply({
+      content: error.toString(),
+    });
+  }
 };

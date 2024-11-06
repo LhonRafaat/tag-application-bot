@@ -424,9 +424,9 @@ export const client = async () => {
       }
     } else if (interaction.commandName === "getdogfightroles") {
       await getDogfightRoles(interaction, settings, client);
-    } else if (interaction.commanName === "mute") {
+    } else if (interaction.commandName === "mute") {
       await muteUser(interaction, settings);
-    } else if (interaction.commanName === "unmute") {
+    } else if (interaction.commandName === "unmute") {
       await unmuteUser(interaction, settings);
     } else if (interaction.commandName === "getbygamename") {
       await getByGameName(interaction, settings);

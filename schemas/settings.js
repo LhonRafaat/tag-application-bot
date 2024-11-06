@@ -20,7 +20,7 @@ const settingSchema = new Schema(
     modId: { type: String, default: "548861871013494784" },
     founderId: { type: String, default: "977522446427103262" },
     headAdminId: { type: String, default: "977522446427103262" },
-    muteRoleId: { type: String, default: "1040294921015394334" },
+    muteRoleId: { type: String, default: "605797383351173131" },
     strikeOne: { type: String },
     strikeTwo: { type: String },
     strikeThree: { type: String },

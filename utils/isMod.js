@@ -1,4 +1,5 @@
-export const isMod = (interaction, settings) => {
+export const isMod = async (interaction, settings) => {
+  await interaction.member.fetch();
   const modRoleIds = [
     settings[0].founderId,
     settings[0].headAdminId,

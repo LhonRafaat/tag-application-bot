@@ -11,6 +11,7 @@ export const unmuteUser = async (interaction, settings) => {
   }
 
   const mentionedUser = await interaction.options.getMember("username");
+  console.log(mentionedUser);
 
   try {
     await mentionedUser.fetch();
@@ -24,7 +25,7 @@ export const unmuteUser = async (interaction, settings) => {
     await muteDoc.delete();
 
     await interaction.editReply({
-      content: "User muted successfully",
+      content: `Muted user ${mentionedUser.id} has been unmuted`,
     });
   } catch (error) {
     await interaction.editReply({

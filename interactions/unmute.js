@@ -19,13 +19,16 @@ export const unmuteUser = async (interaction, settings) => {
     const muteDoc = await Mute.findOne({
       discordId: mentionedUser?.id,
     });
+    console.log(muteDoc);
 
     await mentionedUser.roles.set(muteDoc.prevRoles);
 
-    await muteDoc.delete();
+    await Mute.findByIdAndUpdate(muteDoc._id, {
+      muted: false,
+    });
 
     await interaction.editReply({
-      content: `Muted user ${mentionedUser.id} has been unmuted`,
+      content: `user ${mentionedUser.id} has been unmuted`,
     });
   } catch (error) {
     await interaction.editReply({

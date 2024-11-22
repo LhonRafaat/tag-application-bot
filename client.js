@@ -12,11 +12,7 @@ import {
   isDifferenceGreaterThanMonths,
   matchYoutubeUrl,
 } from "./utils/utils.js";
-import {
-  findAll,
-  findOne,
-  getMembersRankingData,
-} from "./services/memberService.js";
+import { findOne, getMembersRankingData } from "./services/memberService.js";
 import { getByGameName } from "./interactions/getByGameName.js";
 import { closeTicket } from "./interactions/closeTicket.js";
 import { getRegister } from "./interactions/getRegister.js";
@@ -47,6 +43,7 @@ import { register } from "./interactions/register.js";
 import { subLinkAlt } from "./modal-submit/subLinkAlt.js";
 import { muteUser } from "./interactions/mute.js";
 import { unmuteUser } from "./interactions/unmute.js";
+import { Invite } from "./schemas/invite.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -58,6 +55,7 @@ export const client = async () => {
       GatewayIntentBits.GuildIntegrations,
       GatewayIntentBits.GuildMessageReactions,
       GatewayIntentBits.MessageContent,
+      GatewayIntentBits.GuildInvites,
     ],
     partials: [Partials.User, Partials.Reaction, Partials.Message],
   });
@@ -79,6 +77,31 @@ export const client = async () => {
     } else {
       commands = client?.application.commands;
     }
+
+    // Fetch invites for the guild and store them in MongoDB
+    try {
+      const guildInvites = await guild.invites.fetch();
+
+      for await (const invite of guildInvites.values()) {
+        const existingInvite = await Invite.findOne({
+          inviteCode: invite?.code,
+        });
+        if (existingInvite) {
+          existingInvite.uses = invite?.uses;
+          await existingInvite?.save();
+        } else {
+          await Invite.create({
+            inviteCode: invite?.code,
+            uses: invite?.uses,
+            inviter: invite?.inviter?.id,
+          });
+        }
+      }
+      console.log("Guild invites have been cached.");
+    } catch (error) {
+      console.error("Error fetching invites:", error);
+    }
+
     commands?.create({
       name: "vote",
       description: "vote for user",
@@ -816,6 +839,31 @@ export const client = async () => {
           }
         }
       }
+    }
+  });
+
+  client.on(Events.GuildMemberAdd, async (member) => {
+    try {
+      const channelId = "548861917431726091";
+      const channel = member.guild.channels.cache.get(channelId);
+      const newInvites = await member.guild.invites.fetch();
+
+      for await (const invite of newInvites.values()) {
+        const storedInvite = await Invite.findOne({
+          inviteCode: invite.code,
+        });
+        if (storedInvite && invite.uses > storedInvite.uses) {
+          const message = `${member.user.tag} joined using invite code ${invite.code}, created by <@${storedInvite.inviter}>`;
+
+          await channel.send(message);
+
+          storedInvite.uses = invite.uses;
+          await storedInvite.save();
+          break;
+        }
+      }
+    } catch (error) {
+      console.error("Error tracking invite usage:", error);
     }
   });
 };

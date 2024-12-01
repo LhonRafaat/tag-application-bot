@@ -8,6 +8,7 @@ export const hasiDFTag = async (member, settings) => {
     settings[0].idfPcId,
     settings[0].idfPsId,
   ];
+  console.log(settings[0].idfPcId);
 
   return idfRoleIds.some((roleId) => member.roles.cache.has(roleId));
 };

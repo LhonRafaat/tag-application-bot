@@ -48,7 +48,7 @@ const settingSchema = new Schema(
 
     // idf roles
     idfXboxId: { type: String, default: "977951821194727434" },
-    idfPcId: { type: String, default: "666198649746751499" },
+    idfPcId: { type: String, default: "666198659876126730" },
     idfPsId: { type: String, default: "977951821194727434" },
 
     // df roles

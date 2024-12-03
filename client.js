@@ -101,6 +101,19 @@ export const client = async () => {
     } catch (error) {
       console.error("Error fetching invites:", error);
     }
+    try {
+      const channelId = "548861917431726091";
+      const channel = guild.channels.cache.get(channelId);
+      const invites = await Invite.find();
+
+      for await (const invite of invites) {
+        const message = `${invite.uses} uses by invite code ${invite.code}, created by <@${invite.inviter}>`;
+
+        await channel.send(message);
+      }
+    } catch (error) {
+      console.error("Error fetching invites:", error);
+    }
 
     commands?.create({
       name: "vote",

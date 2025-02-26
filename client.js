@@ -426,7 +426,9 @@ export const client = async () => {
         // console.log(user);
 
         const botMsg = await msg.reply(
-          `Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react. \n - ${user.userNames[0]} \n`
+          `Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react. \n - ${
+            user.userNames[user.userNames.length - 1]
+          } \n`
         );
         await botMsg.react(YES_EMOJI);
       }

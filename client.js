@@ -44,6 +44,9 @@ import { subLinkAlt } from "./modal-submit/subLinkAlt.js";
 import { muteUser } from "./interactions/mute.js";
 import { unmuteUser } from "./interactions/unmute.js";
 import { Invite } from "./schemas/invite.js";
+import { openTicket } from "./interactions/openTicket.js";
+import { getMessageSnippet } from "./interactions/messageSnippet.js";
+import { getApplication } from "./interactions/getApplication.js";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -101,14 +104,13 @@ export const client = async () => {
     } catch (error) {
       console.error("Error fetching invites:", error);
     }
+
     try {
       const channelId = "548861917431726091";
       const channel = guild.channels.cache.get(channelId);
       const invites = await Invite.find();
-
       for await (const invite of invites) {
         const message = `${invite.uses} uses by invite code ${invite.code}, created by <@${invite.inviter}>`;
-
         await channel.send(message);
       }
     } catch (error) {
@@ -214,6 +216,41 @@ export const client = async () => {
           type: ApplicationCommandOptionType.String,
         },
       ],
+    });
+
+    commands?.create({
+      name: "tag",
+      description: "send a message snippet",
+      options: [
+        {
+          name: "id",
+          required: true,
+          description: "username of the user",
+          type: ApplicationCommandOptionType.String,
+          choices: [
+            {
+              name: "qa",
+              value: "qa",
+            },
+            {
+              name: "nick",
+              value: "nick",
+            },
+            {
+              name: "go",
+              value: "go",
+            },
+            {
+              name: "why",
+              value: "why",
+            },
+          ],
+        },
+      ],
+    });
+    commands?.create({
+      name: "getapplicationembed",
+      description: "",
     });
     commands?.create({
       name: "getmemberstrikes",
@@ -419,9 +456,14 @@ export const client = async () => {
     // this should be removed
     if (
       !["wantToRegister", "registerButton"].includes(interaction.customId) &&
-      !["mystatus", "getregister", "getdogfightroles", "ranking"].includes(
-        interaction.commandName
-      )
+      ![
+        "mystatus",
+        "getregister",
+        "getdogfightroles",
+        "ranking",
+        "tag",
+        "getapplicationembed",
+      ].includes(interaction.commandName)
     )
       await interaction.deferReply({ ephemeral: true });
 
@@ -476,6 +518,12 @@ export const client = async () => {
       await updateMyGameName(interaction);
     } else if (interaction.commandName === "closeticket") {
       await closeTicket(interaction, settings);
+    } else if (interaction.commandName === "tag") {
+      await interaction.deferReply();
+      await getMessageSnippet(interaction, settings);
+    } else if (interaction.commandName === "getapplicationembed") {
+      await interaction.deferReply();
+      await getApplication(interaction, settings);
     } else if (interaction.commandName === "getregister") {
       await interaction.deferReply();
       await getRegister(interaction, settings);
@@ -528,6 +576,8 @@ export const client = async () => {
       await register(interaction, client);
     } else if (interaction.customId === "registerBf2") {
       await registerBf2(interaction, client);
+    } else if (interaction.customId === "open-ticket") {
+      await openTicket(interaction, settings, client);
     }
 
     // ------------ Modal Submit ------------------------------
@@ -878,5 +928,18 @@ export const client = async () => {
     } catch (error) {
       console.error("Error tracking invite usage:", error);
     }
+  });
+
+  client.on(Events.ChannelDelete, async (channel) => {
+    const guild = channel.guild;
+
+    const transcriptsChannel = await guild.channels.fetch(
+      settings[0].transcriptsChannel
+    );
+
+    if (!settings[0].transcriptsChannel) return;
+
+    if (!transcriptsChannel) return;
+    await transcriptsChannel.send(`${channel.name} has been closed.`);
   });
 };

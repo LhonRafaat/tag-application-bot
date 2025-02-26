@@ -179,6 +179,10 @@ export const client = async () => {
       name: "addme",
       description: "test",
     });
+    commands?.create({
+      name: "applicationembed",
+      description: "get the application embed",
+    });
 
     commands?.create({
       name: "getstatus",
@@ -248,10 +252,7 @@ export const client = async () => {
         },
       ],
     });
-    commands?.create({
-      name: "getapplicationembed",
-      description: "",
-    });
+
     commands?.create({
       name: "getmemberstrikes",
       description: "Get member strikes",
@@ -324,15 +325,15 @@ export const client = async () => {
     });
 
     // send dogfight data to specific channel
-    const bf2042Channel = await guild.channels.fetch(settings[0].bf2042Channel);
-    const bfvChannel = await guild.channels.fetch(settings[0].bfvChannel);
+    // const bf2042Channel = await guild.channels.fetch(settings[0].bf2042Channel);
+    // const bfvChannel = await guild.channels.fetch(settings[0].bfvChannel);
 
-    cron.schedule("*/2 * * * *", async () => {
-      await fetchDogfightServersBF2042(bf2042Channel);
-    });
-    cron.schedule("*/1 * * * *", async () => {
-      await fetchBfvServers(bfvChannel);
-    });
+    // cron.schedule("*/2 * * * *", async () => {
+    //   await fetchDogfightServersBF2042(bf2042Channel);
+    // });
+    // cron.schedule("*/1 * * * *", async () => {
+    //   await fetchBfvServers(bfvChannel);
+    // });
   });
   // discordModals(client);
 
@@ -462,7 +463,7 @@ export const client = async () => {
         "getdogfightroles",
         "ranking",
         "tag",
-        "getapplicationembed",
+        "applicationembed",
       ].includes(interaction.commandName)
     )
       await interaction.deferReply({ ephemeral: true });
@@ -521,7 +522,7 @@ export const client = async () => {
     } else if (interaction.commandName === "tag") {
       await interaction.deferReply();
       await getMessageSnippet(interaction, settings);
-    } else if (interaction.commandName === "getapplicationembed") {
+    } else if (interaction.commandName === "applicationembed") {
       await interaction.deferReply();
       await getApplication(interaction, settings);
     } else if (interaction.commandName === "getregister") {

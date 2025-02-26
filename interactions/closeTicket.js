@@ -8,7 +8,10 @@ export const closeTicket = async (interaction, settings) => {
       ephemeral: true,
     });
   }
-  if (interaction.channel.parentId === settings[0].ticketsParentId) {
+  if (
+    interaction.channel.parentId === settings[0].ticketsParentId &&
+    interaction.channel.name.startsWith("ticket-")
+  ) {
     await interaction.channel.delete();
   } else {
     return interaction.editReply({

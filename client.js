@@ -244,10 +244,6 @@ export const client = async () => {
               name: "go",
               value: "go",
             },
-            {
-              name: "why",
-              value: "why",
-            },
           ],
         },
       ],

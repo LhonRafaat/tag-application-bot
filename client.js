@@ -325,15 +325,15 @@ export const client = async () => {
     });
 
     // send dogfight data to specific channel
-    // const bf2042Channel = await guild.channels.fetch(settings[0].bf2042Channel);
-    // const bfvChannel = await guild.channels.fetch(settings[0].bfvChannel);
+    const bf2042Channel = await guild.channels.fetch(settings[0].bf2042Channel);
+    const bfvChannel = await guild.channels.fetch(settings[0].bfvChannel);
 
-    // cron.schedule("*/2 * * * *", async () => {
-    //   await fetchDogfightServersBF2042(bf2042Channel);
-    // });
-    // cron.schedule("*/1 * * * *", async () => {
-    //   await fetchBfvServers(bfvChannel);
-    // });
+    cron.schedule("*/2 * * * *", async () => {
+      await fetchDogfightServersBF2042(bf2042Channel);
+    });
+    cron.schedule("*/1 * * * *", async () => {
+      await fetchBfvServers(bfvChannel);
+    });
   });
   // discordModals(client);
 

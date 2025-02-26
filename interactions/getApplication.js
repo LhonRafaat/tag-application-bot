@@ -1,7 +1,6 @@
-import { ButtonBuilder } from "@discordjs/builders";
 import { getButton } from "../UI/button.js";
 import { getApplicationsEmbed } from "../UI/embeds/applicationsEmbed.js";
-import { ButtonStyle } from "discord.js";
+import { ButtonBuilder, ButtonStyle } from "discord.js";
 import { isMod } from "../utils/isMod.js";
 
 export async function getApplication(interaction, settings) {
@@ -12,6 +11,7 @@ export async function getApplication(interaction, settings) {
       ephemeral: true,
     });
   }
+
   await interaction.editReply({
     embeds: [getApplicationsEmbed()],
     components: [

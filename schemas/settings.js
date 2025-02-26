@@ -8,6 +8,7 @@ const settingSchema = new Schema(
     rolePingValue: { type: Number, default: 0.5 },
     contentValue: { type: Number, default: 0.5 },
     dfReactionValue: { type: Number, default: 0.5 },
+    ticketCounter: { type: Number, default: 606 },
 
     //------------------
     // member ids
@@ -40,6 +41,8 @@ const settingSchema = new Schema(
     dogfightRolesChannelId: { type: String, default: "859375747432972288" },
     bf2042Channel: { type: String, default: "1252282768184971314" },
     bfvChannel: { type: String, default: "1293264932195930234" },
+    transcriptsChannel: { type: String, default: "1344327343111405668" },
+    applicationsChannel: { type: String, default: "968131185668665404" },
     //------------
     //bot id
 

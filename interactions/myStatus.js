@@ -55,7 +55,9 @@ export const myStatus = async (interaction, settings) => {
       if (gameProfileData) {
         const plate = await getPlate(
           // taking the first username, maybe we increase it  ?
-          !isBf2 ? gameProfileData.data.userName : user.userNames[0],
+          !isBf2
+            ? gameProfileData.data.userName
+            : user.userNames[user.userNames.length - 1],
           user.discordId,
           !isBf2 ? gameProfileData.data?.avatar : user?.avatar,
 

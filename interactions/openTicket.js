@@ -16,6 +16,10 @@ export async function openTicket(interaction, settings, client) {
     parent: settings[0].ticketsParentId,
     permissionOverwrites: [
       {
+        id: interaction.user.id,
+        allow: [PermissionFlagsBits.ViewChannel],
+      },
+      {
         id: role.id,
         deny: [PermissionFlagsBits.ViewChannel],
       },

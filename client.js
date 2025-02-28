@@ -47,6 +47,9 @@ import { Invite } from "./schemas/invite.js";
 import { openTicket } from "./interactions/openTicket.js";
 import { getMessageSnippet } from "./interactions/messageSnippet.js";
 import { getApplication } from "./interactions/getApplication.js";
+import { TicketsLog } from "./schemas/ticketLog.js";
+import { getTicketLogEmbed } from "./UI/embeds/ticketLogEmbed.js";
+import dayjs from "dayjs";
 
 export const client = async () => {
   const settings = await getSettings();
@@ -313,6 +316,14 @@ export const client = async () => {
     commands?.create({
       name: "closeticket",
       description: "delete current channel",
+      options: [
+        {
+          name: "reason",
+          required: true,
+          description: "reason for closing the ticket",
+          type: ApplicationCommandOptionType.String,
+        },
+      ],
     });
 
     commands?.create({
@@ -337,6 +348,26 @@ export const client = async () => {
     if (settings.length === 0) return;
     const user = await findOne(msg.author.id);
     if (!user) return;
+
+    // add msg logs to ticket channel
+
+    if (!msg.author.bot) {
+      if (
+        msg.channel.parentId === settings[0].ticketsParentId &&
+        msg.channel.name.startsWith("ticket-")
+      ) {
+        const ticket = await TicketsLog.findOne({ ticketId: msg.channel.id });
+        if (ticket) {
+          ticket.messages.push({
+            message: msg.content,
+            attachments: msg.attachments.map((el) => el.url),
+            sender: msg.author.id,
+            sentAt: new Date(),
+          });
+          await ticket.save();
+        }
+      }
+    }
 
     //Checking the strikes
 
@@ -957,7 +988,47 @@ export const client = async () => {
 
     if (!settings[0].transcriptsChannel) return;
 
+    const ticket = await TicketsLog.findOne({
+      ticketId: channel.id,
+    });
+
     if (!transcriptsChannel) return;
-    await transcriptsChannel.send(`${channel.name} has been closed.`);
+    const transcriptData = ticket?.messages
+      .map((msg) => {
+        const sender = guild.members.cache?.get(msg?.sender)?.user?.tag;
+        return `[${
+          msg.sentAt
+            ? dayjs(msg?.sentAt).format("DD/MM/YYYY HH:mm:ss")
+            : "Unknown Date"
+        }] ${sender}: ${msg?.message}${
+          msg?.attachments?.length
+            ? ` (Attachments: ${msg?.attachments?.join(", ")})`
+            : ""
+        }`;
+      })
+      .join("\n");
+
+    // Create a buffer from the text data
+    const transcriptBuffer = Buffer.from(transcriptData, "utf-8");
+
+    await transcriptsChannel.send({
+      content: `--------------------------------------------\n**Transcript for ${channel?.name}**`,
+      embeds: [
+        getTicketLogEmbed(
+          channel?.name,
+          ticket?.openedBy,
+          dayjs(ticket?.openedAt).format("DD/MM/YYYY HH:mm:ss"),
+          ticket?.closedBy,
+          dayjs(ticket?.closedAt).format("DD/MM/YYYY HH:mm:ss"),
+          ticket?.closedReason
+        ),
+      ],
+      files: [
+        {
+          attachment: transcriptBuffer,
+          name: `${channel.name}-transcript.txt`,
+        },
+      ],
+    });
   });
 };

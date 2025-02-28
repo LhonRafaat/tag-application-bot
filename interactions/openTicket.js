@@ -1,5 +1,6 @@
 import { ChannelType, PermissionFlagsBits } from "discord.js";
 import { getTicketEmbed } from "../UI/embeds/ticketEmbed.js";
+import { TicketsLog } from "../schemas/ticketLog.js";
 
 export async function openTicket(interaction, settings, client) {
   const guild = await client.guilds?.cache.get(process.env.GUILD_ID);
@@ -34,6 +35,10 @@ export async function openTicket(interaction, settings, client) {
   await settings[0].save();
   await newChannel.send({
     embeds: [getTicketEmbed()],
+  });
+  await TicketsLog.create({
+    ticketId: newChannel.id,
+    openedBy: interaction.user.id,
   });
   return await interaction.editReply({
     content: `Ticket created in <#${newChannel.id}>`,

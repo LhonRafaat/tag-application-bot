@@ -762,7 +762,9 @@ export const client = async () => {
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const member = await findOne(user.id);
-          const askedForDf = msg.content.includes(member?.userNames[0]);
+          const askedForDf = msg.content.includes(
+            member?.userNames[member.userNames.length - 1]
+          );
           const gotPoints = msg.content.includes("**");
           if (member && !askedForDf) {
             const mainUser = await findOne(
@@ -786,8 +788,16 @@ export const client = async () => {
               member.dfReactionContribution = 0;
               member.skills += 1;
             }
-            if (!msg.content.toString().includes(member.userNames[0])) {
-              await msg.edit(`${msg.content} \n - ${member.userNames[0]} \n`);
+            if (
+              !msg.content
+                .toString()
+                .includes(member.userNames[member.userNames.length - 1])
+            ) {
+              await msg.edit(
+                `${msg.content} \n - ${
+                  member.userNames[member.userNames.length - 1]
+                } \n`
+              );
             }
             await member.save();
             // await hasReachedVotes(member, settings, client, discordUser);
@@ -884,7 +894,9 @@ export const client = async () => {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const msg = await reaction.message.fetch();
           const member = await findOne(user.id);
-          const askedForDf = msg.content.includes(member?.userNames[0]);
+          const askedForDf = msg.content.includes(
+            member?.userNames[member?.userNames.length - 1]
+          );
           if (member && !askedForDf) {
             member.dfReactionContribution -= settings[0].dfReactionValue;
 
@@ -892,9 +904,16 @@ export const client = async () => {
               member.dfReactionContribution = 0;
               member.skills -= 1;
             }
-            if (!msg.content.toString().includes(member.userNames[0])) {
+            if (
+              !msg.content
+                .toString()
+                .includes(member.userNames[member.userNames.length - 1])
+            ) {
               await msg.edit(
-                msg.content.replace(`\n - ${member.userNames[0]} \n`, "")
+                msg.content.replace(
+                  `\n - ${member.userNames[member.userNames.length - 1]} \n`,
+                  ""
+                )
               );
             }
             await member.save();

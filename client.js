@@ -346,8 +346,6 @@ export const client = async () => {
 
   client.on(Events.MessageCreate, async (msg) => {
     if (settings.length === 0) return;
-    const user = await findOne(msg.author.id);
-    if (!user) return;
 
     // add msg logs to ticket channel
 
@@ -368,6 +366,8 @@ export const client = async () => {
         }
       }
     }
+    const user = await findOne(msg.author.id);
+    if (!user) return;
 
     //Checking the strikes
 

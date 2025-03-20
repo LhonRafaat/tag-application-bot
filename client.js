@@ -352,7 +352,7 @@ export const client = async () => {
     if (!msg.author.bot) {
       if (
         msg.channel.parentId === settings[0].ticketsParentId &&
-        msg.channel.name.startsWith("ticket-")
+        msg.channel.name !== "transcripts"
       ) {
         const ticket = await TicketsLog.findOne({ ticketId: msg.channel.id });
         if (ticket) {

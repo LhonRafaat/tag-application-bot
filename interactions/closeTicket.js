@@ -11,7 +11,7 @@ export const closeTicket = async (interaction, settings) => {
   }
   if (
     interaction.channel.parentId === settings[0].ticketsParentId &&
-    interaction.channel.name.startsWith("ticket-")
+    interaction.channel.name !== "transcripts"
   ) {
     const reason = interaction.options.get("reason");
     await TicketsLog.findOneAndUpdate(

@@ -19,23 +19,43 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   const user = await findOne(discordId);
   const canvas = Canvas.createCanvas(1700, 550);
   const context = canvas.getContext("2d");
-  const background = await Canvas.loadImage("./assets/images/bf-bg.png");
+  // const background = await Canvas.loadImage("./assets/images/bf-bg.png");
+  const bg1 = await Canvas.loadImage("./assets/images/new-bg-1.png");
+  const bg2 = await Canvas.loadImage("./assets/images/new-bg-2.png");
+  const bg3 = await Canvas.loadImage("./assets/images/new-bg-3.png");
+  const bg4 = await Canvas.loadImage("./assets/images/new-bg-4.png");
   const idfLogo = await Canvas.loadImage("./assets/images/idf-trans.png");
   var grd = context.createLinearGradient(0, 0, 2, 0);
   grd.addColorStop(0, "#53E3F5");
   grd.addColorStop(1, "#53E3F5");
 
   // This uses the canvas dimensions to stretch the image onto the entire canvas
-  context.drawImage(background, 0, 0, canvas.width, canvas.height);
+  // draw one of the background images randomly
+  const random = Math.floor(Math.random() * 4);
+  switch (random) {
+    case 0:
+      context.drawImage(bg1, 0, 0, canvas.width, canvas.height);
+      break;
+    case 1:
+      context.drawImage(bg2, 0, 0, canvas.width, canvas.height);
+      break;
+    case 2:
+      context.drawImage(bg3, 0, 0, canvas.width, canvas.height);
+      break;
+    case 3:
+      context.drawImage(bg4, 0, 0, canvas.width, canvas.height);
+      break;
+  }
+  // context.drawImage(background, 0, 0, canvas.width, canvas.height);
   context.drawImage(idfLogo, canvas.width - 100, 20);
   try {
     const avatar = await Canvas.loadImage(userAvatar);
-    context.drawImage(avatar, 40, 40, 208, 208);
+    context.drawImage(avatar, 40, 40, 220, 220);
   } catch (error) {
     console.log(error);
   }
 
-  const avatarFrame = await Canvas.loadImage("./assets/images/frame.png");
+  const avatarFrame = await Canvas.loadImage("./assets/images/frame-new.png");
   const numBox = await Canvas.loadImage("./assets/images/num-box.png");
   const fillBar = await Canvas.loadImage("./assets/images/fill-bar.png");
   const numBoxFull = await Canvas.loadImage("./assets/images/num-box-full.png");

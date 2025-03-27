@@ -47,7 +47,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
       break;
   }
   // context.drawImage(background, 0, 0, canvas.width, canvas.height);
-  context.drawImage(idfLogo, canvas.width - 100, 20);
+  // context.drawImage(idfLogo, canvas.width - 100, 20);
   try {
     const avatar = await Canvas.loadImage(userAvatar);
     context.drawImage(avatar, 43, 43, 210, 215);

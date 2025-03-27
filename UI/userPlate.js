@@ -50,7 +50,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
   context.drawImage(idfLogo, canvas.width - 100, 20);
   try {
     const avatar = await Canvas.loadImage(userAvatar);
-    context.drawImage(avatar, 40, 42, 218, 215);
+    context.drawImage(avatar, 43, 43, 210, 215);
   } catch (error) {
     console.log(error);
   }

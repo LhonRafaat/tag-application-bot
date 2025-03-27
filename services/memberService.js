@@ -102,6 +102,11 @@ export const getMembersRanking = async () => {
 export const getMembersRankingData = async () => {
   const members = await Members.aggregate([
     {
+      $match: {
+        isBanned: { $ne: true },
+      },
+    },
+    {
       $group: {
         _id: "$fullName",
         totalVotes: {

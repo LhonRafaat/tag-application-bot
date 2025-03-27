@@ -25,6 +25,7 @@ const membersSchema = new Schema(
     contributionVoters: [{ type: String, required: false }],
     votingChannelEnabled: { type: Boolean, default: false },
     reachedVotes: { type: Boolean, default: false },
+    isBanned: { type: Boolean, default: false },
     bf2profile: [
       {
         name: { type: String, required: false, unique: true },

@@ -471,7 +471,7 @@ export const client = async () => {
     // in case you are very bored
 
     if (msg.content.toLowerCase() === "who is the best pilot in the universe") {
-      return msg.reply("LhonXD");
+      return msg.reply("wyter0se");
     }
     if (
       msg.content.toLowerCase() ===
@@ -786,7 +786,18 @@ export const client = async () => {
     }
 
     const dateNow = new Date();
-    if (reaction.emoji.name === YES_EMOJI) {
+    const isDogfightChannel =
+      settings[0].dogfightChannelId?.toString() ===
+      reaction.message.channelId?.toString();
+    const msgIncludesDfPing = reaction.message.content.includes(
+      "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react."
+    );
+
+    if (
+      reaction.emoji.name === YES_EMOJI &&
+      isDogfightChannel &&
+      msgIncludesDfPing
+    ) {
       const msg = await reaction.message.fetch();
       if (msg.author.id !== settings[0].botId) return;
       const msgTime = reaction.message.createdAt;
@@ -917,7 +928,18 @@ export const client = async () => {
       }
     }
 
-    if (reaction.emoji.name === YES_EMOJI) {
+    const isDogfightChannel =
+      settings[0].dogfightChannelId?.toString() ===
+      reaction.message.channelId?.toString();
+    const msgIncludesDfPing = reaction.message.content.includes(
+      "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react."
+    );
+
+    if (
+      reaction.emoji.name === YES_EMOJI &&
+      isDogfightChannel &&
+      msgIncludesDfPing
+    ) {
       const msg = await reaction.message.fetch();
       if (msg.author.id !== settings[0].botId) return;
       const msgTime = reaction.message.createdAt;

@@ -85,40 +85,40 @@ export const client = async () => {
     }
 
     // Fetch invites for the guild and store them in MongoDB
-    try {
-      const guildInvites = await guild.invites.fetch();
+    // try {
+    //   const guildInvites = await guild.invites.fetch();
 
-      for await (const invite of guildInvites.values()) {
-        const existingInvite = await Invite.findOne({
-          inviteCode: invite?.code,
-        });
-        if (existingInvite) {
-          existingInvite.uses = invite?.uses;
-          await existingInvite?.save();
-        } else {
-          await Invite.create({
-            inviteCode: invite?.code,
-            uses: invite?.uses,
-            inviter: invite?.inviter?.id,
-          });
-        }
-      }
-      console.log("Guild invites have been cached.");
-    } catch (error) {
-      console.error("Error fetching invites:", error);
-    }
+    //   for await (const invite of guildInvites.values()) {
+    //     const existingInvite = await Invite.findOne({
+    //       inviteCode: invite?.code,
+    //     });
+    //     if (existingInvite) {
+    //       existingInvite.uses = invite?.uses;
+    //       await existingInvite?.save();
+    //     } else {
+    //       await Invite.create({
+    //         inviteCode: invite?.code,
+    //         uses: invite?.uses,
+    //         inviter: invite?.inviter?.id,
+    //       });
+    //     }
+    //   }
+    //   console.log("Guild invites have been cached.");
+    // } catch (error) {
+    //   console.error("Error fetching invites:", error);
+    // }
 
-    try {
-      const channelId = "548861917431726091";
-      const channel = guild.channels.cache.get(channelId);
-      const invites = await Invite.find();
-      for await (const invite of invites) {
-        const message = `${invite.uses} uses by invite code ${invite.code}, created by <@${invite.inviter}>`;
-        await channel.send(message);
-      }
-    } catch (error) {
-      console.error("Error fetching invites:", error);
-    }
+    // try {
+    //   const channelId = "548861917431726091";
+    //   const channel = guild.channels.cache.get(channelId);
+    //   const invites = await Invite.find();
+    //   for await (const invite of invites) {
+    //     const message = `${invite.uses} uses by invite code ${invite.code}, created by <@${invite.inviter}>`;
+    //     await channel.send(message);
+    //   }
+    // } catch (error) {
+    //   console.error("Error fetching invites:", error);
+    // }
 
     commands?.create({
       name: "vote",
@@ -976,30 +976,30 @@ export const client = async () => {
     }
   });
 
-  client.on(Events.GuildMemberAdd, async (member) => {
-    try {
-      const channelId = "548861917431726091";
-      const channel = member.guild.channels.cache.get(channelId);
-      const newInvites = await member.guild.invites.fetch();
+  // client.on(Events.GuildMemberAdd, async (member) => {
+  //   try {
+  //     const channelId = "548861917431726091";
+  //     const channel = member.guild.channels.cache.get(channelId);
+  //     const newInvites = await member.guild.invites.fetch();
 
-      for await (const invite of newInvites.values()) {
-        const storedInvite = await Invite.findOne({
-          inviteCode: invite.code,
-        });
-        if (storedInvite && invite.uses > storedInvite.uses) {
-          const message = `${member.user.tag} joined using invite code ${invite.code}, created by <@${storedInvite.inviter}>`;
+  //     for await (const invite of newInvites.values()) {
+  //       const storedInvite = await Invite.findOne({
+  //         inviteCode: invite.code,
+  //       });
+  //       if (storedInvite && invite.uses > storedInvite.uses) {
+  //         const message = `${member.user.tag} joined using invite code ${invite.code}, created by <@${storedInvite.inviter}>`;
 
-          await channel.send(message);
+  //         await channel.send(message);
 
-          storedInvite.uses = invite.uses;
-          await storedInvite.save();
-          break;
-        }
-      }
-    } catch (error) {
-      console.error("Error tracking invite usage:", error);
-    }
-  });
+  //         storedInvite.uses = invite.uses;
+  //         await storedInvite.save();
+  //         break;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error tracking invite usage:", error);
+  //   }
+  // });
 
   client.on(Events.ChannelDelete, async (channel) => {
     const guild = channel.guild;

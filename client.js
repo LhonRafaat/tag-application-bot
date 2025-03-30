@@ -716,10 +716,8 @@ export const client = async () => {
       const member = guild.members.cache.find(
         (member) => member.id === user.id
       );
-      console.log(member);
       const title = msg.embeds[0].data.title.toLowerCase();
       // dogfight roles
-      console.log(msg.channelId);
 
       if (msg.channelId === settings[0].dogfightRolesChannelId) {
         if (title.includes("pc")) {
@@ -785,11 +783,13 @@ export const client = async () => {
       }
     }
 
+    const msg = await reaction.message.fetch();
+
     const dateNow = new Date();
     const isDogfightChannel =
       settings[0].dogfightChannelId?.toString() ===
       reaction.message.channelId?.toString();
-    const msgIncludesDfPing = reaction.message.content.includes(
+    const msgIncludesDfPing = msg.content.includes(
       "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react."
     );
 
@@ -798,7 +798,6 @@ export const client = async () => {
       isDogfightChannel &&
       msgIncludesDfPing
     ) {
-      const msg = await reaction.message.fetch();
       if (msg.author.id !== settings[0].botId) return;
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {
@@ -928,10 +927,12 @@ export const client = async () => {
       }
     }
 
+    const msg = await reaction.message.fetch();
+
     const isDogfightChannel =
       settings[0].dogfightChannelId?.toString() ===
       reaction.message.channelId?.toString();
-    const msgIncludesDfPing = reaction.message.content.includes(
+    const msgIncludesDfPing = msg.content.includes(
       "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react."
     );
 
@@ -940,7 +941,6 @@ export const client = async () => {
       isDogfightChannel &&
       msgIncludesDfPing
     ) {
-      const msg = await reaction.message.fetch();
       if (msg.author.id !== settings[0].botId) return;
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {

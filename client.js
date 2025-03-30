@@ -77,6 +77,14 @@ export const client = async () => {
     console.log(`Logged in as ${client.user.tag}!`);
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
+    // send a msg to a channel so I know the server started
+    try {
+      const channel = await guild.channels.fetch("548861917431726091");
+      await channel.send("Server started");
+    } catch (error) {
+      console.log(error);
+    }
+
     let commands;
     if (guild) {
       commands = guild.commands;

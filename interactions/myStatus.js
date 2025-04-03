@@ -7,9 +7,12 @@ import { hasiDFTag } from "../utils/hasiDFtag.js";
 import { games, getBf2Profile, getUserByGameId } from "../utils/utils.js";
 
 export const myStatus = async (interaction, settings) => {
+  //refetch cache
   const serverUser = await interaction?.guild?.members?.cache?.get(
     interaction?.member?.id
   );
+
+  await serverUser?.fetch();
 
   const user = await findOne(interaction.member.id);
 

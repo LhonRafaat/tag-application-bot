@@ -114,6 +114,7 @@ export const getMembersRankingData = async () => {
         },
         // add userNames fields to the result
         userNames: { $first: "$userNames" },
+        discordId: { $first: "$discordId" },
         avatar: { $first: "$avatar" },
       },
     },

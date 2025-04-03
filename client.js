@@ -463,11 +463,11 @@ export const client = async () => {
         // const user = await findOne(msg.author.id);
         // const gameProfile = await getUserProfile(user.userNames[0], user.platforms[0], );
         // console.log(user);
-
+        const serverUser = await msg?.guild?.members?.cache?.get(
+          msg?.author?.id
+        );
         const botMsg = await msg.reply(
-          `Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react. \n - ${
-            user.userNames[user.userNames.length - 1]
-          } \n`
+          `Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react. \n - ${serverUser.nickname} \n`
         );
         await botMsg.react(YES_EMOJI);
       }
@@ -572,10 +572,13 @@ export const client = async () => {
 
         const attachment = await generateMemberTable(
           membersData.map((el) => {
+            const serverUser = interaction?.guild?.members?.cache?.get(
+              el.discordId
+            );
             return {
               name: el._id,
               avatar: el.avatar,
-              username: el.userNames[0],
+              username: serverUser.nickname,
               totalPoints: el.totalVotes,
             };
           })
@@ -797,7 +800,7 @@ export const client = async () => {
     const isDogfightChannel =
       settings[0].dogfightChannelId?.toString() ===
       reaction.message.channelId?.toString();
-    const msgIncludesDfPing = msg.content.includes(
+    const msgIncludesDfPing = msg.content?.includes(
       "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react."
     );
 
@@ -811,9 +814,9 @@ export const client = async () => {
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const member = await findOne(user.id);
-          const askedForDf = msg.content.includes(
-            member?.userNames[member.userNames.length - 1]
-          );
+          const serverUser = msg?.guild?.members?.cache?.get(user.id);
+
+          const askedForDf = msg.content.includes(serverUser?.nickname);
           const gotPoints = msg.content.includes("**");
           if (member && !askedForDf) {
             const mainUser = await findOne(
@@ -837,16 +840,8 @@ export const client = async () => {
               member.dfReactionContribution = 0;
               member.skills += 1;
             }
-            if (
-              !msg.content
-                .toString()
-                .includes(member.userNames[member.userNames.length - 1])
-            ) {
-              await msg.edit(
-                `${msg.content} \n - ${
-                  member.userNames[member.userNames.length - 1]
-                } \n`
-              );
+            if (!msg.content.toString().includes(serverUser.nickname)) {
+              await msg.edit(`${msg.content} \n - ${serverUser.nickname} \n`);
             }
             await member.save();
             // await hasReachedVotes(member, settings, client, discordUser);
@@ -940,7 +935,7 @@ export const client = async () => {
     const isDogfightChannel =
       settings[0].dogfightChannelId?.toString() ===
       reaction.message.channelId?.toString();
-    const msgIncludesDfPing = msg.content.includes(
+    const msgIncludesDfPing = msg.content?.includes(
       "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react."
     );
 
@@ -955,26 +950,18 @@ export const client = async () => {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const msg = await reaction.message.fetch();
           const member = await findOne(user.id);
-          const askedForDf = msg.content.includes(
-            member?.userNames[member?.userNames.length - 1]
-          );
+          const serverUser = await msg?.guild?.members?.cache?.get(user.id);
+
+          const askedForDf = msg.content?.includes(serverUser?.nickname);
           if (member && !askedForDf) {
             member.dfReactionContribution -= settings[0].dfReactionValue;
-
-            if (member.dfReactionContribution >= 1) {
+            if (member.dfReactionContribution <= 0.2) {
               member.dfReactionContribution = 0;
               member.skills -= 1;
             }
-            if (
-              !msg.content
-                .toString()
-                .includes(member.userNames[member.userNames.length - 1])
-            ) {
+            if (msg.content.toString()?.includes(serverUser?.nickname)) {
               await msg.edit(
-                msg.content.replace(
-                  `\n - ${member.userNames[member.userNames.length - 1]} \n`,
-                  ""
-                )
+                msg.content.replace(` - ${serverUser?.nickname}`, "")
               );
             }
             await member.save();

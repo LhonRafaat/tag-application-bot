@@ -79,8 +79,8 @@ export const client = async () => {
 
     // send a msg to a channel so I know the server started
     try {
-      const channel = await guild.channels.fetch("548861917431726091");
-      await channel.send("Server started");
+      // const channel = await guild.channels.fetch("548861917431726091");
+      // await channel.send("Server started");
     } catch (error) {
       console.log(error);
     }

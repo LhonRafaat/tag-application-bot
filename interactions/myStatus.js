@@ -7,6 +7,10 @@ import { hasiDFTag } from "../utils/hasiDFtag.js";
 import { games, getBf2Profile, getUserByGameId } from "../utils/utils.js";
 
 export const myStatus = async (interaction, settings) => {
+  const serverUser = await interaction?.guild?.members?.cache?.get(
+    interaction?.member?.id
+  );
+
   const user = await findOne(interaction.member.id);
 
   let isBf2 = false;
@@ -49,6 +53,7 @@ export const myStatus = async (interaction, settings) => {
           gameProfileData = gameProfile;
         }
       } catch (error) {
+        gameProfileData.data.userName;
         console.log(error);
       }
 
@@ -56,7 +61,7 @@ export const myStatus = async (interaction, settings) => {
         const plate = await getPlate(
           // taking the first username, maybe we increase it  ?
           !isBf2
-            ? gameProfileData.data.userName
+            ? serverUser?.nickname
             : user.userNames[user.userNames.length - 1],
           user.discordId,
           !isBf2 ? gameProfileData.data?.avatar : user?.avatar,

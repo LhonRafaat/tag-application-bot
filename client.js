@@ -465,11 +465,9 @@ export const client = async () => {
         // const user = await findOne(msg.author.id);
         // const gameProfile = await getUserProfile(user.userNames[0], user.platforms[0], );
         // console.log(user);
-        const serverUser = await msg?.guild?.members?.cache?.get(
-          msg?.author?.id
-        );
+
         const botMsg = await msg.reply(
-          `Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react. \n - ${serverUser.nickname} \n`
+          `Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react. \n - ${user.userNames[0]} \n`
         );
         await botMsg.react(YES_EMOJI);
       }
@@ -589,13 +587,10 @@ export const client = async () => {
 
         const attachment = await generateMemberTable(
           membersData.map((el) => {
-            const serverUser = interaction?.guild?.members?.cache?.get(
-              el.discordId
-            );
             return {
               name: el._id,
               avatar: el.avatar,
-              username: serverUser.nickname,
+              username: el.userNames[0],
               totalPoints: el.totalVotes,
             };
           })
@@ -831,9 +826,8 @@ export const client = async () => {
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const member = await findOne(user.id);
-          const serverUser = msg?.guild?.members?.cache?.get(user.id);
 
-          const askedForDf = msg.content.includes(serverUser?.nickname);
+          const askedForDf = msg.content.includes(member.userNames[0]);
           const gotPoints = msg.content.includes("**");
           if (member && !askedForDf) {
             const mainUser = await findOne(
@@ -857,8 +851,8 @@ export const client = async () => {
               member.dfReactionContribution = 0;
               member.skills += 1;
             }
-            if (!msg.content.toString().includes(serverUser.nickname)) {
-              await msg.edit(`${msg.content} \n - ${serverUser.nickname} \n`);
+            if (!msg.content.toString().includes(member.userNames[0])) {
+              await msg.edit(`${msg.content} \n - ${member.userNames[0]} \n`);
             }
             await member.save();
             // await hasReachedVotes(member, settings, client, discordUser);
@@ -967,18 +961,17 @@ export const client = async () => {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const msg = await reaction.message.fetch();
           const member = await findOne(user.id);
-          const serverUser = await msg?.guild?.members?.cache?.get(user.id);
 
-          const askedForDf = msg.content?.includes(serverUser?.nickname);
+          const askedForDf = msg.content?.includes(member.userNames[0]);
           if (member && !askedForDf) {
             member.dfReactionContribution -= settings[0].dfReactionValue;
             if (member.dfReactionContribution <= 0.2) {
               member.dfReactionContribution = 0;
               member.skills -= 1;
             }
-            if (msg.content.toString()?.includes(serverUser?.nickname)) {
+            if (msg.content.toString()?.includes(member.userNames[0])) {
               await msg.edit(
-                msg.content.replace(` - ${serverUser?.nickname}`, "")
+                msg.content.replace(` - ${member.userNames[0]}`, "")
               );
             }
             await member.save();

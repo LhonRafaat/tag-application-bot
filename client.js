@@ -4,6 +4,8 @@ import {
   Partials,
   ApplicationCommandOptionType,
   Events,
+  time,
+  TimestampStyles,
 } from "discord.js";
 import { getSettings } from "./services/settingService.js";
 import cron from "node-cron";
@@ -79,8 +81,8 @@ export const client = async () => {
 
     // send a msg to a channel so I know the server started
     try {
-      // const channel = await guild.channels.fetch("548861917431726091");
-      // await channel.send("Server started");
+      const channel = await guild.channels.fetch("548861917431726091");
+      await channel.send("Server started");
     } catch (error) {
       console.log(error);
     }
@@ -492,6 +494,21 @@ export const client = async () => {
   client.on(Events.InteractionCreate, async (interaction) => {
     // return null if the interaction is from the modal submit
     // this should be removed
+    // send a msg to a channel so I know the server started
+    if (!["mystatus", "ranking"].includes(interaction.commandName)) {
+      try {
+        const channel = await interaction.guild.channels.fetch(
+          "548861917431726091"
+        );
+        await channel.send(
+          `Interaction: ${interaction.commandName} by ${
+            interaction.user.tag
+          } used at ${time(Date.now(), TimestampStyles.LongDateTime)} `
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
     if (
       !["wantToRegister", "registerButton"].includes(interaction.customId) &&
       ![

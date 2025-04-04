@@ -499,9 +499,9 @@ export const client = async () => {
           "548861917431726091"
         );
         await channel.send(
-          `Interaction: ${interaction.commandName} by ${
+          `Interaction: ${interaction.commandName ?? interaction.customId} by ${
             interaction.user.tag
-          } used at ${time(Date.now(), TimestampStyles.LongDateTime)} `
+          } used at ${dayjs().format("YYYY-MM-DD HH:mm:ss")} `
         );
       } catch (error) {
         console.log(error);

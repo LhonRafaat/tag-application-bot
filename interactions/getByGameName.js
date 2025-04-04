@@ -8,6 +8,13 @@ export const getByGameName = async (interaction, settings) => {
     // check user if is head admin or founder
 
     const isAuthorized = await isMod(interaction, settings);
+    if (!isAuthorized) {
+      return await interaction.editReply({
+        content: "You are not authorized to use this command",
+        ephemeral: true,
+      });
+    }
+
     const username = await interaction.options.getString("username");
     const game = await interaction.options.getString("game");
     const platform = await interaction.options.getString("platform");

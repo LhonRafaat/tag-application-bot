@@ -28,7 +28,6 @@ export const myStatus = async (interaction, settings) => {
 
     const totalPoints = user.skills + user.contribution + user.personality;
     const isiDF = await hasiDFTag(interaction.member, settings);
-
     let gameProfileData = null;
     for await (const game of games) {
       if (game === "bf2") {

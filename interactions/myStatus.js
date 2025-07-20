@@ -58,7 +58,7 @@ export const myStatus = async (interaction, settings) => {
             ? gameProfileData.data.userName
             : user.userNames[user.userNames.length - 1],
           user.discordId,
-          !isBf2 ? gameProfileData.data?.avatar : user?.avatar,
+          user?.avatar,
 
           user.userNames[1] ? user.userNames[1] : undefined
         );

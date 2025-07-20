@@ -36,7 +36,7 @@ export const getByGameName = async (interaction, settings) => {
       const attachment = await getPlate(
         gameprofileData.data.userName,
         member.discordId,
-        gameprofileData.data.avatar,
+        member.avatar,
         member.userNames[1] ? member.userNames[1] : undefined
       );
       //TODO: send a error message when user doesnt exist

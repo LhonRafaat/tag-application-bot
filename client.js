@@ -4,6 +4,8 @@ import {
   Partials,
   ApplicationCommandOptionType,
   Events,
+  time,
+  TimestampStyles,
 } from "discord.js";
 import { getSettings } from "./services/settingService.js";
 import cron from "node-cron";
@@ -77,6 +79,14 @@ export const client = async () => {
     console.log(`Logged in as ${client.user.tag}!`);
     const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
+    // send a msg to a channel so I know the server started
+    try {
+      const channel = await guild.channels.fetch("548861917431726091");
+      await channel.send("Server started");
+    } catch (error) {
+      console.log(error);
+    }
+
     let commands;
     if (guild) {
       commands = guild.commands;
@@ -85,40 +95,40 @@ export const client = async () => {
     }
 
     // Fetch invites for the guild and store them in MongoDB
-    try {
-      const guildInvites = await guild.invites.fetch();
+    // try {
+    //   const guildInvites = await guild.invites.fetch();
 
-      for await (const invite of guildInvites.values()) {
-        const existingInvite = await Invite.findOne({
-          inviteCode: invite?.code,
-        });
-        if (existingInvite) {
-          existingInvite.uses = invite?.uses;
-          await existingInvite?.save();
-        } else {
-          await Invite.create({
-            inviteCode: invite?.code,
-            uses: invite?.uses,
-            inviter: invite?.inviter?.id,
-          });
-        }
-      }
-      console.log("Guild invites have been cached.");
-    } catch (error) {
-      console.error("Error fetching invites:", error);
-    }
+    //   for await (const invite of guildInvites.values()) {
+    //     const existingInvite = await Invite.findOne({
+    //       inviteCode: invite?.code,
+    //     });
+    //     if (existingInvite) {
+    //       existingInvite.uses = invite?.uses;
+    //       await existingInvite?.save();
+    //     } else {
+    //       await Invite.create({
+    //         inviteCode: invite?.code,
+    //         uses: invite?.uses,
+    //         inviter: invite?.inviter?.id,
+    //       });
+    //     }
+    //   }
+    //   console.log("Guild invites have been cached.");
+    // } catch (error) {
+    //   console.error("Error fetching invites:", error);
+    // }
 
-    try {
-      const channelId = "548861917431726091";
-      const channel = guild.channels.cache.get(channelId);
-      const invites = await Invite.find();
-      for await (const invite of invites) {
-        const message = `${invite.uses} uses by invite code ${invite.code}, created by <@${invite.inviter}>`;
-        await channel.send(message);
-      }
-    } catch (error) {
-      console.error("Error fetching invites:", error);
-    }
+    // try {
+    //   const channelId = "548861917431726091";
+    //   const channel = guild.channels.cache.get(channelId);
+    //   const invites = await Invite.find();
+    //   for await (const invite of invites) {
+    //     const message = `${invite.uses} uses by invite code ${invite.code}, created by <@${invite.inviter}>`;
+    //     await channel.send(message);
+    //   }
+    // } catch (error) {
+    //   console.error("Error fetching invites:", error);
+    // }
 
     commands?.create({
       name: "vote",
@@ -457,9 +467,7 @@ export const client = async () => {
         // console.log(user);
 
         const botMsg = await msg.reply(
-          `Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react. \n - ${
-            user.userNames[user.userNames.length - 1]
-          } \n`
+          `Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react. \n - ${user.userNames[0]} \n`
         );
         await botMsg.react(YES_EMOJI);
       }
@@ -484,6 +492,21 @@ export const client = async () => {
   client.on(Events.InteractionCreate, async (interaction) => {
     // return null if the interaction is from the modal submit
     // this should be removed
+    // send a msg to a channel so I know the server started
+    if (!["mystatus", "ranking"].includes(interaction.commandName)) {
+      try {
+        const channel = await interaction.guild.channels.fetch(
+          "548861917431726091"
+        );
+        await channel.send(
+          `Interaction: ${interaction.commandName ?? interaction.customId} by ${
+            interaction.user.tag
+          } used at ${dayjs().format("YYYY-MM-DD HH:mm:ss")} `
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
     if (
       !["wantToRegister", "registerButton"].includes(interaction.customId) &&
       ![
@@ -716,10 +739,8 @@ export const client = async () => {
       const member = guild.members.cache.find(
         (member) => member.id === user.id
       );
-      console.log(member);
       const title = msg.embeds[0].data.title.toLowerCase();
       // dogfight roles
-      console.log(msg.channelId);
 
       if (msg.channelId === settings[0].dogfightRolesChannelId) {
         if (title.includes("pc")) {
@@ -785,11 +806,13 @@ export const client = async () => {
       }
     }
 
+    const msg = await reaction.message.fetch();
+
     const dateNow = new Date();
     const isDogfightChannel =
       settings[0].dogfightChannelId?.toString() ===
       reaction.message.channelId?.toString();
-    const msgIncludesDfPing = reaction.message.content.includes(
+    const msgIncludesDfPing = msg.content?.includes(
       "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react."
     );
 
@@ -798,15 +821,13 @@ export const client = async () => {
       isDogfightChannel &&
       msgIncludesDfPing
     ) {
-      const msg = await reaction.message.fetch();
       if (msg.author.id !== settings[0].botId) return;
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const member = await findOne(user.id);
-          const askedForDf = msg.content.includes(
-            member?.userNames[member.userNames.length - 1]
-          );
+
+          const askedForDf = msg.content.includes(member.userNames[0]);
           const gotPoints = msg.content.includes("**");
           if (member && !askedForDf) {
             const mainUser = await findOne(
@@ -830,16 +851,8 @@ export const client = async () => {
               member.dfReactionContribution = 0;
               member.skills += 1;
             }
-            if (
-              !msg.content
-                .toString()
-                .includes(member.userNames[member.userNames.length - 1])
-            ) {
-              await msg.edit(
-                `${msg.content} \n - ${
-                  member.userNames[member.userNames.length - 1]
-                } \n`
-              );
+            if (!msg.content.toString().includes(member.userNames[0])) {
+              await msg.edit(`${msg.content} \n - ${member.userNames[0]} \n`);
             }
             await member.save();
             // await hasReachedVotes(member, settings, client, discordUser);
@@ -928,10 +941,12 @@ export const client = async () => {
       }
     }
 
+    const msg = await reaction.message.fetch();
+
     const isDogfightChannel =
       settings[0].dogfightChannelId?.toString() ===
       reaction.message.channelId?.toString();
-    const msgIncludesDfPing = reaction.message.content.includes(
+    const msgIncludesDfPing = msg.content?.includes(
       "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react."
     );
 
@@ -940,33 +955,23 @@ export const client = async () => {
       isDogfightChannel &&
       msgIncludesDfPing
     ) {
-      const msg = await reaction.message.fetch();
       if (msg.author.id !== settings[0].botId) return;
       const msgTime = reaction.message.createdAt;
       if (dateNow.getDay() === msgTime.getDay()) {
         if (dateNow.getHours() - msgTime.getHours() <= 2) {
           const msg = await reaction.message.fetch();
           const member = await findOne(user.id);
-          const askedForDf = msg.content.includes(
-            member?.userNames[member?.userNames.length - 1]
-          );
+
+          const askedForDf = msg.content?.includes(member.userNames[0]);
           if (member && !askedForDf) {
             member.dfReactionContribution -= settings[0].dfReactionValue;
-
-            if (member.dfReactionContribution >= 1) {
+            if (member.dfReactionContribution <= 0.2) {
               member.dfReactionContribution = 0;
               member.skills -= 1;
             }
-            if (
-              !msg.content
-                .toString()
-                .includes(member.userNames[member.userNames.length - 1])
-            ) {
+            if (msg.content.toString()?.includes(member.userNames[0])) {
               await msg.edit(
-                msg.content.replace(
-                  `\n - ${member.userNames[member.userNames.length - 1]} \n`,
-                  ""
-                )
+                msg.content.replace(` - ${member.userNames[0]}`, "")
               );
             }
             await member.save();
@@ -976,30 +981,30 @@ export const client = async () => {
     }
   });
 
-  client.on(Events.GuildMemberAdd, async (member) => {
-    try {
-      const channelId = "548861917431726091";
-      const channel = member.guild.channels.cache.get(channelId);
-      const newInvites = await member.guild.invites.fetch();
+  // client.on(Events.GuildMemberAdd, async (member) => {
+  //   try {
+  //     const channelId = "548861917431726091";
+  //     const channel = member.guild.channels.cache.get(channelId);
+  //     const newInvites = await member.guild.invites.fetch();
 
-      for await (const invite of newInvites.values()) {
-        const storedInvite = await Invite.findOne({
-          inviteCode: invite.code,
-        });
-        if (storedInvite && invite.uses > storedInvite.uses) {
-          const message = `${member.user.tag} joined using invite code ${invite.code}, created by <@${storedInvite.inviter}>`;
+  //     for await (const invite of newInvites.values()) {
+  //       const storedInvite = await Invite.findOne({
+  //         inviteCode: invite.code,
+  //       });
+  //       if (storedInvite && invite.uses > storedInvite.uses) {
+  //         const message = `${member.user.tag} joined using invite code ${invite.code}, created by <@${storedInvite.inviter}>`;
 
-          await channel.send(message);
+  //         await channel.send(message);
 
-          storedInvite.uses = invite.uses;
-          await storedInvite.save();
-          break;
-        }
-      }
-    } catch (error) {
-      console.error("Error tracking invite usage:", error);
-    }
-  });
+  //         storedInvite.uses = invite.uses;
+  //         await storedInvite.save();
+  //         break;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error tracking invite usage:", error);
+  //   }
+  // });
 
   client.on(Events.ChannelDelete, async (channel) => {
     const guild = channel.guild;

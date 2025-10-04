@@ -165,7 +165,7 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
       canvas
     );
 
-    context.strokeRect(0, 0, canvas.width, canvas.height);
+    // context.strokeRect(0, 0, canvas.width, canvas.height);
 
     // reset composite op
     context.globalCompositeOperation = "source-over";

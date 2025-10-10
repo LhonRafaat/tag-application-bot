@@ -9,6 +9,9 @@ const description = `
 <:BF1:930520402764111942> PS-DF-BF1
 ------------------
 <:BF2042:930520459777290270> PS-DF-BF2042
+------------------
+:six: DF-BF6
+------------------
    `;
 
 // inside a command, event listener, etc.

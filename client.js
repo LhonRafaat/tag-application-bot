@@ -458,6 +458,9 @@ export const client = async () => {
           settings[0].xboxBf1,
           settings[0].xboxBf4,
           settings[0].allBf2042,
+          settings[0].bf6Pc,
+          settings[0].bf6Ps,
+          settings[0].bf6Xbox,
         ].includes(msg.mentions.roles.first().id) &&
         msg.channelId?.toString() === settings[0].dogfightChannelId?.toString()
       ) {
@@ -729,7 +732,7 @@ export const client = async () => {
 
     // dogfight roles
     if (
-      ["bf4", "bfv", "bf1", "bf2042", "dcs"].includes(
+      ["bf4", "bfv", "bf1", "bf2042", "dcs", "6️⃣"].includes(
         reaction.emoji.name?.trim()?.toLowerCase()
       )
     ) {
@@ -765,6 +768,10 @@ export const client = async () => {
             member.roles.add(settings[0].dcsPc).catch((err) => {
               console.log("Error" + err);
             });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "6️⃣") {
+            member.roles.add(settings[0].bf6Pc).catch((err) => {
+              console.log("Error" + err);
+            });
           }
         } else if (title.includes("xbox")) {
           if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
@@ -783,6 +790,10 @@ export const client = async () => {
             member.roles.add(settings[0].allBf2042).catch((err) => {
               console.log("Error" + err);
             });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "6️⃣") {
+            member.roles.add(settings[0].bf6Xbox).catch((err) => {
+              console.log("Error" + err);
+            });
           }
         } else if (title.includes("playstation")) {
           if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
@@ -799,6 +810,10 @@ export const client = async () => {
             });
           } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
             member.roles.add(settings[0].allBf2042).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "6️⃣") {
+            member.roles.add(settings[0].bf6Ps).catch((err) => {
               console.log("Error" + err);
             });
           }
@@ -864,8 +879,9 @@ export const client = async () => {
   client.on(Events.MessageReactionRemove, async (reaction, user) => {
     if (user.bot) return;
     const dateNow = new Date();
+
     if (
-      ["bf4", "bfv", "bf1", "bf2042", "dcs"].includes(
+      ["bf4", "bfv", "bf1", "bf2042", "dcs", "6️⃣"].includes(
         reaction.emoji.name?.trim()?.toLowerCase()
       )
     ) {
@@ -900,6 +916,10 @@ export const client = async () => {
             member.roles.remove(settings[0].dcsPc).catch((err) => {
               console.log("Error" + err);
             });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "6️⃣") {
+            member.roles.remove(settings[0].bf6Pc).catch((err) => {
+              console.log("Error" + err);
+            });
           }
         } else if (title.includes("xbox")) {
           if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
@@ -918,6 +938,10 @@ export const client = async () => {
             member.roles.remove(settings[0].allBf2042).catch((err) => {
               console.log("Error" + err);
             });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "6️⃣") {
+            member.roles.remove(settings[0].bf6Xbox).catch((err) => {
+              console.log("Error" + err);
+            });
           }
         } else if (title.includes("playstation")) {
           if (reaction.emoji.name?.trim().toLowerCase() === "bf4") {
@@ -934,6 +958,10 @@ export const client = async () => {
             });
           } else if (reaction.emoji.name?.trim().toLowerCase() === "bf2042") {
             member.roles.remove(settings[0].allBf2042).catch((err) => {
+              console.log("Error" + err);
+            });
+          } else if (reaction.emoji.name?.trim().toLowerCase() === "6️⃣") {
+            member.roles.remove(settings[0].bf6Ps).catch((err) => {
               console.log("Error" + err);
             });
           }

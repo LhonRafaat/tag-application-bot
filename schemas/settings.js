@@ -66,6 +66,9 @@ const settingSchema = new Schema(
     xboxBf1: { type: String, default: "859379127278633021" },
     xboxBf4: { type: String, default: "859379271642644480" },
     allBf2042: { type: String, default: "906472474366083082" },
+    bf6Pc: { type: String, default: "1214479627498553404" },
+    bf6Ps: { type: String, default: "1214479627498553404" },
+    bf6Xbox: { type: String, default: "1214479627498553404" },
   },
   { timestamps: true }
 );

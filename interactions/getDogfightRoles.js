@@ -1,7 +1,7 @@
 import { dogfightRulesPcEmbed } from "../UI/embeds/dogfightRulesPcEmbed.js";
 import { dogfightRulesPsEmbed } from "../UI/embeds/dogfightRulesPsEmbed.js";
 import { dogfightRulesXboxEmbed } from "../UI/embeds/dogfightRulesXboxEmbed.js";
-import { BF1, BF2042, BF4, BFV, DCS } from "../emojies/emojies.js";
+import { BF1, BF2042, BF4, BF6, BFV, DCS } from "../emojies/emojies.js";
 import { isMod } from "../utils/isMod.js";
 
 export const getDogfightRoles = async (interaction, settings, client) => {
@@ -34,6 +34,7 @@ export const getDogfightRoles = async (interaction, settings, client) => {
         embedMessage.react(BFV).catch((e) => console.log(e));
         embedMessage.react(BF2042).catch((e) => console.log(e));
         embedMessage.react(DCS).catch((e) => console.log(e));
+        embedMessage.react(BF6).catch((e) => console.log(e));
       });
     dogfightRolesChannel
       .send({
@@ -44,6 +45,7 @@ export const getDogfightRoles = async (interaction, settings, client) => {
         embedMessage.react(BF1).catch((e) => console.log(e));
         embedMessage.react(BFV).catch((e) => console.log(e));
         embedMessage.react(BF2042).catch((e) => console.log(e));
+        embedMessage.react(BF6).catch((e) => console.log(e));
       });
     dogfightRolesChannel
       .send({
@@ -54,6 +56,7 @@ export const getDogfightRoles = async (interaction, settings, client) => {
         embedMessage.react(BF1).catch((e) => console.log(e));
         embedMessage.react(BFV).catch((e) => console.log(e));
         embedMessage.react(BF2042).catch((e) => console.log(e));
+        embedMessage.react(BF6).catch((e) => console.log(e));
       });
   } catch (error) {
     console.log(error);

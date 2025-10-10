@@ -61,7 +61,35 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
 
     // background
     const bg1 = await Canvas.loadImage("./assets/images/bf6-bg-1.png");
-    context.drawImage(bg1, 0, 0, canvas.width, canvas.height);
+    const bg2 = await Canvas.loadImage("./assets/images/bf6-bg-2.png");
+    const bg3 = await Canvas.loadImage("./assets/images/bf6-bg-3.png");
+    const bg4 = await Canvas.loadImage("./assets/images/bf6-bg-4.png");
+    const bg5 = await Canvas.loadImage("./assets/images/bf6-bg-5.png");
+    const bg6 = await Canvas.loadImage("./assets/images/bf6-bg-6.png");
+    const bg7 = await Canvas.loadImage("./assets/images/bf6-bg-7.png");
+    const bg8 = await Canvas.loadImage("./assets/images/bf6-bg-8.png");
+    function pickRandomBg() {
+      const randomBg = Math.floor(Math.random() * 8);
+      if (randomBg === 0) {
+        return bg1;
+      } else if (randomBg === 1) {
+        return bg2;
+      } else if (randomBg === 2) {
+        return bg3;
+      } else if (randomBg === 3) {
+        return bg4;
+      } else if (randomBg === 4) {
+        return bg5;
+      } else if (randomBg === 5) {
+        return bg6;
+      } else if (randomBg === 6) {
+        return bg7;
+      } else if (randomBg === 7) {
+        return bg8;
+      }
+    }
+
+    context.drawImage(pickRandomBg(), 0, 0, canvas.width, canvas.height);
 
     // avatar
     try {

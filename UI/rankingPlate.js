@@ -126,7 +126,7 @@ export const generateMemberTable = async (members) => {
 
   // Draw each row
   for (let i = 0; i < 16; i++) {
-    const member = members[0];
+    const member = members[i];
     const y = tableY + 120 + i * rowHeight;
 
     // === Alternate row color (slight transparency) ===

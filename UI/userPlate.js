@@ -93,7 +93,8 @@ export const getPlate = async (name, discordId, userAvatar, secondName) => {
 
     // avatar
     try {
-      const avatar = await Canvas.loadImage("https://picsum.photos/200/300");
+      // const avatar = await Canvas.loadImage("https://picsum.photos/200/300");
+      const avatar = await Canvas.loadImage(userAvatar);
       context.drawImage(avatar, 43, 43, 210, 215);
     } catch (error) {
       console.log(error);

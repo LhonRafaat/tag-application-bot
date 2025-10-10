@@ -84,7 +84,7 @@ export const generateMemberTable = async (members) => {
   try {
     const logo = await Canvas.loadImage("./assets/images/idf-header-logo.png"); // <- replace with your logo path
     const headerHeight = 80;
-    const headerWidth = 750;
+    const headerWidth = 800;
     const headerX = (canvas.width - headerWidth) / 2;
     const headerY = tableY - headerHeight - 10;
 

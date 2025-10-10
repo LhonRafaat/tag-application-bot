@@ -124,7 +124,7 @@ export const getMembersRankingData = async () => {
       },
     },
   ]);
-  return members.slice(0, 15);
+  return members.slice(0, 16);
 };
 
 export const registerBf2Account = async (discordId, bf2Name, fullName) => {

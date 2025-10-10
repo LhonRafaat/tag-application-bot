@@ -127,6 +127,7 @@ export const generateMemberTable = async (members) => {
   // Draw each row
   for (let i = 0; i < 16; i++) {
     const member = members[i];
+    console.log(member);
     const y = tableY + 120 + i * rowHeight;
 
     // === Alternate row color (slight transparency) ===
@@ -170,8 +171,8 @@ export const generateMemberTable = async (members) => {
 
     // === Draw other text ===
     context.fillStyle = textColor;
-    context.fillText(member.name, columnPositions.name, y);
-    context.fillText(member.username, columnPositions.username, y);
+    context.fillText(member?.name ?? "N/A", columnPositions.name, y);
+    context.fillText(member?.username ?? "N/A", columnPositions.username, y);
 
     // === Draw black background for points ===
     const pointsWidth = 130;
@@ -183,7 +184,7 @@ export const generateMemberTable = async (members) => {
     context.fillRect(pointsX, pointsY, pointsWidth, pointsHeight);
 
     // === Draw points text ===
-    const pointsText = member.totalPoints.toString();
+    const pointsText = member?.totalPoints.toString() ?? "0";
     const pointsMetrics = context.measureText(pointsText);
     const pointsTextWidth = pointsMetrics.width;
     const pointsTextX = pointsX + pointsWidth / 2 - pointsTextWidth / 2;

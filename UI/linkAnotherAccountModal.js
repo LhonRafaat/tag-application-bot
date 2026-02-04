@@ -23,7 +23,7 @@ export const linkAnotherAccountModal = () => {
 
   const gameVal = new TextInputBuilder()
     .setCustomId("gameVal")
-    .setLabel("game (bf1,bfv,bf3,bf4,bf2042)")
+    .setLabel("game (bf1,bfv,bf3,bf4,bf2042,bf6)")
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 

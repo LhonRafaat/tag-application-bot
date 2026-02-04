@@ -4,8 +4,9 @@ import { AttachmentBuilder } from "discord.js";
 
 export const getUserProfile = async (gameVal, gameNameVal, platformVal) => {
   try {
+    const endpoint = gameVal === "bf6" ? "stats" : "all";
     const user = await axios.get(
-      `https://api.gametools.network/${gameVal}/all/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`
+      `https://api.gametools.network/${gameVal}/${endpoint}/?format_values=false&name=${gameNameVal}&lang=en-us&platform=${platformVal}`,
     );
     return user;
   } catch (e) {
@@ -14,8 +15,9 @@ export const getUserProfile = async (gameVal, gameNameVal, platformVal) => {
 };
 export const getUserByGameId = async (gameId, gameVal, platform) => {
   try {
+    const endpoint = gameVal === "bf6" ? "stats" : "all";
     const user = await axios.get(
-      `https://api.gametools.network/${gameVal}/all/?format_values=false&playerid=${gameId}&lang=en-us&platform=${platform}`
+      `https://api.gametools.network/${gameVal}/${endpoint}/?format_values=false&playerid=${gameId}&lang=en-us&platform=${platform}`,
     );
     return user;
   } catch (e) {
@@ -31,7 +33,7 @@ export const getUserByGameId = async (gameId, gameVal, platform) => {
 export const getBf2Profile = async (name) => {
   try {
     const user = await axios.get(
-      `https://api.gametools.network/bf2/stats/?format_values=false&name=${name}&lang=en-us&platform=bf2hub`
+      `https://api.gametools.network/bf2/stats/?format_values=false&name=${name}&lang=en-us&platform=bf2hub`,
     );
     return user;
   } catch (e) {
@@ -89,7 +91,7 @@ export const createAttachmentFromImageUrl = async (imageUrl) => {
 
 export const fetchProfileByNucleusId = async (id, platform) => {
   const res = await axios.get(
-    `https://api.gametools.network/bf2042/stats/?raw=false&format_values=true&nucleus_id=${id}&platform=${platform}`
+    `https://api.gametools.network/bf2042/stats/?raw=false&format_values=true&nucleus_id=${id}&platform=${platform}`,
   );
 
   return res.data;

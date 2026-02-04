@@ -392,7 +392,7 @@ export const client = async () => {
               isDifferenceGreaterThanMonths(
                 todaysDate,
                 new Date(strike.createdAt),
-                3
+                3,
               )
             ) {
               strike.status = "resolved";
@@ -408,7 +408,7 @@ export const client = async () => {
               isDifferenceGreaterThanMonths(
                 todaysDate,
                 new Date(strike.createdAt),
-                6
+                6,
               )
             ) {
               strike.status = "resolved";
@@ -470,7 +470,7 @@ export const client = async () => {
         // console.log(user);
 
         const botMsg = await msg.reply(
-          `Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react. \n - ${user.userNames[0]} \n`
+          `Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react. \n - ${user.userNames[0]} \n`,
         );
         await botMsg.react(YES_EMOJI);
       }
@@ -498,13 +498,12 @@ export const client = async () => {
     // send a msg to a channel so I know the server started
     if (!["mystatus", "ranking"].includes(interaction.commandName)) {
       try {
-        const channel = await interaction.guild.channels.fetch(
-          "548861917431726091"
-        );
+        const channel =
+          await interaction.guild.channels.fetch("548861917431726091");
         await channel.send(
           `Interaction: ${interaction.commandName ?? interaction.customId} by ${
             interaction.user.tag
-          } used at ${dayjs().format("YYYY-MM-DD HH:mm:ss")} `
+          } used at ${dayjs().format("YYYY-MM-DD HH:mm:ss")} `,
         );
       } catch (error) {
         console.log(error);
@@ -596,7 +595,7 @@ export const client = async () => {
               username: el.userNames[0],
               totalPoints: el.totalVotes,
             };
-          })
+          }),
         );
 
         await interaction.editReply({
@@ -620,7 +619,7 @@ export const client = async () => {
       await setPoints(interaction, settings);
     } else if (
       ["personalityId", "contributionId", "skillsId"].includes(
-        interaction.customId?.split("-")[0]
+        interaction.customId?.split("-")[0],
       )
     ) {
       await submitVote(interaction, settings, client);
@@ -658,8 +657,8 @@ export const client = async () => {
     ) {
       console.log("here");
       if (
-        !["bfv", "bf1", "bf4", "bf3", "bf2042"].includes(
-          gameVal?.toLowerCase()?.trim()
+        !["bfv", "bf1", "bf4", "bf3", "bf2042", "bf6"].includes(
+          gameVal?.toLowerCase()?.trim(),
         )
       )
         return await interaction.editReply({
@@ -670,7 +669,7 @@ export const client = async () => {
 
       if (
         !["pc", "ps4", "ps3", "xbox360", "xboxone"].includes(
-          platformVal?.toLowerCase()?.trim()
+          platformVal?.toLowerCase()?.trim(),
         )
       )
         return await interaction.editReply({
@@ -682,7 +681,7 @@ export const client = async () => {
         const returnedMember = await getUserProfile(
           gameVal,
           gameNameVal,
-          platformVal
+          platformVal,
         );
         if (returnedMember?.data?.id) {
           // we check if this account is linked by someone else already
@@ -698,7 +697,7 @@ export const client = async () => {
               returnedMember,
               client,
               platformVal,
-              gameVal
+              gameVal,
             );
           } else if (interaction.customId === "linkAnotherAccount") {
             await subLinkAlt(interaction, returnedMember, platformVal);
@@ -727,20 +726,20 @@ export const client = async () => {
     if (user.bot) return;
     const { guild } = reaction.message;
     const discordUser = guild.members.cache.find(
-      (member) => member.id === user.id
+      (member) => member.id === user.id,
     );
 
     // dogfight roles
     if (
       ["bf4", "bfv", "bf1", "bf2042", "dcs", "6️⃣"].includes(
-        reaction.emoji.name?.trim()?.toLowerCase()
+        reaction.emoji.name?.trim()?.toLowerCase(),
       )
     ) {
       const { guild } = reaction.message;
       const msg = await reaction.message.fetch();
       if (msg.author.id !== settings[0].botId) return;
       const member = guild.members.cache.find(
-        (member) => member.id === user.id
+        (member) => member.id === user.id,
       );
       const title = msg.embeds[0].data.title.toLowerCase();
       // dogfight roles
@@ -828,7 +827,7 @@ export const client = async () => {
       settings[0].dogfightChannelId?.toString() ===
       reaction.message.channelId?.toString();
     const msgIncludesDfPing = msg.content?.includes(
-      "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react."
+      "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react.",
     );
 
     if (
@@ -846,7 +845,7 @@ export const client = async () => {
           const gotPoints = msg.content.includes("**");
           if (member && !askedForDf) {
             const mainUser = await findOne(
-              reaction.message.mentions?.repliedUser?.id
+              reaction.message.mentions?.repliedUser?.id,
             );
             if (!gotPoints) {
               mainUser.rolePingContribution += settings[0].rolePingValue;
@@ -882,7 +881,7 @@ export const client = async () => {
 
     if (
       ["bf4", "bfv", "bf1", "bf2042", "dcs", "6️⃣"].includes(
-        reaction.emoji.name?.trim()?.toLowerCase()
+        reaction.emoji.name?.trim()?.toLowerCase(),
       )
     ) {
       const { guild } = reaction.message;
@@ -890,7 +889,7 @@ export const client = async () => {
       if (msg.author.id !== settings[0].botId) return;
 
       const member = guild.members.cache.find(
-        (member) => member.id === user.id
+        (member) => member.id === user.id,
       );
       const title = msg.embeds[0].data.title.toLowerCase();
       // dogfight roles
@@ -975,7 +974,7 @@ export const client = async () => {
       settings[0].dogfightChannelId?.toString() ===
       reaction.message.channelId?.toString();
     const msgIncludesDfPing = msg.content?.includes(
-      "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react."
+      "Please only react if you going to participate in the dogfight, after 2 hours from this ping, you cannot react.",
     );
 
     if (
@@ -999,7 +998,7 @@ export const client = async () => {
             }
             if (msg.content.toString()?.includes(member.userNames[0])) {
               await msg.edit(
-                msg.content.replace(` - ${member.userNames[0]}`, "")
+                msg.content.replace(` - ${member.userNames[0]}`, ""),
               );
             }
             await member.save();
@@ -1038,7 +1037,7 @@ export const client = async () => {
     const guild = channel.guild;
 
     const transcriptsChannel = await guild.channels.fetch(
-      settings[0].transcriptsChannel
+      settings[0].transcriptsChannel,
     );
 
     if (!settings[0].transcriptsChannel) return;
@@ -1075,7 +1074,7 @@ export const client = async () => {
           dayjs(ticket?.openedAt).format("DD/MM/YYYY HH:mm:ss"),
           ticket?.closedBy,
           dayjs(ticket?.closedAt).format("DD/MM/YYYY HH:mm:ss"),
-          ticket?.closedReason
+          ticket?.closedReason,
         ),
       ],
       files: [

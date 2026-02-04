@@ -41,7 +41,7 @@ export const getBf2Profile = async (name) => {
   }
 };
 
-export const games = ["bfv", "bf2", "bf1", "bf4", "bf3", "bf2042"];
+export const games = ["bfv", "bf2", "bf1", "bf4", "bf3", "bf2042", "bf6"];
 
 export function matchYoutubeUrl(url) {
   const links = ["youtu.be", "youtube.com"];

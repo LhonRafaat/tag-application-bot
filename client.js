@@ -51,6 +51,8 @@ import { getMessageSnippet } from "./interactions/messageSnippet.js";
 import { getApplication } from "./interactions/getApplication.js";
 import { TicketsLog } from "./schemas/ticketLog.js";
 import { getTicketLogEmbed } from "./UI/embeds/ticketLogEmbed.js";
+import { addMemberPoints } from "./interactions/addMemberPoints.js";
+import { deductMemberPoints } from "./interactions/deductMemberPoints.js";
 import dayjs from "dayjs";
 
 export const client = async () => {
@@ -341,6 +343,44 @@ export const client = async () => {
       description: "Lists players ranking",
     });
 
+    commands?.create({
+      name: "addpoints",
+      description: "Add points to a member (mods only)",
+      options: [
+        {
+          name: "username",
+          required: true,
+          description: "username of the user to add points to",
+          type: ApplicationCommandOptionType.User,
+        },
+        {
+          name: "points",
+          required: true,
+          description: "number of points to add",
+          type: ApplicationCommandOptionType.Number,
+        },
+      ],
+    });
+
+    commands?.create({
+      name: "deductpoints",
+      description: "Deduct points from a member (mods only)",
+      options: [
+        {
+          name: "username",
+          required: true,
+          description: "username of the user to deduct points from",
+          type: ApplicationCommandOptionType.User,
+        },
+        {
+          name: "points",
+          required: true,
+          description: "number of points to deduct",
+          type: ApplicationCommandOptionType.Number,
+        },
+      ],
+    });
+
     // send dogfight data to specific channel
     const bf2042Channel = await guild.channels.fetch(settings[0].bf2042Channel);
     const bfvChannel = await guild.channels.fetch(settings[0].bfvChannel);
@@ -617,6 +657,10 @@ export const client = async () => {
       await vote(interaction, settings);
     } else if (interaction.commandName === "setpoints") {
       await setPoints(interaction, settings);
+    } else if (interaction.commandName === "addpoints") {
+      await addMemberPoints(interaction, settings, client);
+    } else if (interaction.commandName === "deductpoints") {
+      await deductMemberPoints(interaction, settings, client);
     } else if (
       ["personalityId", "contributionId", "skillsId"].includes(
         interaction.customId?.split("-")[0],

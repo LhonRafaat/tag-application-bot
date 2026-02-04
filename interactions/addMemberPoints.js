@@ -1,11 +1,7 @@
 import { isMod } from "../utils/isMod.js";
 import { findOne } from "../services/memberService.js";
 
-export const addMemberPoints = async (
-  interaction,
-  settings,
-  client,
-) => {
+export const addMemberPoints = async (interaction, settings, client) => {
   const isAuthorized = await isMod(interaction, settings);
   if (!isAuthorized) {
     return await interaction.editReply({
@@ -30,9 +26,7 @@ export const addMemberPoints = async (
 
   // Log to the specified channel
   try {
-    const channel = await client.channels.cache.get(
-      "548861917431726091",
-    );
+    const channel = await client.channels.cache.get("548861917431726091");
     if (channel) {
       await channel.send(
         `✅ **Points Added** - ${interaction.user.tag} added ${points} points to <@${user.id}> at ${new Date().toLocaleString()}`,
